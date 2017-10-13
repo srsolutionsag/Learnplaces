@@ -10,5 +10,25 @@
         }
     ],
     "minimum-stability": "stable",
-    "require": {}
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "studer-raimann.ch\\Lernplaces\\": "classes"
+        },
+        "classmap": ["classes/**/*GUI.php"]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "studer-raimann.ch\\Lernplaces\\": "tests"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true,
+        "sort-packages": true,
+        "discard-changes": true,
+        "htaccess-protect": true,
+        "secure-http": true,
+        "process-timeout": 600
+    }
 }
