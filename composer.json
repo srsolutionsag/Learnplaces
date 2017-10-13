@@ -1,0 +1,14 @@
+{
+    "name": "studer-raimann.ch/learnplaces",
+    "description": "Ground up rewrite of the Lernorte plugin for modern ILIAS versions.",
+    "type": "project",
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Nicolas Schäfli",
+            "email": "ns@studer-raimann.ch"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
