@@ -9,6 +9,9 @@
             "email": "ns@studer-raimann.ch"
         }
     ],
+    "support": {
+        "email": "info@studer-raimann.ch"
+    },
     "minimum-stability": "stable",
     "require": {},
     "autoload": {
