@@ -19,6 +19,7 @@ class ilLearnplacesPlugin extends ilRepositoryObjectPlugin
     protected function uninstallCustom()
     {
         // TODO: what do we need to do here?
+	    throw new Exception("Not Implemented yet.");
     }
 
 
