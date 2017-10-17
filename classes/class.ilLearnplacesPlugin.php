@@ -8,8 +8,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilLearnplacesPlugin extends ilRepositoryObjectPlugin
 {
-    const PLUGIN_NAME = "LearnLoc2";
-    const PLUGIN_ID = "xle2";
+    const PLUGIN_NAME = "Learnplaces";
+    const PLUGIN_ID = "srlp";
 
     public function getPluginName()
     {
