@@ -6,7 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnLoc2 extends ilObjectPlugin
+class ilObjLearnplaces extends ilObjectPlugin
 {
 
 
@@ -22,7 +22,7 @@ class ilObjLearnLoc2 extends ilObjectPlugin
 
     protected function initType()
     {
-        $this->setType(ilLearnLoc2Plugin::PLUGIN_ID);
+        $this->setType(ilLearnplacesPlugin::PLUGIN_ID);
     }
 
     protected function doCreate()

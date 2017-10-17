@@ -6,11 +6,11 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnLoc2ListGUI extends ilObjectPluginListGUI
+class ilObjLearnplacesListGUI extends ilObjectPluginListGUI
 {
     function getGuiClass()
     {
-        return ilObjLearnLoc2GUI::class;
+        return ilObjLearnplacesGUI::class;
     }
 
     function initCommands()
@@ -20,7 +20,7 @@ class ilObjLearnLoc2ListGUI extends ilObjectPluginListGUI
 
     function initType()
     {
-        $this->setType(ilLearnLoc2Plugin::PLUGIN_ID);
+        $this->setType(ilLearnplacesPlugin::PLUGIN_ID);
     }
 
 }

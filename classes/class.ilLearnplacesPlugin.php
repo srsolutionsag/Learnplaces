@@ -6,7 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilLearnLoc2Plugin extends ilRepositoryObjectPlugin
+class ilLearnplacesPlugin extends ilRepositoryObjectPlugin
 {
     const PLUGIN_NAME = "LearnLoc2";
     const PLUGIN_ID = "xle2";

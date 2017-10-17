@@ -9,7 +9,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  * @ilCtrl_isCalledBy ilObjLiveVotingGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI
  * @ilCtrl_Calls      ilObjLiveVotingGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
  */
-class ilObjLearnLoc2GUI extends ilObjectPluginGUI
+class ilObjLearnplacesGUI extends ilObjectPluginGUI
 {
 
 
@@ -26,7 +26,7 @@ class ilObjLearnLoc2GUI extends ilObjectPluginGUI
      */
     function getType()
     {
-        return ilLearnLoc2Plugin::PLUGIN_ID;
+        return ilLearnplacesPlugin::PLUGIN_ID;
     }
 
     /**

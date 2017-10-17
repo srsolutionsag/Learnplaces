@@ -6,7 +6,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnLoc2Access extends ilObjectPluginAccess
+class ilObjLearnplacesAccess extends ilObjectPluginAccess
 {
     /**
      * @var \ILIAS\DI\Container
@@ -18,6 +18,8 @@ class ilObjLearnLoc2Access extends ilObjectPluginAccess
      */
     public function __construct()
     {
+    	parent::__construct();
+
         global $DIC;
         $this->dic = $DIC;
     }
