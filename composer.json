@@ -14,17 +14,23 @@
     },
     "minimum-stability": "stable",
     "require": {
-        "php": "^5.6 || ^7.0"
+        "php": "^5.6 || >=7.0.8"
     },
     "autoload": {
         "psr-4": {
-            "studer-raimann.ch\\Lernplaces\\": "classes"
+            "StuderRaimannCh\\Lernplaces\\": "classes/"
         },
-        "classmap": ["classes/**/*GUI.php"]
+        "classmap": [
+            "./classes/class.ilLearnplacesPlugin.php",
+            "./classes/class.ilObjLearnplaces.php",
+            "./classes/class.ilObjLearnplacesAccess.php",
+            "./classes/class.ilObjLearnplacesGUI.php",
+            "./classes/class.ilObjLearnplacesListGUI.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "studer-raimann.ch\\Lernplaces\\": "tests"
+            "StuderRaimannCh\\Lernplaces\\": "tests/"
         }
     },
     "config": {
