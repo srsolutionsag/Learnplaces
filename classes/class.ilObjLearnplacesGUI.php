@@ -6,8 +6,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  *
- * @ilCtrl_isCalledBy ilObjLiveVotingGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI
- * @ilCtrl_Calls      ilObjLiveVotingGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
+ * @ilCtrl_isCalledBy ilObjLearnplacesGUI: ilRepositoryGUI, ilObjPluginDispatchGUI, ilAdministrationGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI, ilCommonActionDispatcherGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI
 {
