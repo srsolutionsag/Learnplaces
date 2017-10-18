@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../../../vendor/autoload.php';
 
 use SRAG\Learnplaces\gui\helper\CtrlAware;
 use SRAG\Learnplaces\gui\helper\ICtrlAware;
