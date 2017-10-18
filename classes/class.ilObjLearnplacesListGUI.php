@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilObjLearnLoc2ListGUI
+ * Class ilObjLearnplacesListGUI
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */

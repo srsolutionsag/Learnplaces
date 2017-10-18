@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilLearnLoc2Plugin
+ * Class ilLearnplacesPlugin
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
