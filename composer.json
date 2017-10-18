@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "StuderRaimannCh\\Lernplaces\\": "classes/"
+            "SRAG\\Lernplaces\\": "classes/"
         },
         "classmap": [
             "./classes/class.ilLearnplacesPlugin.php",
@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "StuderRaimannCh\\Lernplaces\\": "tests/"
+            "SRAG\\Lernplaces\\": "tests/"
         }
     },
     "config": {
