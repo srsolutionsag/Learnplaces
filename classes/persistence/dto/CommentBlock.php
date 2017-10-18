@@ -16,4 +16,24 @@ class CommentBlock extends Block {
 	 */
 	private $comments;
 
+
+	/**
+	 * @return Comment[]
+	 */
+	public function getComments() {
+		return $this->comments;
+	}
+
+
+	/**
+	 * @param Comment[] $comments
+	 *
+	 * @return CommentBlock
+	 */
+	public function setComments($comments) {
+		$this->comments = $comments;
+
+		return $this;
+	}
+
 }
