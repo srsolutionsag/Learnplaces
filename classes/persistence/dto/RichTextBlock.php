@@ -5,7 +5,7 @@ namespace SRAG\Lernplaces\persistence\dto;
 /**
  * Class RichTextBlock
  *
- * @package StuderRaimannCh\Lernplaces\persistence\dto
+ * @package SRAG\Lernplaces\persistence\dto
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
