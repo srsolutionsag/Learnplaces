@@ -25,7 +25,8 @@
             "./classes/class.ilObjLearnplaces.php",
             "./classes/class.ilObjLearnplacesAccess.php",
             "./classes/class.ilObjLearnplacesGUI.php",
-            "./classes/class.ilObjLearnplacesListGUI.php"
+            "./classes/class.ilObjLearnplacesListGUI.php",
+            "./classes/gui"
         ]
     },
     "autoload-dev": {

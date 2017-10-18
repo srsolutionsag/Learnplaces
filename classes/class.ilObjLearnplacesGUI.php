@@ -1,30 +1,28 @@
 <?php
+
+use SRAG\Learnplaces\gui\helper\DIC;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilObjLearnLoc2GUI
+ * Class ilObjLearnplacesGUI
  *
  * @author            Nicolas Schäfli <ns@studer-raimann.ch>
  *
- * @ilCtrl_isCalledBy ilObjLearnplacesGUI: ilRepositoryGUI, ilObjPluginDispatchGUI,
- *                    ilAdministrationGUI
- * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI,
- *                    ilCommonActionDispatcherGUI
+ * @ilCtrl_isCalledBy ilObjLearnplacesGUI: ilRepositoryGUI, ilObjPluginDispatchGUI
+ * @ilCtrl_isCalledBy ilObjLearnplacesGUI: ilAdministrationGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: ilCommonActionDispatcherGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
-	/**
-	 * @inheritDoc
-	 */
-	function executeCommand() {
-		throw new Exception("Not Implemented yet.");
-	}
+	use DIC;
 
 
 	/**
 	 * @inheritDoc
 	 */
-	function getType() {
+	public function getType() {
 		return ilLearnplacesPlugin::PLUGIN_ID;
 	}
 
@@ -34,8 +32,8 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 *
 	 * @return string
 	 */
-	function getAfterCreationCmd() {
-		throw new Exception("Not Implemented yet.");
+	public function getAfterCreationCmd() {
+		return \SRAG\Learnplaces\gui\helper\Ctrl::CMD_INDEX;
 	}
 
 
@@ -44,7 +42,12 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 *
 	 * @return string
 	 */
-	function getStandardCmd() {
-		throw new Exception("Not Implemented yet.");
+	public function getStandardCmd() {
+		return \SRAG\Learnplaces\gui\helper\Ctrl::CMD_INDEX;
+	}
+
+
+	protected function index() {
+		throw new Exception('Not implemented');
 	}
 }

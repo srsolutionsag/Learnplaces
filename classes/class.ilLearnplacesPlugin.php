@@ -9,7 +9,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 
 	const PLUGIN_NAME = "Learnplaces";
-	const PLUGIN_ID = "srlp";
+	const PLUGIN_ID = "xsrl";
 
 
 	public function getPluginName() {
@@ -18,7 +18,6 @@ class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 
 
 	protected function uninstallCustom() {
-		// TODO: what do we need to do here?
 		throw new Exception("Not Implemented yet.");
 	}
 }

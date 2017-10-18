@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilObjLearnLoc2
+ * Class ilObjLearnplaces
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
@@ -11,10 +11,10 @@ class ilObjLearnplaces extends ilObjectPlugin {
 	/**
 	 * ilObjLearnLoc2 constructor.
 	 *
-	 * @param int $refId The reference id of the current object.
+	 * @param int $ref_id The reference id of the current object.
 	 */
-	public function __construct($refId = 0) {
-		parent::__construct($refId);
+	public function __construct($ref_id = 0) {
+		parent::__construct($ref_id);
 	}
 
 
@@ -43,6 +43,9 @@ class ilObjLearnplaces extends ilObjectPlugin {
 	}
 
 
+	/**
+	 * @inheritdoc
+	 */
 	protected function doCloneObject($new_obj, $a_target_id, $a_copy_id = null) {
 		throw new Exception("Not Implemented yet.");
 	}

@@ -2,16 +2,13 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
- * Class ilObjLearnLoc2Access
+ * Class ilObjLearnplacesAccess
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 
-	/**
-	 * @var \ILIAS\DI\Container
-	 */
-	private $dic;
+	use \SRAG\Learnplaces\helper\DIC;
 
 
 	/**
@@ -19,9 +16,6 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 */
 	public function __construct() {
 		parent::__construct();
-
-		global $DIC;
-		$this->dic = $DIC;
 	}
 
 
@@ -42,16 +36,14 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 */
 	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = "") {
 
-		$ilUser = $this->dic["ilUser"];
-		$ilAccess = $this->dic["ilAccess"];
 
 		if ($a_user_id == "") {
-			$a_user_id = $ilUser->getId();
+			$a_user_id = $this->user()->getId();
 		}
 		switch ($a_permission) {
 			case "read":
 				if (!self::checkOnline($a_obj_id)
-				    && !$ilAccess->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
+				    && !$this->access()->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
 					return false;
 				}
 				break;
@@ -61,7 +53,12 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	}
 
 
-	public static function checkOnline($objectId) {
+	/**
+	 * @param $object_id
+	 *
+	 * @throws \Exception
+	 */
+	public static function checkOnline($object_id) {
 		throw new Exception("Not implemented yet");
 	}
 }
