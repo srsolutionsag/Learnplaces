@@ -6,21 +6,19 @@ require_once __DIR__ . '/../vendor/autoload.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnplacesListGUI extends ilObjectPluginListGUI
-{
-    function getGuiClass()
-    {
-        return ilObjLearnplacesGUI::class;
-    }
+class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 
-    function initCommands()
-    {
-        return [];
-    }
+	function getGuiClass() {
+		return ilObjLearnplacesGUI::class;
+	}
 
-    function initType()
-    {
-        $this->setType(ilLearnplacesPlugin::PLUGIN_ID);
-    }
 
+	function initCommands() {
+		return [];
+	}
+
+
+	function initType() {
+		$this->setType(ilLearnplacesPlugin::PLUGIN_ID);
+	}
 }
