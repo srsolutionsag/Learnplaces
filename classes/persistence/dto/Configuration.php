@@ -19,6 +19,10 @@ class Configuration {
 	 * @var bool $online
 	 */
 	private $online;
+	/**
+	 * @var string $defaultVisibility
+	 */
+	private $defaultVisibility;
 
 
 	/**
@@ -56,6 +60,26 @@ class Configuration {
 	 */
 	public function setOnline($online) {
 		$this->online = $online;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getDefaultVisibility() {
+		return $this->defaultVisibility;
+	}
+
+
+	/**
+	 * @param string $defaultVisibility
+	 *
+	 * @return Configuration
+	 */
+	public function setDefaultVisibility($defaultVisibility) {
+		$this->defaultVisibility = $defaultVisibility;
 
 		return $this;
 	}
