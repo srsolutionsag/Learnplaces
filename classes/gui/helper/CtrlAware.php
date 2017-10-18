@@ -12,6 +12,7 @@ namespace SRAG\Learnplaces\gui\helper;
  */
 trait CtrlAware {
 
+	use CtrlHandler;
 	use DIC;
 	/**
 	 * @var ICtrlAware
@@ -20,26 +21,11 @@ trait CtrlAware {
 
 
 	public function executeCommand() {
-		$this->language()->loadLanguageModule("orgu");
-		$cmd = $this->ctrl()->getCmd(ICtrlAware::CMD_INDEX);
-		$next_class = $this->ctrl()->getNextClass();
-		if ($next_class) {
-			foreach ($this->getPossibleNextClasses() as $class) {
-				if (strtolower($class) === $next_class) {
-					/**
-					 * @var $instance CtrlAware
-					 */
-					$instance = new $class($this->ctrl(), $this->tpl(), $this->language(), $this->tabs(), $this->user(), $this->access());
-					if ($instance instanceof ICtrlAware) {
-						$instance->setParentController($this);
-						$this->ctrl()->forwardCommand($instance);
-					}
-
-					return;
-				}
-			}
+		if ($this->handleNextClass($this)) {
+			return true;
 		}
-
+		$this->tpl()->getStandardTemplate();
+		$cmd = $this->ctrl()->getCmd(ICtrlAware::CMD_INDEX);
 		if ($this->getActiveTabId()) {
 			$this->tabs()->activateTab($this->getActiveTabId());
 		}
@@ -51,6 +37,9 @@ trait CtrlAware {
 				}
 				break;
 		}
+		$this->tpl()->show();
+
+		return true;
 	}
 
 

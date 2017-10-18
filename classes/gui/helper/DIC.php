@@ -74,7 +74,7 @@ trait DIC {
 	/**
 	 * @return \ilCtrl
 	 */
-	protected function ctrl() {
+	public function ctrl() {
 		return $this->ctrl;
 	}
 
@@ -84,7 +84,7 @@ trait DIC {
 	 *
 	 * @return string
 	 */
-	public function ptxt($variable) {
+	public function txt($variable) {
 		return $this->language->txt($variable);
 	}
 
@@ -92,7 +92,7 @@ trait DIC {
 	/**
 	 * @return \ilTemplate
 	 */
-	protected function tpl() {
+	public function tpl() {
 		return $this->tpl;
 	}
 
@@ -100,7 +100,7 @@ trait DIC {
 	/**
 	 * @return \ilLanguage
 	 */
-	protected function language() {
+	public function language() {
 		return $this->language;
 	}
 
@@ -108,7 +108,7 @@ trait DIC {
 	/**
 	 * @return \ilTabsGUI
 	 */
-	protected function tabs() {
+	public function tabs() {
 		return $this->tabs;
 	}
 
@@ -124,7 +124,7 @@ trait DIC {
 	/**
 	 * @return \ilObjUser
 	 */
-	protected function user() {
+	public function user() {
 		return $this->user;
 	}
 

@@ -42,4 +42,54 @@ interface ICtrlAware {
 
 
 	public function cancel();
+
+
+	/**
+	 * @return array of ClassNames this Controller can call using ILIAS ilCtrl
+	 */
+	public function getPossibleNextClasses();
+
+
+	/**
+	 * @return \ilCtrl
+	 */
+	public function ctrl();
+
+
+	/**
+	 * @return \ilTemplate the global Instance
+	 */
+	public function tpl();
+
+
+	/**
+	 * @return \ilLanguage
+	 */
+	public function language();
+
+
+	/**
+	 * @return \ilTabsGUI
+	 */
+	public function tabs();
+
+
+	/**
+	 * @return \ilObjUser
+	 */
+	public function user();
+
+
+	/**
+	 * @return \ilAccessHandler
+	 */
+	public function access();
+
+
+	/**
+	 * @param \SRAG\Learnplaces\gui\helper\ICtrlAware $ctrlAware the current controller
+	 *
+	 * @return bool whether a next class has handled the request or not
+	 */
+	public function handleNextClass(ICtrlAware $ctrlAware);
 }

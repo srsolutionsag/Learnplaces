@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use SRAG\Learnplaces\gui\helper\CtrlAware;
+use SRAG\Learnplaces\gui\helper\CtrlHandler;
 use SRAG\Learnplaces\gui\helper\ICtrlAware;
 
 /**
@@ -14,9 +14,11 @@ use SRAG\Learnplaces\gui\helper\ICtrlAware;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilCommonActionDispatcherGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlLocationGUI
  */
-class ilObjLearnplacesGUI extends ilObjectPluginGUI {
+class ilObjLearnplacesGUI extends ilObjectPluginGUI implements ICtrlAware {
 
+	use CtrlHandler;
 	const DEFAULT_CMD = ICtrlAware::CMD_INDEX;
 
 
@@ -39,27 +41,30 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				parent::executeCommand();
 				break;
 			default:
-				$this->handleNextClass();
+				$this->handleNextClass($this);
 				break;
 		}
 	}
 
 
-	protected function handleNextClass() {
-		$this->tpl()->getStandardTemplate();
-		/**
-		 * @var $nextClass CtrlAware
-		 */
-		$nextClass = (string)$this->ctrl()->getNextClass();
-		$fqClassName = null;
-		switch ($nextClass) {
-			case strtolower(xsrlBlockGUI::class):
-				$fqClassName = xsrlBlockGUI::class;
-				break;
-		}
-		$instance = new $fqClassName($this->ctrl(), $this->tpl(), $this->language(), $this->tabs(), $this->user(), $this->access());
-		$this->ctrl()->forwardCommand($instance);
-		$this->tpl()->show();
+	/**
+	 * @inheritdoc
+	 */
+	public function getPossibleNextClasses() {
+		return array(
+			xsrlBlockGUI::class,
+			xsrlLocationGUI::class,
+		);
+	}
+
+
+	public function getParentController() {
+		return $this;
+	}
+
+
+	public function setParentController(ICtrlAware $ctrlAware) {
+		// TODO: Implement setParentController() method.
 	}
 
 
@@ -94,7 +99,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 
 	public function index() {
-		$this->ctrl()->redirectByClass((new \ReflectionClass(xsrlBlockGUI::class))->getShortName());
+		$this->ctrl()->redirectByClass((new \ReflectionClass(xsrlLocationGUI::class))->getShortName());
 	}
 
 	//
@@ -112,7 +117,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilAccessHandler
 	 */
-	protected function access() {
+	public function access() {
 		return $this->dic()->access();
 	}
 
@@ -120,7 +125,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilCtrl
 	 */
-	protected function ctrl() {
+	public function ctrl() {
 		return $this->dic()->ctrl();
 	}
 
@@ -128,7 +133,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilTemplate
 	 */
-	protected function tpl() {
+	public function tpl() {
 		return $this->dic()->ui()->mainTemplate();
 	}
 
@@ -136,7 +141,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilObjUser
 	 */
-	protected function user() {
+	public function user() {
 		return $this->dic()->user();
 	}
 
@@ -144,7 +149,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilLanguage
 	 */
-	protected function language() {
+	public function language() {
 		return $this->dic()->language();
 	}
 
@@ -152,7 +157,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	/**
 	 * @return \ilTabsGUI
 	 */
-	protected function tabs() {
+	public function tabs() {
 		return $this->dic()->tabs();
 	}
 }
