@@ -2,6 +2,8 @@
 
 namespace SRAG\Learnplaces\gui\helper;
 
+use ILIAS\DI\Container;
+
 /**
  * Class DIC
  *
@@ -10,9 +12,61 @@ namespace SRAG\Learnplaces\gui\helper;
 trait DIC {
 
 	/**
+	 * @var \ilAccessHandler
+	 */
+	private $access;
+	/**
+	 * @var \ilObjUser
+	 */
+	private $user;
+	/**
+	 * @var \ilCtrl
+	 */
+	private $ctrl;
+	/**
+	 * @var \ilTemplate
+	 */
+	private $tpl;
+	/**
+	 * @var \ilLanguage
+	 */
+	private $language;
+	/**
+	 * @var \ilTabsGUI
+	 */
+	private $tabs;
+
+
+	/**
+	 * Ctrl constructor.
+	 */
+	public function __construct(\ilCtrl $ctrl, \ilTemplate $tpl, \ilLanguage $lng, \ilTabsGUI $tabs, \ilObjUser $user, \ilAccessHandler $access) {
+		$this->ctrl = $ctrl;
+		$this->tpl = $tpl;
+		$this->language = $lng;
+		$this->tabs = $tabs;
+		$this->user = $user;
+		$this->access = $access;
+	}
+
+
+	/**
+	 * @param \ILIAS\DI\Container $dic
+	 */
+	public function initFromDIC(Container $dic) {
+		$this->ctrl = $dic->ctrl();
+		$this->tpl = $dic->ui()->mainTemplate();
+		$this->language = $dic->language();
+		$this->tabs = $dic->tabs();
+		$this->user = $dic->user();
+		$this->access = $dic->access();
+	}
+
+
+	/**
 	 * @return \ILIAS\DI\Container
 	 */
-	public function dic() {
+	private function dic() {
 		return $GLOBALS['DIC'];
 	}
 
@@ -21,7 +75,7 @@ trait DIC {
 	 * @return \ilCtrl
 	 */
 	protected function ctrl() {
-		return $this->dic()->ctrl();
+		return $this->ctrl;
 	}
 
 
@@ -30,8 +84,8 @@ trait DIC {
 	 *
 	 * @return string
 	 */
-	public function txt($variable) {
-		return $this->lng()->txt($variable);
+	public function ptxt($variable) {
+		return $this->language->txt($variable);
 	}
 
 
@@ -39,15 +93,15 @@ trait DIC {
 	 * @return \ilTemplate
 	 */
 	protected function tpl() {
-		return $this->dic()->ui()->mainTemplate();
+		return $this->tpl;
 	}
 
 
 	/**
 	 * @return \ilLanguage
 	 */
-	protected function lng() {
-		return $this->dic()->language();
+	protected function language() {
+		return $this->language;
 	}
 
 
@@ -55,7 +109,7 @@ trait DIC {
 	 * @return \ilTabsGUI
 	 */
 	protected function tabs() {
-		return $this->dic()->tabs();
+		return $this->tabs;
 	}
 
 
@@ -71,18 +125,7 @@ trait DIC {
 	 * @return \ilObjUser
 	 */
 	protected function user() {
-		return $this->dic()->user();
-	}
-
-
-	/**
-	 * @return mixed
-	 * @throws \Exception
-	 */
-	protected function http() {
-		throw new \Exception('Not implemented');
-
-		return $this->dic()->http();
+		return $this->user;
 	}
 
 
@@ -91,5 +134,17 @@ trait DIC {
 	 */
 	public function access() {
 		return $this->dic()->access();
+	}
+
+
+	public function getCurrentRefId() {
+		//		try {
+		//			$http = $this->dic()->http();
+		//			$ref_id = $http->request()->getQueryParams()["ref_id"];
+		//		} catch (\Exception $e) {
+		//		}
+		$ref_id = $_GET['ref_id'];
+
+		return $ref_id;
 	}
 }

@@ -24,22 +24,22 @@ class ilObjLearnplaces extends ilObjectPlugin {
 
 
 	protected function doCreate() {
-		throw new Exception("Not Implemented yet.");
+//		throw new Exception("Not Implemented yet.");
 	}
 
 
 	protected function doRead() {
-		throw new Exception("Not Implemented yet.");
+//		throw new Exception("Not Implemented yet.");
 	}
 
 
 	protected function doUpdate() {
-		throw new Exception("Not Implemented yet.");
+//		throw new Exception("Not Implemented yet.");
 	}
 
 
 	protected function doDelete() {
-		throw new Exception("Not Implemented yet.");
+//		throw new Exception("Not Implemented yet.");
 	}
 
 
@@ -47,6 +47,6 @@ class ilObjLearnplaces extends ilObjectPlugin {
 	 * @inheritdoc
 	 */
 	protected function doCloneObject($new_obj, $a_target_id, $a_copy_id = null) {
-		throw new Exception("Not Implemented yet.");
+//		throw new Exception("Not Implemented yet.");
 	}
 }

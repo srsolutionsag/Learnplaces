@@ -1,4 +1,7 @@
 <?php
+
+use SRAG\Learnplaces\gui\helper\DIC;
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 /**
@@ -8,14 +11,16 @@ require_once __DIR__ . '/../vendor/autoload.php';
  */
 class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 
-	use \SRAG\Learnplaces\helper\DIC;
+	use DIC {
+		DIC::__construct as private traitConstructor;
+	}
 
 
 	/**
 	 * ilObjLearnLoc2Access constructor.
 	 */
 	public function __construct() {
-		parent::__construct();
+		$this->initFromDIC($GLOBALS['DIC']);
 	}
 
 
@@ -35,7 +40,7 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 * @return    boolean        true, if everything is ok
 	 */
 	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = "") {
-
+		return true; //TODO
 
 		if ($a_user_id == "") {
 			$a_user_id = $this->user()->getId();
@@ -59,6 +64,7 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 * @throws \Exception
 	 */
 	public static function checkOnline($object_id) {
+		return true;
 		throw new Exception("Not implemented yet");
 	}
 }
