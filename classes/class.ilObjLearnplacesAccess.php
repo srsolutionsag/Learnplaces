@@ -2,7 +2,7 @@
 
 use SRAG\Learnplaces\gui\helper\DIC;
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/bootstrap.php';
 
 /**
  * Class ilObjLearnplacesAccess
