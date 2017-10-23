@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -29,7 +30,7 @@ class Picture {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -39,7 +40,7 @@ class Picture {
 	 *
 	 * @return Picture
 	 */
-	public function setId($id) {
+	public function setId(int $id): Picture {
 		$this->id = $id;
 
 		return $this;
@@ -49,7 +50,7 @@ class Picture {
 	/**
 	 * @return string
 	 */
-	public function getOriginalPath() {
+	public function getOriginalPath(): string {
 		return $this->originalPath;
 	}
 
@@ -59,7 +60,7 @@ class Picture {
 	 *
 	 * @return Picture
 	 */
-	public function setOriginalPath($originalPath) {
+	public function setOriginalPath(string $originalPath): Picture {
 		$this->originalPath = $originalPath;
 
 		return $this;
@@ -69,7 +70,7 @@ class Picture {
 	/**
 	 * @return string
 	 */
-	public function getPreviewPath() {
+	public function getPreviewPath(): string {
 		return $this->previewPath;
 	}
 
@@ -79,7 +80,7 @@ class Picture {
 	 *
 	 * @return Picture
 	 */
-	public function setPreviewPath($previewPath) {
+	public function setPreviewPath(string $previewPath): Picture {
 		$this->previewPath = $previewPath;
 
 		return $this;

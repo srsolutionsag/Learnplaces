@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -42,7 +43,7 @@ class Answer {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -52,7 +53,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setId($id) {
+	public function setId(int $id): Answer {
 		$this->id = $id;
 
 		return $this;
@@ -62,7 +63,7 @@ class Answer {
 	/**
 	 * @return DateTime
 	 */
-	public function getCreateDate() {
+	public function getCreateDate(): DateTime {
 		return $this->createDate;
 	}
 
@@ -72,7 +73,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setCreateDate($createDate) {
+	public function setCreateDate(DateTime $createDate): Answer {
 		$this->createDate = $createDate;
 
 		return $this;
@@ -82,7 +83,7 @@ class Answer {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
@@ -92,7 +93,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title): Answer {
 		$this->title = $title;
 
 		return $this;
@@ -102,7 +103,7 @@ class Answer {
 	/**
 	 * @return string
 	 */
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
@@ -112,7 +113,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setContent($content) {
+	public function setContent(string $content): Answer {
 		$this->content = $content;
 
 		return $this;
@@ -122,7 +123,7 @@ class Answer {
 	/**
 	 * @return int
 	 */
-	public function getUserId() {
+	public function getUserId(): int {
 		return $this->userId;
 	}
 
@@ -132,7 +133,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setUserId($userId) {
+	public function setUserId(int $userId): Answer {
 		$this->userId = $userId;
 
 		return $this;
@@ -142,7 +143,7 @@ class Answer {
 	/**
 	 * @return Picture
 	 */
-	public function getPicture() {
+	public function getPicture(): Picture {
 		return $this->picture;
 	}
 
@@ -152,7 +153,7 @@ class Answer {
 	 *
 	 * @return Answer
 	 */
-	public function setPicture($picture) {
+	public function setPicture(Picture $picture): Answer {
 		$this->picture = $picture;
 
 		return $this;

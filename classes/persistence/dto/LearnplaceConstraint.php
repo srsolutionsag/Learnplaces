@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -22,17 +23,19 @@ class LearnplaceConstraint implements BlockConstraint {
 
 
 	/**
-	 * @inheritdoc
+	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
 
 	/**
-	 * @inheritdoc
+	 * @param int $id
+	 *
+	 * @return LearnplaceConstraint
 	 */
-	public function setId($id) {
+	public function setId(int $id): LearnplaceConstraint {
 		$this->id = $id;
 
 		return $this;
@@ -42,7 +45,7 @@ class LearnplaceConstraint implements BlockConstraint {
 	/**
 	 * @return Learnplace
 	 */
-	public function getPreviousLearnplace() {
+	public function getPreviousLearnplace(): Learnplace {
 		return $this->previousLearnplace;
 	}
 
@@ -52,9 +55,10 @@ class LearnplaceConstraint implements BlockConstraint {
 	 *
 	 * @return LearnplaceConstraint
 	 */
-	public function setPreviousLearnplace($previousLearnplace) {
+	public function setPreviousLearnplace(Learnplace $previousLearnplace): LearnplaceConstraint {
 		$this->previousLearnplace = $previousLearnplace;
 
 		return $this;
 	}
+
 }

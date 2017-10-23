@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -29,7 +30,7 @@ class AccordionBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
@@ -39,7 +40,7 @@ class AccordionBlock extends Block {
 	 *
 	 * @return AccordionBlock
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title): AccordionBlock {
 		$this->title = $title;
 
 		return $this;
@@ -49,7 +50,7 @@ class AccordionBlock extends Block {
 	/**
 	 * @return bool
 	 */
-	public function isExpand() {
+	public function isExpand(): bool {
 		return $this->expand;
 	}
 
@@ -59,7 +60,7 @@ class AccordionBlock extends Block {
 	 *
 	 * @return AccordionBlock
 	 */
-	public function setExpand($expand) {
+	public function setExpand(bool $expand): AccordionBlock {
 		$this->expand = $expand;
 
 		return $this;
@@ -69,7 +70,7 @@ class AccordionBlock extends Block {
 	/**
 	 * @return Block[]
 	 */
-	public function getBlocks() {
+	public function getBlocks(): array {
 		return $this->blocks;
 	}
 
@@ -79,10 +80,9 @@ class AccordionBlock extends Block {
 	 *
 	 * @return AccordionBlock
 	 */
-	public function setBlocks($blocks) {
+	public function setBlocks(array $blocks): AccordionBlock {
 		$this->blocks = $blocks;
 
 		return $this;
 	}
-
 }

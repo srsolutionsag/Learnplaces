@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -20,15 +21,20 @@ class ExternalStreamBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getUrl() {
+	public function getUrl(): string {
 		return $this->url;
 	}
 
 
 	/**
 	 * @param string $url
+	 *
+	 * @return ExternalStreamBlock
 	 */
-	public function setUrl($url) {
+	public function setUrl(string $url): ExternalStreamBlock {
 		$this->url = $url;
+
+		return $this;
 	}
+
 }

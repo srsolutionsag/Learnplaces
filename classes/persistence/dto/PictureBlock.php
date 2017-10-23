@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -28,7 +29,7 @@ class PictureBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
@@ -38,7 +39,7 @@ class PictureBlock extends Block {
 	 *
 	 * @return PictureBlock
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title): PictureBlock {
 		$this->title = $title;
 
 		return $this;
@@ -48,7 +49,7 @@ class PictureBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getDescription() {
+	public function getDescription(): string {
 		return $this->description;
 	}
 
@@ -58,7 +59,7 @@ class PictureBlock extends Block {
 	 *
 	 * @return PictureBlock
 	 */
-	public function setDescription($description) {
+	public function setDescription(string $description): PictureBlock {
 		$this->description = $description;
 
 		return $this;
@@ -68,7 +69,7 @@ class PictureBlock extends Block {
 	/**
 	 * @return Picture
 	 */
-	public function getPicture() {
+	public function getPicture(): Picture {
 		return $this->picture;
 	}
 
@@ -78,9 +79,10 @@ class PictureBlock extends Block {
 	 *
 	 * @return PictureBlock
 	 */
-	public function setPicture($picture) {
+	public function setPicture(Picture $picture): PictureBlock {
 		$this->picture = $picture;
 
 		return $this;
 	}
+
 }

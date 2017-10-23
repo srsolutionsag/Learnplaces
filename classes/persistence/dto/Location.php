@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -36,7 +37,7 @@ class Location {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -46,7 +47,7 @@ class Location {
 	 *
 	 * @return Location
 	 */
-	public function setId($id) {
+	public function setId(int $id): Location {
 		$this->id = $id;
 
 		return $this;
@@ -56,7 +57,7 @@ class Location {
 	/**
 	 * @return float
 	 */
-	public function getLatitude() {
+	public function getLatitude(): float {
 		return $this->latitude;
 	}
 
@@ -66,7 +67,7 @@ class Location {
 	 *
 	 * @return Location
 	 */
-	public function setLatitude($latitude) {
+	public function setLatitude(float $latitude): Location {
 		$this->latitude = $latitude;
 
 		return $this;
@@ -76,7 +77,7 @@ class Location {
 	/**
 	 * @return float
 	 */
-	public function getLongitude() {
+	public function getLongitude(): float {
 		return $this->longitude;
 	}
 
@@ -86,7 +87,7 @@ class Location {
 	 *
 	 * @return Location
 	 */
-	public function setLongitude($longitude) {
+	public function setLongitude(float $longitude): Location {
 		$this->longitude = $longitude;
 
 		return $this;
@@ -96,7 +97,7 @@ class Location {
 	/**
 	 * @return float
 	 */
-	public function getElevation() {
+	public function getElevation(): float {
 		return $this->elevation;
 	}
 
@@ -106,7 +107,7 @@ class Location {
 	 *
 	 * @return Location
 	 */
-	public function setElevation($elevation) {
+	public function setElevation(float $elevation): Location {
 		$this->elevation = $elevation;
 
 		return $this;
@@ -116,7 +117,7 @@ class Location {
 	/**
 	 * @return int
 	 */
-	public function getRadius() {
+	public function getRadius(): int {
 		return $this->radius;
 	}
 
@@ -126,9 +127,10 @@ class Location {
 	 *
 	 * @return Location
 	 */
-	public function setRadius($radius) {
+	public function setRadius(int $radius): Location {
 		$this->radius = $radius;
 
 		return $this;
 	}
+
 }

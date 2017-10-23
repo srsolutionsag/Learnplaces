@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -32,7 +33,7 @@ abstract class Block {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -42,7 +43,7 @@ abstract class Block {
 	 *
 	 * @return Block
 	 */
-	public function setId($id) {
+	public function setId(int $id): Block {
 		$this->id = $id;
 
 		return $this;
@@ -52,7 +53,7 @@ abstract class Block {
 	/**
 	 * @return int
 	 */
-	public function getSequence() {
+	public function getSequence(): int {
 		return $this->sequence;
 	}
 
@@ -62,7 +63,7 @@ abstract class Block {
 	 *
 	 * @return Block
 	 */
-	public function setSequence($sequence) {
+	public function setSequence(int $sequence): Block {
 		$this->sequence = $sequence;
 
 		return $this;
@@ -72,7 +73,7 @@ abstract class Block {
 	/**
 	 * @return string
 	 */
-	public function getVisibility() {
+	public function getVisibility(): string {
 		return $this->visibility;
 	}
 
@@ -82,7 +83,7 @@ abstract class Block {
 	 *
 	 * @return Block
 	 */
-	public function setVisibility($visibility) {
+	public function setVisibility(string $visibility): Block {
 		$this->visibility = $visibility;
 
 		return $this;
@@ -92,7 +93,7 @@ abstract class Block {
 	/**
 	 * @return BlockConstraint[]
 	 */
-	public function getConstraints() {
+	public function getConstraints(): array {
 		return $this->constraints;
 	}
 
@@ -102,7 +103,7 @@ abstract class Block {
 	 *
 	 * @return Block
 	 */
-	public function setConstraints($constraints) {
+	public function setConstraints(array $constraints): Block {
 		$this->constraints = $constraints;
 
 		return $this;

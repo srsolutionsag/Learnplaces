@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -46,7 +47,7 @@ class Comment {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -56,7 +57,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setId($id) {
+	public function setId(int $id): Comment {
 		$this->id = $id;
 
 		return $this;
@@ -66,7 +67,7 @@ class Comment {
 	/**
 	 * @return DateTime
 	 */
-	public function getCreateDate() {
+	public function getCreateDate(): DateTime {
 		return $this->createDate;
 	}
 
@@ -76,7 +77,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setCreateDate($createDate) {
+	public function setCreateDate(DateTime $createDate): Comment {
 		$this->createDate = $createDate;
 
 		return $this;
@@ -86,7 +87,7 @@ class Comment {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
@@ -96,7 +97,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title): Comment {
 		$this->title = $title;
 
 		return $this;
@@ -106,7 +107,7 @@ class Comment {
 	/**
 	 * @return string
 	 */
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
@@ -116,7 +117,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setContent($content) {
+	public function setContent(string $content): Comment {
 		$this->content = $content;
 
 		return $this;
@@ -126,7 +127,7 @@ class Comment {
 	/**
 	 * @return int
 	 */
-	public function getUserId() {
+	public function getUserId(): int {
 		return $this->userId;
 	}
 
@@ -136,7 +137,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setUserId($userId) {
+	public function setUserId(int $userId): Comment {
 		$this->userId = $userId;
 
 		return $this;
@@ -146,7 +147,7 @@ class Comment {
 	/**
 	 * @return Answer[]
 	 */
-	public function getAnswers() {
+	public function getAnswers(): array {
 		return $this->answers;
 	}
 
@@ -156,7 +157,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setAnswers($answers) {
+	public function setAnswers(array $answers): Comment {
 		$this->answers = $answers;
 
 		return $this;
@@ -166,7 +167,7 @@ class Comment {
 	/**
 	 * @return Picture
 	 */
-	public function getPicture() {
+	public function getPicture(): Picture {
 		return $this->picture;
 	}
 
@@ -176,7 +177,7 @@ class Comment {
 	 *
 	 * @return Comment
 	 */
-	public function setPicture($picture) {
+	public function setPicture(Picture $picture): Comment {
 		$this->picture = $picture;
 
 		return $this;

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -20,7 +21,7 @@ class CommentBlock extends Block {
 	/**
 	 * @return Comment[]
 	 */
-	public function getComments() {
+	public function getComments(): array {
 		return $this->comments;
 	}
 
@@ -30,7 +31,7 @@ class CommentBlock extends Block {
 	 *
 	 * @return CommentBlock
 	 */
-	public function setComments($comments) {
+	public function setComments(array $comments): CommentBlock {
 		$this->comments = $comments;
 
 		return $this;

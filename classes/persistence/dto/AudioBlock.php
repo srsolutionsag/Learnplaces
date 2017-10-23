@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -20,7 +21,7 @@ class AudioBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getPath() {
+	public function getPath(): string {
 		return $this->path;
 	}
 
@@ -30,7 +31,7 @@ class AudioBlock extends Block {
 	 *
 	 * @return AudioBlock
 	 */
-	public function setPath($path) {
+	public function setPath(string $path): AudioBlock {
 		$this->path = $path;
 
 		return $this;

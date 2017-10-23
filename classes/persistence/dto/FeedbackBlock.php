@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -24,7 +25,7 @@ class FeedbackBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
@@ -34,7 +35,7 @@ class FeedbackBlock extends Block {
 	 *
 	 * @return FeedbackBlock
 	 */
-	public function setContent($content) {
+	public function setContent(string $content): FeedbackBlock {
 		$this->content = $content;
 
 		return $this;
@@ -44,7 +45,7 @@ class FeedbackBlock extends Block {
 	/**
 	 * @return int
 	 */
-	public function getUserId() {
+	public function getUserId(): int {
 		return $this->userId;
 	}
 
@@ -54,9 +55,10 @@ class FeedbackBlock extends Block {
 	 *
 	 * @return FeedbackBlock
 	 */
-	public function setUserId($userId) {
+	public function setUserId(int $userId): FeedbackBlock {
 		$this->userId = $userId;
 
 		return $this;
 	}
+
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -36,7 +37,7 @@ class Learnplace {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -46,7 +47,7 @@ class Learnplace {
 	 *
 	 * @return Learnplace
 	 */
-	public function setId($id) {
+	public function setId(int $id): Learnplace {
 		$this->id = $id;
 
 		return $this;
@@ -56,7 +57,7 @@ class Learnplace {
 	/**
 	 * @return string
 	 */
-	public function getTitle() {
+	public function getTitle(): string {
 		return $this->title;
 	}
 
@@ -66,7 +67,7 @@ class Learnplace {
 	 *
 	 * @return Learnplace
 	 */
-	public function setTitle($title) {
+	public function setTitle(string $title): Learnplace {
 		$this->title = $title;
 
 		return $this;
@@ -76,7 +77,7 @@ class Learnplace {
 	/**
 	 * @return string
 	 */
-	public function getDescription() {
+	public function getDescription(): string {
 		return $this->description;
 	}
 
@@ -86,7 +87,7 @@ class Learnplace {
 	 *
 	 * @return Learnplace
 	 */
-	public function setDescription($description) {
+	public function setDescription(string $description): Learnplace {
 		$this->description = $description;
 
 		return $this;
@@ -96,7 +97,7 @@ class Learnplace {
 	/**
 	 * @return Configuration
 	 */
-	public function getConfiguration() {
+	public function getConfiguration(): Configuration {
 		return $this->configuration;
 	}
 
@@ -106,7 +107,7 @@ class Learnplace {
 	 *
 	 * @return Learnplace
 	 */
-	public function setConfiguration($configuration) {
+	public function setConfiguration(Configuration $configuration): Learnplace {
 		$this->configuration = $configuration;
 
 		return $this;
@@ -116,7 +117,7 @@ class Learnplace {
 	/**
 	 * @return VisitJournal[]
 	 */
-	public function getVisitJournals() {
+	public function getVisitJournals(): array {
 		return $this->visitJournals;
 	}
 
@@ -126,7 +127,7 @@ class Learnplace {
 	 *
 	 * @return Learnplace
 	 */
-	public function setVisitJournals($visitJournals) {
+	public function setVisitJournals(array $visitJournals): Learnplace {
 		$this->visitJournals = $visitJournals;
 
 		return $this;

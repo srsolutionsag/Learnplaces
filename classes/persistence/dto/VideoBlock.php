@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -24,31 +25,40 @@ class VideoBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getPath() {
+	public function getPath(): string {
 		return $this->path;
 	}
 
 
 	/**
 	 * @param string $path
+	 *
+	 * @return VideoBlock
 	 */
-	public function setPath($path) {
+	public function setPath(string $path): VideoBlock {
 		$this->path = $path;
+
+		return $this;
 	}
 
 
 	/**
 	 * @return string
 	 */
-	public function getCoverPath() {
+	public function getCoverPath(): string {
 		return $this->coverPath;
 	}
 
 
 	/**
 	 * @param string $coverPath
+	 *
+	 * @return VideoBlock
 	 */
-	public function setCoverPath($coverPath) {
+	public function setCoverPath(string $coverPath): VideoBlock {
 		$this->coverPath = $coverPath;
+
+		return $this;
 	}
+
 }

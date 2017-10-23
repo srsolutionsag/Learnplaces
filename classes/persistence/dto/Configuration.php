@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -28,7 +29,7 @@ class Configuration {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -38,7 +39,7 @@ class Configuration {
 	 *
 	 * @return Configuration
 	 */
-	public function setId($id) {
+	public function setId(int $id): Configuration {
 		$this->id = $id;
 
 		return $this;
@@ -48,7 +49,7 @@ class Configuration {
 	/**
 	 * @return bool
 	 */
-	public function isOnline() {
+	public function isOnline(): bool {
 		return $this->online;
 	}
 
@@ -58,7 +59,7 @@ class Configuration {
 	 *
 	 * @return Configuration
 	 */
-	public function setOnline($online) {
+	public function setOnline(bool $online): Configuration {
 		$this->online = $online;
 
 		return $this;
@@ -68,7 +69,7 @@ class Configuration {
 	/**
 	 * @return string
 	 */
-	public function getDefaultVisibility() {
+	public function getDefaultVisibility(): string {
 		return $this->defaultVisibility;
 	}
 
@@ -78,7 +79,7 @@ class Configuration {
 	 *
 	 * @return Configuration
 	 */
-	public function setDefaultVisibility($defaultVisibility) {
+	public function setDefaultVisibility(string $defaultVisibility): Configuration {
 		$this->defaultVisibility = $defaultVisibility;
 
 		return $this;

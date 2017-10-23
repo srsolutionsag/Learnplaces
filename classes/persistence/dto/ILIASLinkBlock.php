@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -20,7 +21,7 @@ class ILIASLinkBlock extends Block {
 	/**
 	 * @return int
 	 */
-	public function getRefId() {
+	public function getRefId(): int {
 		return $this->refId;
 	}
 
@@ -30,7 +31,7 @@ class ILIASLinkBlock extends Block {
 	 *
 	 * @return ILIASLinkBlock
 	 */
-	public function setRefId($refId) {
+	public function setRefId(int $refId): ILIASLinkBlock {
 		$this->refId = $refId;
 
 		return $this;

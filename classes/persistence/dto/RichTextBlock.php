@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -20,7 +21,7 @@ class RichTextBlock extends Block {
 	/**
 	 * @return string
 	 */
-	public function getContent() {
+	public function getContent(): string {
 		return $this->content;
 	}
 
@@ -30,9 +31,10 @@ class RichTextBlock extends Block {
 	 *
 	 * @return RichTextBlock
 	 */
-	public function setContent($content) {
+	public function setContent(string $content): RichTextBlock {
 		$this->content = $content;
 
 		return $this;
 	}
+
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\dto;
 
@@ -30,7 +31,7 @@ class VisitJournal {
 	/**
 	 * @return int
 	 */
-	public function getId() {
+	public function getId(): int {
 		return $this->id;
 	}
 
@@ -40,7 +41,7 @@ class VisitJournal {
 	 *
 	 * @return VisitJournal
 	 */
-	public function setId($id) {
+	public function setId(int $id): VisitJournal {
 		$this->id = $id;
 
 		return $this;
@@ -50,7 +51,7 @@ class VisitJournal {
 	/**
 	 * @return int
 	 */
-	public function getUserId() {
+	public function getUserId(): int {
 		return $this->userId;
 	}
 
@@ -60,7 +61,7 @@ class VisitJournal {
 	 *
 	 * @return VisitJournal
 	 */
-	public function setUserId($userId) {
+	public function setUserId(int $userId): VisitJournal {
 		$this->userId = $userId;
 
 		return $this;
@@ -70,7 +71,7 @@ class VisitJournal {
 	/**
 	 * @return DateTime
 	 */
-	public function getTime() {
+	public function getTime(): DateTime {
 		return $this->time;
 	}
 
@@ -80,7 +81,7 @@ class VisitJournal {
 	 *
 	 * @return VisitJournal
 	 */
-	public function setTime($time) {
+	public function setTime(DateTime $time): VisitJournal {
 		$this->time = $time;
 
 		return $this;
