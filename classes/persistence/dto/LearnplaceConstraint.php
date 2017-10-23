@@ -33,9 +33,9 @@ class LearnplaceConstraint implements BlockConstraint {
 	/**
 	 * @param int $id
 	 *
-	 * @return LearnplaceConstraint
+	 * @return BlockConstraint
 	 */
-	public function setId(int $id): LearnplaceConstraint {
+	public function setId(int $id): BlockConstraint {
 		$this->id = $id;
 
 		return $this;

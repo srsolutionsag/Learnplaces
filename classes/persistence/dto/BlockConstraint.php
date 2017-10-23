@@ -11,13 +11,13 @@ interface BlockConstraint {
 	/**
 	 * @return int
 	 */
-	public function getId();
+	public function getId(): int;
 
 
 	/**
 	 * @param int $id
 	 *
-	 * @return LearnplaceConstraint
+	 * @return BlockConstraint
 	 */
-	public function setId($id);
+	public function setId(int $id): BlockConstraint;
 }
