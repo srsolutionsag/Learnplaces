@@ -33,6 +33,16 @@ class CommentBlock extends ActiveRecord {
 	 */
 	protected $pk_id;
 
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_is_notnull true
+	 * @con_fieldtype  integer
+	 * @con_length     8
+	 */
+	protected $fk_block_id;
+
 
 	/**
 	 * @return int
@@ -49,6 +59,26 @@ class CommentBlock extends ActiveRecord {
 	 */
 	public function setPkId(int $pk_id): CommentBlock {
 		$this->pk_id = $pk_id;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getFkBlockId(): int {
+		return $this->fk_block_id;
+	}
+
+
+	/**
+	 * @param int $fk_block_id
+	 *
+	 * @return CommentBlock
+	 */
+	public function setFkBlockId(int $fk_block_id): CommentBlock {
+		$this->fk_block_id = $fk_block_id;
 
 		return $this;
 	}

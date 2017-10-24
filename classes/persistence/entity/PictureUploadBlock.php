@@ -33,6 +33,16 @@ class PictureUploadBlock extends ActiveRecord {
 	 */
 	protected $pk_id;
 
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_is_notnull true
+	 * @con_fieldtype  integer
+	 * @con_length     8
+	 */
+	protected $fk_block_id;
+
 
 	/**
 	 * @return int
@@ -52,4 +62,26 @@ class PictureUploadBlock extends ActiveRecord {
 
 		return $this;
 	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getFkBlockId(): int {
+		return $this->fk_block_id;
+	}
+
+
+	/**
+	 * @param int $fk_block_id
+	 *
+	 * @return PictureUploadBlock
+	 */
+	public function setFkBlockId(int $fk_block_id): PictureUploadBlock {
+		$this->fk_block_id = $fk_block_id;
+
+		return $this;
+	}
+
+
 }

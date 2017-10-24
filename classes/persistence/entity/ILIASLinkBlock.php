@@ -43,6 +43,16 @@ class ILIASLinkBlock extends ActiveRecord {
 	 */
 	protected $ref_id;
 
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_is_notnull true
+	 * @con_fieldtype  integer
+	 * @con_length     8
+	 */
+	protected $fk_block_id;
+
 
 	/**
 	 * @return int
@@ -79,6 +89,26 @@ class ILIASLinkBlock extends ActiveRecord {
 	 */
 	public function setRefId(int $ref_id): ILIASLinkBlock {
 		$this->ref_id = $ref_id;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getFkBlockId(): int {
+		return $this->fk_block_id;
+	}
+
+
+	/**
+	 * @param int $fk_block_id
+	 *
+	 * @return ILIASLinkBlock
+	 */
+	public function setFkBlockId(int $fk_block_id): ILIASLinkBlock {
+		$this->fk_block_id = $fk_block_id;
 
 		return $this;
 	}
