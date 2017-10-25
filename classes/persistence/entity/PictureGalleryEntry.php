@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\entity;
 
+use ActiveRecord;
+
 /**
  * Class PictureGalleryEntry
  *
@@ -10,7 +12,7 @@ namespace SRAG\Learnplaces\persistence\entity;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureGalleryEntry {
+class PictureGalleryEntry extends ActiveRecord {
 
 	/**
 	 * @return string

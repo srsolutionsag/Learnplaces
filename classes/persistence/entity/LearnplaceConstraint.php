@@ -49,7 +49,7 @@ class LearnplaceConstraint extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_block;
+	protected $fk_block_id;
 
 
 	/**
@@ -95,18 +95,18 @@ class LearnplaceConstraint extends ActiveRecord {
 	/**
 	 * @return int
 	 */
-	public function getFkBlock(): int {
-		return $this->fk_block;
+	public function getFkBlockId(): int {
+		return $this->fk_block_id;
 	}
 
 
 	/**
-	 * @param int $fk_block
+	 * @param int $fk_block_id
 	 *
 	 * @return LearnplaceConstraint
 	 */
-	public function setFkBlock(int $fk_block): LearnplaceConstraint {
-		$this->fk_block = $fk_block;
+	public function setFkBlockId(int $fk_block_id): LearnplaceConstraint {
+		$this->fk_block_id = $fk_block_id;
 
 		return $this;
 	}
