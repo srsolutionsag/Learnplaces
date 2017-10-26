@@ -12,12 +12,25 @@ namespace SRAG\Learnplaces\gui\helper;
  */
 trait CtrlAware {
 
-	use CtrlHandler;
+	use CtrlHandler ;
 	use DIC;
 	/**
 	 * @var ICtrlAware
 	 */
 	protected $parent_gui = null;
+
+
+	/**
+	 * Ctrl constructor.
+	 */
+	public function __construct(\ilCtrl $ctrl, \ilTemplate $tpl, \ilLanguage $lng, \ilTabsGUI $tabs, \ilObjUser $user, \ilAccessHandler $access) {
+		$this->ctrl = $ctrl;
+		$this->tpl = $tpl;
+		$this->language = $lng;
+		$this->tabs = $tabs;
+		$this->user = $user;
+		$this->access = $access;
+	}
 
 
 	public function executeCommand() {
