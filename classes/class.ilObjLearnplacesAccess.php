@@ -40,8 +40,6 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 * @return    boolean        true, if everything is ok
 	 */
 	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = "") {
-		return true; //TODO
-
 		if ($a_user_id == "") {
 			$a_user_id = $this->user()->getId();
 		}
@@ -59,12 +57,11 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 
 
 	/**
-	 * @param $object_id
+	 * @param int $object_id
 	 *
-	 * @throws \Exception
+	 * @return bool
 	 */
 	public static function checkOnline($object_id) {
 		return true;
-		throw new Exception("Not implemented yet");
 	}
 }
