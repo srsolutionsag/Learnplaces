@@ -22,7 +22,7 @@
     },
     "autoload": {
         "psr-4": {
-            "SRAG\\Lernplaces\\": "classes/"
+            "SRAG\\Learnplaces\\": "classes/"
         },
         "classmap": [
             "./classes/class.ilLearnplacesPlugin.php",
@@ -36,7 +36,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "SRAG\\Lernplaces\\": "tests/"
+            "SRAG\\Learnplaces\\": "tests/"
         }
     },
     "config": {
