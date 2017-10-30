@@ -17,14 +17,6 @@ class Learnplace {
 	 */
 	private $id;
 	/**
-	 * @var string $title;
-	 */
-	private $title;
-	/**
-	 * @var string $description
-	 */
-	private $description;
-	/**
 	 * @var Configuration $configuration
 	 */
 	private $configuration;
@@ -41,7 +33,6 @@ class Learnplace {
 		return $this->id;
 	}
 
-
 	/**
 	 * @param int $id
 	 *
@@ -52,47 +43,6 @@ class Learnplace {
 
 		return $this;
 	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getTitle(): string {
-		return $this->title;
-	}
-
-
-	/**
-	 * @param string $title
-	 *
-	 * @return Learnplace
-	 */
-	public function setTitle(string $title): Learnplace {
-		$this->title = $title;
-
-		return $this;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	public function getDescription(): string {
-		return $this->description;
-	}
-
-
-	/**
-	 * @param string $description
-	 *
-	 * @return Learnplace
-	 */
-	public function setDescription(string $description): Learnplace {
-		$this->description = $description;
-
-		return $this;
-	}
-
 
 	/**
 	 * @return Configuration
