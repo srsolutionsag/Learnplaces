@@ -25,14 +25,7 @@ class VisibilityDaoImpl extends AbstractCrudDao implements VisibilityDao {
 
 
 	/**
-	 * Searches a visibility by its name. The first visibility with the provided name will be returned.
-	 *
-	 * @param string $name The name of the visibility.
-	 *
-	 * @return Visibility The visibility with the given name.
-	 *
-	 * @throws EntityNotFoundException
-	 *                          Thrown if no visibility with the given name was found.
+	 * @inheritdoc
 	 */
 	public function findByName(string $name) : Visibility {
 		/**
