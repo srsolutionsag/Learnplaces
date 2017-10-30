@@ -1,9 +1,4 @@
 <?php
-/**
- * File bootstrap.php
- *
- * @author  Nicolas Schäfli <ns@studer-raimann.ch>
- */
 
 use SRAG\Learnplaces\aop\aspect\LearnplaceAspectKernel;
 
