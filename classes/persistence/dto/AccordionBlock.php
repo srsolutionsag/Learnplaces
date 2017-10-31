@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Lernplaces\persistence\dto;
+namespace SRAG\Learnplaces\persistence\dto;
 
 /**
  * Class AccordionBlock

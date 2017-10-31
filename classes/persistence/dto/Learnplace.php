@@ -1,9 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Lernplaces\persistence\dto;
-
-use SRAG\Learnplaces\persistence\entity\PictureUploadBlock;
+namespace SRAG\Learnplaces\persistence\dto;
 
 /**
  * Class Learnplace
@@ -17,11 +15,11 @@ class Learnplace {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var int $objectId
 	 */
-	private $objectId;
+	private $objectId = 0;
 	/**
 	 * @var Configuration $configuration
 	 */
@@ -29,33 +27,37 @@ class Learnplace {
 	/**
 	 * @var VisitJournal[] $visitJournals
 	 */
-	private $visitJournals;
+	private $visitJournals = [];
+	/**
+	 * @var Picture[]
+	 */
+	private $pictures = [];
 
 	//--------- Blocks ------------
 	/**
 	 * @var AccordionBlock[]
 	 */
-	private $accordionBlocks;
+	private $accordionBlocks = [];
 	/**
 	 * @var FeedbackBlock[]
 	 */
-	private $feedbackBlocks;
+	private $feedbackBlocks = [];
 	/**
 	 * @var ExternalStreamBlock[]
 	 */
-	private $externalStreamBlocks;
+	private $externalStreamBlocks = [];
 	/**
 	 * @var PictureBlock[]
 	 */
-	private $pictureBlocks;
+	private $pictureBlocks = [];
 	/**
 	 * @var RichTextBlock[]
 	 */
-	private $richtTextBlock;
+	private $richtTextBlock = [];
 	/**
 	 * @var VideoBlock[]
 	 */
-	private $videoBlock;
+	private $videoBlock = [];
 	/**
 	 * @var CommentBlock $commentBlock
 	 */
@@ -67,15 +69,15 @@ class Learnplace {
 	/**
 	 * @var HorizontalLineBlock[] $horizontalLineBlocks
 	 */
-	private $horizontalLineBlocks;
+	private $horizontalLineBlocks = [];
 	/**
 	 * @var AudioBlock[] $audioBlocks
 	 */
-	private $audioBlocks;
+	private $audioBlocks = [];
 	/**
 	 * @var ILIASLinkBlock[] $iliasLinkBlocks
 	 */
-	private $iliasLinkBlocks;
+	private $iliasLinkBlocks = [];
 	/**
 	 * @var PictureUploadBlock $pictureUploadBlock
 	 */
@@ -395,6 +397,26 @@ class Learnplace {
 	 */
 	public function setObjectId(int $objectId): Learnplace {
 		$this->objectId = $objectId;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Picture[]
+	 */
+	public function getPictures(): array {
+		return $this->pictures;
+	}
+
+
+	/**
+	 * @param Picture[] $pictures
+	 *
+	 * @return Learnplace
+	 */
+	public function setPictures(array $pictures): Learnplace {
+		$this->pictures = $pictures;
 
 		return $this;
 	}

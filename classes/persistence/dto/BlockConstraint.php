@@ -1,6 +1,6 @@
 <?php
 
-namespace SRAG\Lernplaces\persistence\dto;
+namespace SRAG\Learnplaces\persistence\dto;
 
 /**
  * Interface BlockConstraint
