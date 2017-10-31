@@ -3,7 +3,9 @@
 namespace SRAG\Lernplaces\persistence\dao;
 
 use ActiveRecord;
+use SRAG\Learnplaces\persistence\dao\CrudDao;
 use SRAG\Learnplaces\persistence\dao\exception\EntityNotFoundException;
+use SRAG\Learnplaces\persistence\entity\LearnplaceConstraint;
 
 /**
  * Interface LearnplaceConstraintDao
@@ -12,7 +14,7 @@ use SRAG\Learnplaces\persistence\dao\exception\EntityNotFoundException;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-interface LearnplaceConstraintDao {
+interface LearnplaceConstraintDao extends CrudDao {
 
 	/**
 	 * Searches the learnplace constraint which belongs to the given block.
@@ -25,5 +27,5 @@ interface LearnplaceConstraintDao {
 	 * @throws EntityNotFoundException
 	 *                          Thrown if the block has no learnplace constraint.
 	 */
-	public function findByBlockId(int $id): ActiveRecord;
+	public function findByBlockId(int $id): LearnplaceConstraint;
 }
