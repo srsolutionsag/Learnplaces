@@ -36,7 +36,7 @@ class LearnplaceConstraintDaoImpl extends AbstractCrudDao implements LearnplaceC
 	 * @throws EntityNotFoundException
 	 *                          Thrown if the block has no learnplace constraint.
 	 */
-	public function findByBlockId(int $id) : ActiveRecord {
+	public function findByBlockId(int $id) : LearnplaceConstraint {
 
 		$recordList = LearnplaceConstraint::where(['fk_block_id' => $id]);
 		$result = $recordList->first();
