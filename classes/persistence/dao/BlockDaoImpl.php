@@ -20,4 +20,12 @@ class BlockDaoImpl extends AbstractCrudDao implements BlockDao {
 	public function __construct() {
 		parent::__construct(Block::class);
 	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function findByLearnplaceId(int $id) : array {
+		return Block::where(['fk_learnplace_id' => $id])->get();
+	}
 }
