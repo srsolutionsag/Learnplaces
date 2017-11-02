@@ -3,6 +3,7 @@
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
 
 \SRAG\Learnplaces\persistence\entity\AccordionBlock::installDB();
+\SRAG\Learnplaces\persistence\entity\AccordionBlockMember::installDB();
 \SRAG\Learnplaces\persistence\entity\Answer::installDB();
 \SRAG\Learnplaces\persistence\entity\AudioBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\Block::installDB();
