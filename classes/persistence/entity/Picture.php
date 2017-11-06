@@ -33,21 +33,21 @@ class Picture extends ActiveRecord {
 	 */
 	protected $pk_id;
 	/**
-	 * @var int
+	 * @var string
 	 *
-	 * @con_has_field  true
 	 * @con_is_notnull true
-	 * @con_fieldtype  integer
-	 * @con_length     8
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     2000
 	 */
 	protected $original_path;
 	/**
-	 * @var int
+	 * @var string
 	 *
-	 * @con_has_field  true
 	 * @con_is_notnull true
-	 * @con_fieldtype  integer
-	 * @con_length     8
+	 * @con_has_field  true
+	 * @con_fieldtype  text
+	 * @con_length     2000
 	 */
 	protected $preview_path;
 
@@ -73,19 +73,19 @@ class Picture extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return string
 	 */
-	public function getOriginalPath(): int {
+	public function getOriginalPath(): string {
 		return $this->original_path;
 	}
 
 
 	/**
-	 * @param int $original_path
+	 * @param string $original_path
 	 *
 	 * @return Picture
 	 */
-	public function setOriginalPath(int $original_path): Picture {
+	public function setOriginalPath(string $original_path): Picture {
 		$this->original_path = $original_path;
 
 		return $this;
@@ -93,21 +93,22 @@ class Picture extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return string
 	 */
-	public function getPreviewPath(): int {
+	public function getPreviewPath(): string {
 		return $this->preview_path;
 	}
 
 
 	/**
-	 * @param int $preview_path
+	 * @param string $preview_path
 	 *
 	 * @return Picture
 	 */
-	public function setPreviewPath(int $preview_path): Picture {
+	public function setPreviewPath(string $preview_path): Picture {
 		$this->preview_path = $preview_path;
 
 		return $this;
 	}
+
 }
