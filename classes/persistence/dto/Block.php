@@ -25,7 +25,7 @@ abstract class Block {
 	 */
 	private $visibility;
 	/**
-	 * @var BlockConstraint
+	 * @var BlockConstraint $constraint
 	 */
 	private $constraint;
 

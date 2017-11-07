@@ -32,6 +32,10 @@ class Learnplace {
 	 * @var Picture[]
 	 */
 	private $pictures = [];
+	/**
+	 * @var Feedback[]
+	 */
+	private $feedback = [];
 
 	//--------- Blocks ------------
 	/**
@@ -417,6 +421,26 @@ class Learnplace {
 	 */
 	public function setPictures(array $pictures): Learnplace {
 		$this->pictures = $pictures;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return Feedback[]
+	 */
+	public function getFeedback(): array {
+		return $this->feedback;
+	}
+
+
+	/**
+	 * @param Feedback[] $feedback
+	 *
+	 * @return Learnplace
+	 */
+	public function setFeedback(array $feedback): Learnplace {
+		$this->feedback = $feedback;
 
 		return $this;
 	}
