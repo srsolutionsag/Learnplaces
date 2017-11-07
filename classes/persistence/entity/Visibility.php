@@ -31,7 +31,7 @@ class Visibility extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 
 	/**
 	 * @var string
@@ -41,7 +41,7 @@ class Visibility extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     64
 	 */
-	protected $name;
+	protected $name = "";
 
 
 	/**

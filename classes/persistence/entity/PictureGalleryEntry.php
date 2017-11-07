@@ -31,25 +31,25 @@ class PictureGalleryEntry extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_learnplace_id;
+	protected $fk_learnplace_id = NULL;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_picture_id;
+	protected $fk_picture_id = NULL;
 
 
 	/**
@@ -73,19 +73,19 @@ class PictureGalleryEntry extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkLearnplaceId(): int {
+	public function getFkLearnplaceId() {
 		return $this->fk_learnplace_id;
 	}
 
 
 	/**
-	 * @param int $fk_learnplace_id
+	 * @param int|null $fk_learnplace_id
 	 *
 	 * @return PictureGalleryEntry
 	 */
-	public function setFkLearnplaceId(int $fk_learnplace_id): PictureGalleryEntry {
+	public function setFkLearnplaceId($fk_learnplace_id) {
 		$this->fk_learnplace_id = $fk_learnplace_id;
 
 		return $this;
@@ -93,19 +93,19 @@ class PictureGalleryEntry extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkPictureId(): int {
+	public function getFkPictureId() {
 		return $this->fk_picture_id;
 	}
 
 
 	/**
-	 * @param int $fk_picture_id
+	 * @param int|null $fk_picture_id
 	 *
 	 * @return PictureGalleryEntry
 	 */
-	public function setFkPictureId(int $fk_picture_id): PictureGalleryEntry {
+	public function setFkPictureId($fk_picture_id) {
 		$this->fk_picture_id = $fk_picture_id;
 
 		return $this;

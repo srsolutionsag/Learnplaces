@@ -31,7 +31,7 @@ class Block extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
 	 * @var int
 	 *
@@ -40,25 +40,25 @@ class Block extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $sequence;
+	protected $sequence = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_visibility;
+	protected $fk_visibility = NULL;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_learnplace_id;
+	protected $fk_learnplace_id = NULL;
 
 
 	/**
@@ -102,19 +102,19 @@ class Block extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkVisibility(): int {
+	public function getFkVisibility() {
 		return $this->fk_visibility;
 	}
 
 
 	/**
-	 * @param int $fk_visibility
+	 * @param int|null $fk_visibility
 	 *
 	 * @return Block
 	 */
-	public function setFkVisibility(int $fk_visibility): Block {
+	public function setFkVisibility($fk_visibility) {
 		$this->fk_visibility = $fk_visibility;
 
 		return $this;
@@ -122,19 +122,19 @@ class Block extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkLearnplaceId(): int {
+	public function getFkLearnplaceId() {
 		return $this->fk_learnplace_id;
 	}
 
 
 	/**
-	 * @param int $fk_learnplace_id
+	 * @param int|null $fk_learnplace_id
 	 *
 	 * @return Block
 	 */
-	public function setFkLearnplaceId(int $fk_learnplace_id): Block {
+	public function setFkLearnplaceId($fk_learnplace_id) {
 		$this->fk_learnplace_id = $fk_learnplace_id;
 
 		return $this;

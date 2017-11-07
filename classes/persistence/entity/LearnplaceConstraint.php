@@ -31,25 +31,25 @@ class LearnplaceConstraint extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_previous_learnplace;
+	protected $fk_previous_learnplace = NULL;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_block_id;
+	protected $fk_block_id = NULL;
 
 
 	/**
@@ -73,19 +73,19 @@ class LearnplaceConstraint extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkPreviousLearnplace(): int {
+	public function getFkPreviousLearnplace() {
 		return $this->fk_previous_learnplace;
 	}
 
 
 	/**
-	 * @param int $fk_previous_learnplace
+	 * @param int|null $fk_previous_learnplace
 	 *
 	 * @return LearnplaceConstraint
 	 */
-	public function setFkPreviousLearnplace(int $fk_previous_learnplace): LearnplaceConstraint {
+	public function setFkPreviousLearnplace($fk_previous_learnplace) {
 		$this->fk_previous_learnplace = $fk_previous_learnplace;
 
 		return $this;
@@ -93,19 +93,19 @@ class LearnplaceConstraint extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkBlockId(): int {
+	public function getFkBlockId() {
 		return $this->fk_block_id;
 	}
 
 
 	/**
-	 * @param int $fk_block_id
+	 * @param int|null $fk_block_id
 	 *
 	 * @return LearnplaceConstraint
 	 */
-	public function setFkBlockId(int $fk_block_id): LearnplaceConstraint {
+	public function setFkBlockId($fk_block_id) {
 		$this->fk_block_id = $fk_block_id;
 
 		return $this;

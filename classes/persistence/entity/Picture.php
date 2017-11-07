@@ -31,7 +31,7 @@ class Picture extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
 	 * @var string
 	 *
@@ -40,7 +40,7 @@ class Picture extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     2000
 	 */
-	protected $original_path;
+	protected $original_path = "";
 	/**
 	 * @var string
 	 *
@@ -49,7 +49,7 @@ class Picture extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     2000
 	 */
-	protected $preview_path;
+	protected $preview_path = "";
 
 
 	/**
@@ -110,5 +110,4 @@ class Picture extends ActiveRecord {
 
 		return $this;
 	}
-
 }

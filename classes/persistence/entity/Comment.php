@@ -31,7 +31,7 @@ class Comment extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 
 	/**
 	 * @var int
@@ -41,7 +41,7 @@ class Comment extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $create_date;
+	protected $create_date = 0;
 	/**
 	 * @var string
 	 *
@@ -50,7 +50,7 @@ class Comment extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
-	protected $title;
+	protected $title = "";
 	/**
 	 * @var string
 	 *
@@ -59,7 +59,16 @@ class Comment extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     2000
 	 */
-	protected $content;
+	protected $content = "";
+	/**
+	 * @var int|null
+	 *
+	 * @con_has_field  true
+	 * @con_is_notnull false
+	 * @con_fieldtype  integer
+	 * @con_length     8
+	 */
+	protected $fk_comment_block = NULL;
 	/**
 	 * @var int
 	 *
@@ -68,25 +77,16 @@ class Comment extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_comment_block;
+	protected $fk_iluser_id = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
 	 * @con_is_notnull true
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_iluser_id;
-	/**
-	 * @var int
-	 *
-	 * @con_has_field  true
-	 * @con_is_notnull true
-	 * @con_fieldtype  integer
-	 * @con_length     8
-	 */
-	protected $fk_picture_id;
+	protected $fk_picture_id = NULL;
 
 
 	/**
@@ -170,19 +170,19 @@ class Comment extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkCommentBlock(): int {
+	public function getFkCommentBlock() {
 		return $this->fk_comment_block;
 	}
 
 
 	/**
-	 * @param int $fk_comment_block
+	 * @param int|null $fk_comment_block
 	 *
 	 * @return Comment
 	 */
-	public function setFkCommentBlock(int $fk_comment_block): Comment {
+	public function setFkCommentBlock($fk_comment_block) {
 		$this->fk_comment_block = $fk_comment_block;
 
 		return $this;
@@ -210,19 +210,19 @@ class Comment extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkPictureId(): int {
+	public function getFkPictureId() {
 		return $this->fk_picture_id;
 	}
 
 
 	/**
-	 * @param int $fk_picture_id
+	 * @param int|null $fk_picture_id
 	 *
 	 * @return Comment
 	 */
-	public function setFkPictureId(int $fk_picture_id): Comment {
+	public function setFkPictureId($fk_picture_id) {
 		$this->fk_picture_id = $fk_picture_id;
 
 		return $this;

@@ -31,7 +31,7 @@ class Location extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 
 	/**
 	 * @var float
@@ -40,7 +40,7 @@ class Location extends ActiveRecord {
 	 * @con_is_notnull true
 	 * @con_fieldtype  float
 	 */
-	protected $latitude;
+	protected $latitude = 0.0;
 
 	/**
 	 * @var float
@@ -49,7 +49,7 @@ class Location extends ActiveRecord {
 	 * @con_is_notnull true
 	 * @con_fieldtype  float
 	 */
-	protected $longitude;
+	protected $longitude = 0.0;
 
 	/**
 	 * @var float
@@ -58,7 +58,7 @@ class Location extends ActiveRecord {
 	 * @con_is_notnull true
 	 * @con_fieldtype  float
 	 */
-	protected $elevation;
+	protected $elevation = 0.0;
 
 	/**
 	 * @var int
@@ -68,17 +68,17 @@ class Location extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $radius;
+	protected $radius = 0;
 
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_learnplace_id;
+	protected $fk_learnplace_id = NULL;
 
 
 	/**
@@ -182,22 +182,21 @@ class Location extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkLearnplaceId(): int {
+	public function getFkLearnplaceId() {
 		return $this->fk_learnplace_id;
 	}
 
 
 	/**
-	 * @param int $fk_learnplace_id
+	 * @param int|null $fk_learnplace_id
 	 *
 	 * @return Location
 	 */
-	public function setFkLearnplaceId(int $fk_learnplace_id): Location {
+	public function setFkLearnplaceId($fk_learnplace_id) {
 		$this->fk_learnplace_id = $fk_learnplace_id;
 
 		return $this;
 	}
-
 }

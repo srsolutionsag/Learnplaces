@@ -15,6 +15,13 @@ use ActiveRecord;
 class Feedback extends ActiveRecord {
 
 	/**
+	 * @return string
+	 */
+	static function returnDbTableName() : string {
+		return 'xsrl_feedback';
+	}
+
+	/**
 	 * @var int
 	 *
 	 * @con_is_primary true

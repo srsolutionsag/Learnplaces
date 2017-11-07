@@ -31,7 +31,7 @@ class AccordionBlock extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 
 	/**
 	 * @var string
@@ -41,7 +41,7 @@ class AccordionBlock extends ActiveRecord {
 	 * @con_fieldtype  text
 	 * @con_length     256
 	 */
-	protected $title;
+	protected $title = "";
 	/**
 	 * @var int
 	 *
@@ -50,17 +50,17 @@ class AccordionBlock extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 */
-	protected $expand;
+	protected $expand = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
 	 * @con_is_unique  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_block_id;
+	protected $fk_block_id = NULL;
 
 
 	/**
@@ -124,59 +124,19 @@ class AccordionBlock extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkUpperBlock(): int {
-		return $this->fk_upper_block;
-	}
-
-
-	/**
-	 * @param int $fk_upper_block
-	 *
-	 * @return AccordionBlock
-	 */
-	public function setFkUpperBlock(int $fk_upper_block): AccordionBlock {
-		$this->fk_upper_block = $fk_upper_block;
-
-		return $this;
-	}
-
-
-	/**
-	 * @return int
-	 */
-	public function getFkLowerBlock(): int {
-		return $this->fk_lower_block;
-	}
-
-
-	/**
-	 * @param int $fk_lower_block
-	 *
-	 * @return AccordionBlock
-	 */
-	public function setFkLowerBlock(int $fk_lower_block): AccordionBlock {
-		$this->fk_lower_block = $fk_lower_block;
-
-		return $this;
-	}
-
-
-	/**
-	 * @return int
-	 */
-	public function getFkBlockId(): int {
+	public function getFkBlockId() {
 		return $this->fk_block_id;
 	}
 
 
 	/**
-	 * @param int $fk_block_id
+	 * @param int|null $fk_block_id
 	 *
 	 * @return AccordionBlock
 	 */
-	public function setFkBlockId(int $fk_block_id): AccordionBlock {
+	public function setFkBlockId($fk_block_id) {
 		$this->fk_block_id = $fk_block_id;
 
 		return $this;

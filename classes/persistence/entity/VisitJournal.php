@@ -31,7 +31,7 @@ class VisitJournal extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
 	 * @var int
 	 *
@@ -40,7 +40,7 @@ class VisitJournal extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $user_id;
+	protected $user_id = 0;
 	/**
 	 * @var int
 	 *
@@ -49,16 +49,16 @@ class VisitJournal extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $time;
+	protected $time = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_learnplace_id;
+	protected $fk_learnplace_id = NULL;
 
 
 	/**
@@ -122,19 +122,19 @@ class VisitJournal extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkLearnplaceId(): int {
+	public function getFkLearnplaceId() {
 		return $this->fk_learnplace_id;
 	}
 
 
 	/**
-	 * @param int $fk_learnplace_id
+	 * @param int|null $fk_learnplace_id
 	 *
 	 * @return VisitJournal
 	 */
-	public function setFkLearnplaceId(int $fk_learnplace_id): VisitJournal {
+	public function setFkLearnplaceId($fk_learnplace_id) {
 		$this->fk_learnplace_id = $fk_learnplace_id;
 
 		return $this;

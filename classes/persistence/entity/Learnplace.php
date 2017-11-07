@@ -31,26 +31,26 @@ class Learnplace extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_configuration;
+	protected $fk_configuration = NULL;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
 	 * @con_is_unique  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_object_id;
+	protected $fk_object_id = NULL;
 
 
 	/**
@@ -74,19 +74,19 @@ class Learnplace extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkConfiguration(): int {
+	public function getFkConfiguration() {
 		return $this->fk_configuration;
 	}
 
 
 	/**
-	 * @param int $fk_configuration
+	 * @param int|null $fk_configuration
 	 *
 	 * @return Learnplace
 	 */
-	public function setFkConfiguration(int $fk_configuration): Learnplace {
+	public function setFkConfiguration($fk_configuration) {
 		$this->fk_configuration = $fk_configuration;
 
 		return $this;
@@ -94,22 +94,21 @@ class Learnplace extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkObjectId(): int {
+	public function getFkObjectId() {
 		return $this->fk_object_id;
 	}
 
 
 	/**
-	 * @param int $fk_object_id
+	 * @param int|null $fk_object_id
 	 *
 	 * @return Learnplace
 	 */
-	public function setFkObjectId(int $fk_object_id): Learnplace {
+	public function setFkObjectId($fk_object_id) {
 		$this->fk_object_id = $fk_object_id;
 
 		return $this;
 	}
-
 }

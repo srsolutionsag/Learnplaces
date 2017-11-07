@@ -31,7 +31,7 @@ class Configuration extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $pk_id;
+	protected $pk_id = 0;
 	/**
 	 * @var int
 	 *
@@ -40,16 +40,16 @@ class Configuration extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 */
-	protected $online;
+	protected $online = 0;
 	/**
-	 * @var int
+	 * @var int|null
 	 *
 	 * @con_has_field  true
-	 * @con_is_notnull true
+	 * @con_is_notnull false
 	 * @con_fieldtype  integer
 	 * @con_length     8
 	 */
-	protected $fk_visibility_default;
+	protected $fk_visibility_default = NULL;
 
 
 	/**
@@ -93,19 +93,19 @@ class Configuration extends ActiveRecord {
 
 
 	/**
-	 * @return int
+	 * @return int|null
 	 */
-	public function getFkVisibilityDefault(): int {
+	public function getFkVisibilityDefault() {
 		return $this->fk_visibility_default;
 	}
 
 
 	/**
-	 * @param int $fk_visibility_default
+	 * @param int|null $fk_visibility_default
 	 *
 	 * @return Configuration
 	 */
-	public function setFkVisibilityDefault(int $fk_visibility_default): Configuration {
+	public function setFkVisibilityDefault($fk_visibility_default) {
 		$this->fk_visibility_default = $fk_visibility_default;
 
 		return $this;
