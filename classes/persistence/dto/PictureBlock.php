@@ -21,7 +21,7 @@ class PictureBlock extends Block {
 	 */
 	private $description;
 	/**
-	 * @var Picture $picture
+	 * @var Picture|null $picture
 	 */
 	private $picture;
 
@@ -67,22 +67,21 @@ class PictureBlock extends Block {
 
 
 	/**
-	 * @return Picture
+	 * @return null|Picture
 	 */
-	public function getPicture(): Picture {
+	public function getPicture() {
 		return $this->picture;
 	}
 
 
 	/**
-	 * @param Picture $picture
+	 * @param null|Picture $picture
 	 *
 	 * @return PictureBlock
 	 */
-	public function setPicture(Picture $picture): PictureBlock {
+	public function setPicture($picture) {
 		$this->picture = $picture;
 
 		return $this;
 	}
-
 }

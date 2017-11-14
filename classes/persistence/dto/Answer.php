@@ -35,7 +35,7 @@ class Answer {
 	 */
 	private $userId;
 	/**
-	 * @var Picture $picture
+	 * @var Picture|null $picture
 	 */
 	private $picture;
 
@@ -141,19 +141,19 @@ class Answer {
 
 
 	/**
-	 * @return Picture
+	 * @return null|Picture
 	 */
-	public function getPicture(): Picture {
+	public function getPicture() {
 		return $this->picture;
 	}
 
 
 	/**
-	 * @param Picture $picture
+	 * @param null|Picture $picture
 	 *
 	 * @return Answer
 	 */
-	public function setPicture(Picture $picture): Answer {
+	public function setPicture($picture) {
 		$this->picture = $picture;
 
 		return $this;

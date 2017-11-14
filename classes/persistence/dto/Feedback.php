@@ -13,6 +13,11 @@ namespace SRAG\Learnplaces\persistence\dto;
 class Feedback {
 
 	/**
+	 * @var int $id
+	 */
+	private $id;
+
+	/**
 	 * @var string $content
 	 */
 	private $content;
@@ -21,6 +26,25 @@ class Feedback {
 	 */
 	private $userId;
 
+
+	/**
+	 * @return int
+	 */
+	public function getId(): int {
+		return $this->id;
+	}
+
+
+	/**
+	 * @param int $id
+	 *
+	 * @return Feedback
+	 */
+	public function setId(int $id): Feedback {
+		$this->id = $id;
+
+		return $this;
+	}
 
 	/**
 	 * @return string

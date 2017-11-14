@@ -39,7 +39,7 @@ class Comment {
 	 */
 	private $answers;
 	/**
-	 * @var Picture $picture
+	 * @var Picture|null $picture
 	 */
 	private $picture;
 
@@ -165,19 +165,19 @@ class Comment {
 
 
 	/**
-	 * @return Picture
+	 * @return null|Picture
 	 */
-	public function getPicture(): Picture {
+	public function getPicture() {
 		return $this->picture;
 	}
 
 
 	/**
-	 * @param Picture $picture
+	 * @param null|Picture $picture
 	 *
 	 * @return Comment
 	 */
-	public function setPicture(Picture $picture): Comment {
+	public function setPicture($picture) {
 		$this->picture = $picture;
 
 		return $this;

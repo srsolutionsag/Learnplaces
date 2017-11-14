@@ -15,16 +15,16 @@ class AccordionBlock extends Block {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var bool $expand
 	 */
-	private $expand;
+	private $expand = false;
 	/**
 	 * An already sorted collection of blocks.
 	 * @var Block[]
 	 */
-	private $blocks;
+	private $blocks = [];
 
 
 	/**
