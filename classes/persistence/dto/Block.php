@@ -25,7 +25,7 @@ abstract class Block {
 	 */
 	private $visibility;
 	/**
-	 * @var BlockConstraint $constraint
+	 * @var BlockConstraint|null $constraint
 	 */
 	private $constraint;
 
@@ -91,19 +91,19 @@ abstract class Block {
 
 
 	/**
-	 * @return BlockConstraint
+	 * @return null|BlockConstraint
 	 */
-	public function getConstraint(): BlockConstraint {
+	public function getConstraint() {
 		return $this->constraint;
 	}
 
 
 	/**
-	 * @param BlockConstraint $constraint
+	 * @param null|BlockConstraint $constraint
 	 *
 	 * @return Block
 	 */
-	public function setConstraint(BlockConstraint $constraint): Block {
+	public function setConstraint($constraint) {
 		$this->constraint = $constraint;
 
 		return $this;
