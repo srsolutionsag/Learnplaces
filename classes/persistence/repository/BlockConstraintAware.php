@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\repository;
 
-use SRAG\Learnplaces\persistence\dao\CrudDao;
 use SRAG\Learnplaces\persistence\dto\Block;
 
 /**
@@ -21,21 +20,22 @@ trait BlockConstraintAware {
 	/**
 	 * Stores the underlying relation of the constraint with the block.
 	 *
-	 * @param Block   $block            The block which has a constraint which should be associated with the constraint.
-	 * @param CrudDao $constraintDao    The dao which is responsible for the constraint.
+	 * @param Block $block The block which has a constraint which should be associated with the constraint.
 	 *
 	 * @return void
 	 */
-	private function storeBlockConstraint(Block $block, CrudDao $constraintDao) {
+	private function storeBlockConstraint(Block $block) {
 		$constraint = $block->getConstraint();
 
 		if(!is_null($constraint)) {
+			$constraintClass = get_class($constraint);
+
 			/**
 			 * @var \SRAG\Learnplaces\persistence\entity\PictureUploadBlock $constraintEntity
 			 */
-			$constraintEntity = $constraintDao->find($constraint->getId());
+			$constraintEntity = new $constraintClass($constraint->getId());
 			$constraintEntity->setFkBlockId($block->getId());
-			$constraintDao->update($constraintEntity);
+			$constraintEntity->update();
 		}
 	}
 

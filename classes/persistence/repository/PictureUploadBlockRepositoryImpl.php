@@ -3,14 +3,11 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\repository;
 
-use SRAG\Learnplaces\persistence\dao\BlockDao;
-use SRAG\Learnplaces\persistence\dao\VisibilityDao;
-use SRAG\Learnplaces\persistence\dto\Learnplace;
-use SRAG\Learnplaces\persistence\dto\PictureUploadBlock;
-use SRAG\Learnplaces\persistence\entity\Block;
-use SRAG\Learnplaces\persistence\entity\Visibility;
-use SRAG\Lernplaces\persistence\dao\LearnplaceConstraintDao;
-use SRAG\Lernplaces\persistence\dao\PictureUploadBlockDao;
+use arException;
+use function is_null;
+use SRAG\Learnplaces\persistence\dto\{Learnplace, PictureUploadBlock};
+use SRAG\Learnplaces\persistence\entity\{Block, Visibility};
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Class PictureUploadBlockRepositoryImpl
@@ -24,51 +21,23 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 	use BlockConstraintAware, BlockMappingAware;
 
 	/**
-	 * @var BlockDao $blockDao
-	 */
-	private $blockDao;
-	/**
-	 * @var PictureUploadBlockDao $pictureUploadBlockDao
-	 */
-	private $pictureUploadBlockDao;
-	/**
-	 * @var VisibilityDao $visibilityDao
-	 */
-	private $visibilityDao;
-	/**
-	 * @var LearnplaceConstraintDao $learplaceConstraint
-	 */
-	private $learnplaceConstraintDao;
-	/**
 	 * @var LearnplaceConstraintRepository $learnplaceConstraintRepository
 	 */
 	private $learnplaceConstraintRepository;
 
-
 	/**
 	 * PictureUploadBlockRepositoryImpl constructor.
 	 *
-	 * @param BlockDao                       $blockDao
-	 * @param PictureUploadBlockDao          $pictureUploadBlockDao
-	 * @param VisibilityDao                  $visibilityDao
-	 * @param LearnplaceConstraintDao        $learnplaceConstraintDao
 	 * @param LearnplaceConstraintRepository $learnplaceConstraintRepository
 	 */
-	public function __construct(BlockDao $blockDao, PictureUploadBlockDao $pictureUploadBlockDao, VisibilityDao $visibilityDao, LearnplaceConstraintDao $learnplaceConstraintDao, LearnplaceConstraintRepository $learnplaceConstraintRepository) {
-		$this->blockDao = $blockDao;
-		$this->pictureUploadBlockDao = $pictureUploadBlockDao;
-		$this->visibilityDao = $visibilityDao;
-		$this->learnplaceConstraintDao = $learnplaceConstraintDao;
-		$this->learnplaceConstraintRepository = $learnplaceConstraintRepository;
-	}
-
+	public function __construct(LearnplaceConstraintRepository $learnplaceConstraintRepository) { $this->learnplaceConstraintRepository = $learnplaceConstraintRepository; }
 
 	/**
 	 * @inheritdoc
 	 */
 	public function store(PictureUploadBlock $pictureUploadBlock) : PictureUploadBlock {
 		$storedBlock = ($pictureUploadBlock->getId() > 0) ? $this->update($pictureUploadBlock) : $this->create($pictureUploadBlock);
-		$this->storeBlockConstraint($storedBlock, $this->learnplaceConstraintDao);
+		$this->storeBlockConstraint($storedBlock);
 		return $storedBlock;
 	}
 
@@ -76,14 +45,16 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 		/**
 		 * @var Block $block
 		 */
-		$block = $this->blockDao->create($this->mapToBlockEntity($pictureUploadBlock, $this->visibilityDao));
+		$block = $this->mapToBlockEntity($pictureUploadBlock);
+		$block->create();
 		$pictureUploadBlock->setId($block->getPkId());
-		$this->pictureUploadBlockDao->create($this->mapToEntity($pictureUploadBlock));
+		$this->mapToEntity($pictureUploadBlock)->create();
 		return $this->mapToDTO($block);
 	}
 
 	private function update(PictureUploadBlock $pictureUploadBlock) : PictureUploadBlock {
-		$blockEntity = $this->blockDao->update($this->mapToBlockEntity($pictureUploadBlock, $this->visibilityDao));
+		$blockEntity = $this->mapToBlockEntity($pictureUploadBlock);
+		$blockEntity->update();
 		return $this->mapToDTO($blockEntity);
 	}
 
@@ -91,25 +62,45 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 	 * @inheritdoc
 	 */
 	public function findByBlockId(int $id) : PictureUploadBlock {
-		$block = $this->blockDao->find($id);
-		return $this->mapToDTO($block);
+		try {
+			$block = Block::findOrFail($id);
+			return $this->mapToDTO($block);
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("PictureUploadBlock with id \"$id\" was not found", $ex);
+		}
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function delete(int $id) {
-		$this->pictureUploadBlockDao->delete($id);
+		try {
+			$uploadBlock = \SRAG\Learnplaces\persistence\entity\PictureUploadBlock::where(['fk_block_id' => $id])->first();
+			if(!is_null($uploadBlock)){
+				$uploadBlock->delete();
+			}
+
+			Block::findOrFail($id)->delete();
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("PictureUploadBlock with id \"$id\" not found", $ex);
+		}
 	}
 
 
 	/**
-	 * @param Learnplace $learnplace
-	 *
-	 * @return PictureUploadBlock[]
+	 * @inheritdoc
 	 */
-	public function findByLearnplace(Learnplace $learnplace) : array {
-		$blocks = $this->blockDao->findByLearnplaceId($learnplace->getId());
+	public function findByLearnplace(Learnplace $learnplace) : PictureUploadBlock {
+		$block = Block::innerjoinAR(new \SRAG\Learnplaces\persistence\entity\PictureUploadBlock(), 'pk_id', 'fk_block_id')
+			->where(['fk_learnplace_id' => $learnplace->getId()])
+			->first();
+
+		if(is_null($block))
+			throw new EntityNotFoundException('Could not find picture upload block for learnplace with id "' . $learnplace->getId() . '".');
+
+		return $this->mapToDTO($block);
 	}
 
 	private function mapToDTO(Block $block) : PictureUploadBlock {
@@ -118,7 +109,7 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 		/**
 		 * @var Visibility $visibility
 		 */
-		$visibility = $this->visibilityDao->find($block->getFkVisibility());
+		$visibility = Visibility::findOrFail($block->getFkVisibility());
 
 		$pictureUploadBlock
 			->setId($block->getPkId())
@@ -135,9 +126,11 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 		/**
 		 * @var \SRAG\Learnplaces\persistence\entity\PictureUploadBlock $activeRecord
 		 */
-		$activeRecord = ($pictureUploadBlock > 0)
-			? $this->pictureUploadBlockDao->find($pictureUploadBlock->getId())
-			: new \SRAG\Learnplaces\persistence\entity\PictureUploadBlock();
+		$activeRecord = \SRAG\Learnplaces\persistence\entity\PictureUploadBlock::where(['fk_block_id' => $pictureUploadBlock->getId()])->first();
+		if(is_null($activeRecord)) {
+			$activeRecord = new \SRAG\Learnplaces\persistence\entity\PictureUploadBlock();
+			$activeRecord->setFkBlockId($pictureUploadBlock->getId());
+		}
 
 		return $activeRecord;
 	}

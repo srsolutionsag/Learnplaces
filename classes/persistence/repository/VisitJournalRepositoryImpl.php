@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\repository;
 
+use arException;
 use function array_map;
 use DateTime;
-use SRAG\Learnplaces\persistence\dao\VisibilityDao;
-use SRAG\Learnplaces\persistence\dao\VisitJournalDao;
-use SRAG\Lernplaces\persistence\dto\VisitJournal;
+use ilDatabaseException;
+use SRAG\Learnplaces\persistence\dto\VisitJournal;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Class VisitJournalRepositoryImpl
@@ -19,50 +20,42 @@ use SRAG\Lernplaces\persistence\dto\VisitJournal;
 class VisitJournalRepositoryImpl implements VisitJournalRepository {
 
 	/**
-	 * @var VisitJournalDao $visitJournalDao
-	 */
-	private $visitJournalDao;
-
-
-	/**
-	 * VisitJournalRepositoryImpl constructor.
-	 *
-	 * @param VisitJournalDao $visitJournalDao
-	 */
-	public function __construct(VisitJournalDao $visitJournalDao) { $this->visitJournalDao = $visitJournalDao; }
-
-	/**
 	 * @inheritdoc
 	 */
 	public function store(VisitJournal $visitJournal) : VisitJournal {
 
-		return ($visitJournal->getId() > 0) ? $this->update($visitJournal) : $this->create($visitJournal);
-	}
-
-	private function create(VisitJournal $visitJournal) : VisitJournal {
-		$activeRecord = $this->visitJournalDao->create($this->mapToEntity($visitJournal));
+		$activeRecord = $this->mapToEntity($visitJournal);
+		$activeRecord->store();
 		return $this->mapToDTO($activeRecord);
 	}
-
-	private function update(VisitJournal $visitJournal) : VisitJournal {
-		$activeRecord = $this->visitJournalDao->update($this->mapToEntity($visitJournal));
-		return $this->mapToDTO($activeRecord);
-	}
-
 
 	/**
 	 * @inheritdoc
 	 */
 	public function find(int $id) : VisitJournal {
-		$visitJournalEntity = $this->visitJournalDao->find($id);
-		return $this->mapToDTO($visitJournalEntity);
+		try {
+			$visitJournalEntity = \SRAG\Learnplaces\persistence\entity\VisitJournal::findOrFail($id);
+			return $this->mapToDTO($visitJournalEntity);
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("VisitJournal entry with id \"$id\" not found.", $ex);
+		}
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function delete(int $id) {
-		$this->visitJournalDao->delete($id);
+		try {
+			$visitJournal = \SRAG\Learnplaces\persistence\entity\VisitJournal::findOrFail($id);
+			$visitJournal->delete();
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("VisitJournal entry with id \"$id\" not found.", $ex);
+		}
+		catch (ilDatabaseException $ex) {
+			throw new ilDatabaseException("Could not delete visit journal entry with id \"$id\".");
+		}
 	}
 
 
@@ -75,8 +68,8 @@ class VisitJournalRepositoryImpl implements VisitJournalRepository {
 	 */
 	public function findByLearnplaceId(int $id) : array {
 		return array_map(
-			function($visit) { return $this->mapToDTO($visit); },
-			$this->visitJournalDao->findByLearnplaceId($id)
+			function($visit) { return $this->mapToDTO($visit); },                                                //mapping function
+			\SRAG\Learnplaces\persistence\entity\VisitJournal::where(['fk_learnplace_id' => $id])->get()         //input
 		);
 	}
 
@@ -92,7 +85,7 @@ class VisitJournalRepositoryImpl implements VisitJournalRepository {
 
 	private function mapToEntity(VisitJournal $visitJournal) : \SRAG\Learnplaces\persistence\entity\VisitJournal {
 
-		$activeRecord = ($visitJournal > 0) ? $this->visitJournalDao->find($visitJournal->getId()) : new \SRAG\Learnplaces\persistence\entity\VisitJournal();
+		$activeRecord = new \SRAG\Learnplaces\persistence\entity\VisitJournal($visitJournal->getId());
 		$activeRecord
 			->setTime($visitJournal->getTime()->getTimestamp())
 			->setUserId($visitJournal->getUserId());

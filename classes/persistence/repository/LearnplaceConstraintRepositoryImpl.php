@@ -2,8 +2,10 @@
 
 namespace SRAG\Learnplaces\persistence\repository;
 
+use arException;
+use ilDatabaseException;
 use SRAG\Learnplaces\persistence\dto\LearnplaceConstraint;
-use SRAG\Lernplaces\persistence\dao\LearnplaceConstraintDao;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Class LearnplaceConstraintRepositoryImpl
@@ -15,10 +17,6 @@ use SRAG\Lernplaces\persistence\dao\LearnplaceConstraintDao;
 class LearnplaceConstraintRepositoryImpl implements LearnplaceConstraintRepository {
 
 	/**
-	 * @var LearnplaceConstraintDao $learnplaceConstraintDao
-	 */
-	private $learnplaceConstraintDao;
-	/**
 	 * @var LearnplaceRepository $learnplaceRepository
 	 */
 	private $learnplaceRepository;
@@ -27,29 +25,16 @@ class LearnplaceConstraintRepositoryImpl implements LearnplaceConstraintReposito
 	/**
 	 * LearnplaceConstraintRepositoryImpl constructor.
 	 *
-	 * @param LearnplaceConstraintDao $learnplaceConstraintDao
-	 * @param LearnplaceRepository    $learnplaceRepository
+	 * @param LearnplaceRepository $learnplaceRepository
 	 */
-	public function __construct(LearnplaceConstraintDao $learnplaceConstraintDao, LearnplaceRepository $learnplaceRepository) {
-		$this->learnplaceConstraintDao = $learnplaceConstraintDao;
-		$this->learnplaceRepository = $learnplaceRepository;
-	}
-
+	public function __construct(LearnplaceRepository $learnplaceRepository) { $this->learnplaceRepository = $learnplaceRepository; }
 
 	/**
 	 * @inheritdoc
 	 */
 	public function store(LearnplaceConstraint $constraint) : LearnplaceConstraint {
-		return ($constraint->getId() > 0) ? $this->update($constraint) : $this->create($constraint);
-	}
-
-	private function create(LearnplaceConstraint $constraint) : LearnplaceConstraint {
-		$activeRecord = $this->learnplaceConstraintDao->create($this->mapToEntity($constraint));
-		return $this->mapToDTO($activeRecord);
-	}
-
-	private function update(LearnplaceConstraint $constraint) : LearnplaceConstraint {
-		$activeRecord = $this->learnplaceConstraintDao->update($this->mapToEntity($constraint));
+		$activeRecord = $this->mapToEntity($constraint);
+		$activeRecord->store();
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -57,7 +42,7 @@ class LearnplaceConstraintRepositoryImpl implements LearnplaceConstraintReposito
 	 * @inheritdoc
 	 */
 	public function findByBlockId(int $id) : LearnplaceConstraint {
-		$learnplaceConstraintEntity = $this->learnplaceConstraintDao->findByBlockId($id);
+		$learnplaceConstraintEntity = \SRAG\Learnplaces\persistence\entity\LearnplaceConstraint::where(['fk_block_id' => $id])->first();
 		return $this->mapToDTO($learnplaceConstraintEntity);
 	}
 
@@ -65,7 +50,16 @@ class LearnplaceConstraintRepositoryImpl implements LearnplaceConstraintReposito
 	 * @inheritdoc
 	 */
 	public function delete(int $id) {
-		$this->learnplaceConstraintDao->delete($id);
+		try {
+			$constraint = \SRAG\Learnplaces\persistence\entity\LearnplaceConstraint::findOrFail($id);
+			$constraint->delete();
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Learnplace constraint with id \"$id\"", $ex);
+		}
+		catch (ilDatabaseException $ex) {
+			throw new ilDatabaseException("Could not delete learnplace constraint with id \"$id\".");
+		}
 	}
 
 	private function mapToDTO(\SRAG\Learnplaces\persistence\entity\LearnplaceConstraint $constraint) : LearnplaceConstraint {
@@ -80,11 +74,9 @@ class LearnplaceConstraintRepositoryImpl implements LearnplaceConstraintReposito
 
 	private function mapToEntity(LearnplaceConstraint $constraint) : \SRAG\Learnplaces\persistence\entity\LearnplaceConstraint {
 
-		$learnplaceConstraintEntity = ($constraint->getId() > 0) ?
-			$this->learnplaceConstraintDao->find($constraint->getId()) : new \SRAG\Learnplaces\persistence\entity\LearnplaceConstraint();
+		$learnplaceConstraintEntity = new \SRAG\Learnplaces\persistence\entity\LearnplaceConstraint($constraint->getId());
 
 		$learnplaceConstraintEntity
-			->setPkId($constraint->getId())
 			->setFkPreviousLearnplace($constraint->getPreviousLearnplace()->getId());
 
 		return $learnplaceConstraintEntity;

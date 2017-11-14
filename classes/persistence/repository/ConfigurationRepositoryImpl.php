@@ -3,49 +3,20 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\repository;
 
-use SRAG\Learnplaces\persistence\dao\ConfigurationDao;
-use SRAG\Learnplaces\persistence\dao\VisibilityDao;
+use arException;
+use ilDatabaseException;
+use SRAG\Learnplaces\persistence\dto\Configuration;
 use SRAG\Learnplaces\persistence\entity\Visibility;
-use SRAG\Lernplaces\persistence\dto\Configuration;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 class ConfigurationRepositoryImpl implements ConfigurationRepository {
-
-	/**
-	 * @var ConfigurationDao $configurationDAO
-	 */
-	private $configurationDAO;
-	/**
-	 * @var VisibilityDao $visibilityDAO
-	 */
-	private $visibilityDAO;
-
-
-	/**
-	 * ConfigurationRepositoryImpl constructor.
-	 *
-	 * @param ConfigurationDao $configurationDAO
-	 * @param VisibilityDao    $visibilityDAO
-	 */
-	public function __construct(ConfigurationDao $configurationDAO, VisibilityDao $visibilityDAO) {
-		$this->configurationDAO = $configurationDAO;
-		$this->visibilityDAO = $visibilityDAO;
-	}
-
 
 	/**
 	 * @inheritdoc
 	 */
 	public function store(Configuration $configuration) : Configuration {
-		return ($configuration->getId() > 0) ? $this->update($configuration) : $this->create($configuration);
-	}
-
-	private function create(Configuration $configuration) : Configuration {
-		$activeRecord = $this->configurationDAO->create($this->mapToEntity($configuration));
-		return $this->mapToDTO($activeRecord);
-	}
-
-	private function update(Configuration $configuration) : Configuration {
-		$activeRecord = $this->configurationDAO->update($this->mapToEntity($configuration));
+		$activeRecord = $this->mapToEntity($configuration);
+		$activeRecord->store();
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -53,29 +24,50 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 	 * @inheritdoc
 	 */
 	public function find(int $id) : Configuration {
-		$configurationEntity = $this->configurationDAO->find($id);
-		return $this->mapToDTO($configurationEntity);
+		try {
+			$configurationEntity = \SRAG\Learnplaces\persistence\entity\Configuration::findOrFail($id);
+			return $this->mapToDTO($configurationEntity);
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Configuration with id \"$id\" not found.", $ex);
+		}
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function delete(int $id) {
-		$this->configurationDAO->delete($id);
+		try {
+			$configurationEntity = \SRAG\Learnplaces\persistence\entity\Configuration::findOrFail($id);
+			$configurationEntity->delete();
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Configuration with id \"$id\" not found.", $ex);
+		}
+		catch(ilDatabaseException $ex) {
+			throw new ilDatabaseException("Unable to delete configuration with id \"$id\"");
+		}
 	}
 
 	private function mapToDTO(\SRAG\Learnplaces\persistence\entity\Configuration $configurationEntity) : Configuration {
-		/**
-		 * @var Visibility $visibility
-		 */
-		$visibility = $this->visibilityDAO->find($configurationEntity->getFkVisibilityDefault());
-		$configuration = new Configuration();
-		$configuration
-			->setId($configurationEntity->getPkId())
-			->setDefaultVisibility($visibility->getName())
-			->setOnline($configurationEntity->getOnline() === 1);
 
-		return $configuration;
+		try {
+			/**
+			 * @var Visibility $visibility
+			 */
+			$visibility = Visibility::findOrFail($configurationEntity->getFkVisibilityDefault());
+			$configuration = new Configuration();
+			$configuration
+				->setId($configurationEntity->getPkId())
+				->setDefaultVisibility($visibility->getName())
+				->setOnline($configurationEntity->getOnline() === 1);
+
+			return $configuration;
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Visibility with id \"$id\" not found", $ex);
+		}
+
 	}
 
 	private function mapToEntity(Configuration $configuration) : \SRAG\Learnplaces\persistence\entity\Configuration {
@@ -83,15 +75,16 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 		/**
 		 * @var \SRAG\Learnplaces\persistence\entity\Configuration $activeRecord
 		 */
-		$activeRecord = ($configuration > 0)
-			? $this->configurationDAO->find($configuration->getId())
-			: new \SRAG\Learnplaces\persistence\entity\Configuration();
+		$activeRecord = new \SRAG\Learnplaces\persistence\entity\Configuration($configuration->getId());
 
-		$visibilityId = $this->visibilityDAO->findByName($configuration->getDefaultVisibility())->getPkId();
+		/**
+		 * @var Visibility $visibility
+		 */
+		$visibility = Visibility::where(['name' => $configuration->getDefaultVisibility()])->first();
 
 		$activeRecord
 			->setOnline($configuration->isOnline() ? 1 : 0)
-			->setFkVisibilityDefault($visibilityId);
+			->setFkVisibilityDefault($visibility->getPkId());
 
 		return $activeRecord;
 	}

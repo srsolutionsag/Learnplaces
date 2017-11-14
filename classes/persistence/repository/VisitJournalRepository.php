@@ -2,7 +2,7 @@
 
 namespace SRAG\Learnplaces\persistence\repository;
 
-use SRAG\Lernplaces\persistence\dto\VisitJournal;
+use SRAG\Learnplaces\persistence\dto\VisitJournal;
 
 /**
  * Interface VisitJournalRepository

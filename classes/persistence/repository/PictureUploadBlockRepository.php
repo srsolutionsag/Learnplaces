@@ -2,7 +2,9 @@
 
 namespace SRAG\Learnplaces\persistence\repository;
 
+use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\dto\PictureUploadBlock;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Interface PictureUploadBlockRepository
@@ -29,6 +31,8 @@ interface PictureUploadBlockRepository {
 	 * @param int $id                   The id of the block which should be found.
 	 *
 	 * @return PictureUploadBlock       The found picture upload block.
+	 *
+	 * @throws EntityNotFoundException  Thrown if the given block id was not found.
 	 */
 	public function findByBlockId(int $id): PictureUploadBlock;
 
@@ -39,6 +43,19 @@ interface PictureUploadBlockRepository {
 	 * @param int $id   The id if the block which should be deleted.
 	 *
 	 * @return void
+	 *
+	 * @throws EntityNotFoundException Thrown if the given block id was not found.
 	 */
 	public function delete(int $id);
+
+	/**
+	 * Searches the picture upload blocks for the given learnplace.
+	 *
+	 * @param Learnplace $learnplace    The learnplace which should be used to find all picture upload blocks.
+	 *
+	 * @return PictureUploadBlock       The found picture upload block for the given learnplace.
+	 *
+	 * @throws EntityNotFoundException  Thrown if the given leanplace has no picture upload block.
+	 */
+	public function findByLearnplace(Learnplace $learnplace) : PictureUploadBlock;
 }

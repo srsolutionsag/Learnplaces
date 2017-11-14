@@ -3,8 +3,12 @@ declare(strict_types=1);
 
 namespace SRAG\Lernplaces\persistence\repository;
 
-use SRAG\Learnplaces\persistence\dao\LocationDao;
+use arException;
+use ilDatabaseException;
+use function is_null;
+use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\dto\Location;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Class LocationRepositoryImpl
@@ -15,52 +19,58 @@ use SRAG\Learnplaces\persistence\dto\Location;
  */
 class LocationRepositoryImpl implements LocationRepository {
 
-	/**
-	 * @var LocationDao $locationDao
-	 */
-	private $locationDao;
-
-
-	/**
-	 * LocationRepositoryImpl constructor.
-	 *
-	 * @param LocationDao $locationDao
-	 */
-	public function __construct(LocationDao $locationDao) { $this->locationDao = $locationDao; }
-
 
 	/**
 	 * @inheritdoc
 	 */
 	public function store(Location $location) : Location {
-
-		return ($location->getId() > 0) ? $this->update($location) : $this->create($location);
-	}
-
-	private function create(Location $location) : Location {
-		$activeRecord = $this->locationDao->create($this->mapToEntity($location));
+		$activeRecord = $this->mapToEntity($location);
+		$activeRecord->store();
 		return $this->mapToDTO($activeRecord);
 	}
-
-	private function update(Location $location) : Location {
-		$activeRecord = $this->locationDao->update($this->mapToEntity($location));
-		return $this->mapToDTO($activeRecord);
-	}
-
 
 	/**
 	 * @inheritdoc
 	 */
 	public function find(int $id) : Location {
-		$locationId = $this->locationDao->find($id);
-		return $this->mapToDTO($locationId);
+		try {
+			$locationId = \SRAG\Learnplaces\persistence\entity\Location::findOrFail($id);
+			return $this->mapToDTO($locationId);
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Location not found with id \"$id\"", $ex);
+		}
 	}
 
 	/**
 	 * @inheritdoc
 	 */
 	public function delete(int $id) {
-		$this->locationDao->delete($id);
+		try {
+			$location = \SRAG\Learnplaces\persistence\entity\Location::findOrFail($id);
+			$location->delete();
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Location not found with id \"$id\"", $ex);
+		}
+		catch (ilDatabaseException $ex) {
+			throw new ilDatabaseException("Unable to delete location with id \"$id\"");
+		}
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function findByLearnplace(Learnplace $learnplace) : Location {
+
+		$id = $learnplace->getId();
+
+		$location = \SRAG\Learnplaces\persistence\entity\Location::where(['fk_learnplace_id' => $id])->first();
+		if(is_null($location))
+			throw new EntityNotFoundException("Location not found with id \"$id\"");
+
+		return $this->mapToDTO($location);
 	}
 
 
@@ -93,7 +103,7 @@ class LocationRepositoryImpl implements LocationRepository {
 	 */
 	private function mapToEntity(Location $location) : \SRAG\Learnplaces\persistence\entity\Location {
 
-		$activeRecord = ($location > 0) ? $this->locationDao->find($location->getId()) : new \SRAG\Learnplaces\persistence\entity\Location();
+		$activeRecord = new \SRAG\Learnplaces\persistence\entity\Location($location->getId());
 		$activeRecord
 			->setRadius($location->getRadius())
 			->setLongitude($location->getLongitude())
