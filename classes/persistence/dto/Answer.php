@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\dto;
 
 use DateTime;
+use SRAG\Lernplaces\persistence\mapping\AnswerModelMappingAware;
 
 /**
  * Class Answer
@@ -13,6 +14,8 @@ use DateTime;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class Answer {
+
+	use AnswerModelMappingAware;
 
 	/**
 	 * @var int $id

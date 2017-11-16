@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\dto;
 
+use SRAG\Lernplaces\persistence\mapping\MapBlockModelMappingAware;
+
 /**
  * Class MapBlock
  *
@@ -11,5 +13,5 @@ namespace SRAG\Learnplaces\persistence\dto;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class MapBlock extends Block{
-
+	use MapBlockModelMappingAware;
 }

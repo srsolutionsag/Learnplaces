@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\dto;
 
+use SRAG\Lernplaces\persistence\mapping\RichTextBlockModelMappingAware;
+
 /**
  * Class RichTextBlock
  *
@@ -11,6 +13,8 @@ namespace SRAG\Learnplaces\persistence\dto;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class RichTextBlock extends Block {
+
+	use RichTextBlockModelMappingAware;
 
 	/**
 	 * @var string $content

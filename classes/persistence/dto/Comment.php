@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\dto;
 
 use DateTime;
+use SRAG\Lernplaces\persistence\mapping\CommentModelMappingAware;
 
 /**
  * Class Comment
@@ -13,6 +14,8 @@ use DateTime;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class Comment {
+
+	use CommentModelMappingAware;
 
 	/**
 	 * @var int $id

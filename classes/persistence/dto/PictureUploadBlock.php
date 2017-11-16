@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\persistence\dto;
 
+use SRAG\Lernplaces\persistence\mapping\PictureUploadBlockMappingAware;
+
 /**
  * Class PictureUploadBlock
  *
@@ -12,4 +14,5 @@ namespace SRAG\Learnplaces\persistence\dto;
  */
 class PictureUploadBlock extends Block {
 
+	use PictureUploadBlockMappingAware;
 }
