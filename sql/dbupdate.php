@@ -1,5 +1,6 @@
 <#1>
 <?php
+
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
 
 \SRAG\Learnplaces\persistence\entity\AccordionBlock::installDB();
@@ -12,6 +13,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 \SRAG\Learnplaces\persistence\entity\Configuration::installDB();
 \SRAG\Learnplaces\persistence\entity\ExternalStreamBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\FeedbackBlock::installDB();
+\SRAG\Learnplaces\persistence\entity\Feedback::installDB();
 \SRAG\Learnplaces\persistence\entity\HorizontalLineBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\ILIASLinkBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\Learnplace::installDB();
@@ -21,6 +23,7 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 \SRAG\Learnplaces\persistence\entity\Picture::installDB();
 \SRAG\Learnplaces\persistence\entity\PictureBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\PictureGalleryEntry::installDB();
+\SRAG\Learnplaces\persistence\entity\PictureUploadBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\RichTextBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\VideoBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\Visibility::installDB();
