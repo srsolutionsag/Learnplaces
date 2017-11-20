@@ -8,6 +8,7 @@ use function array_map;
 use ilDatabaseException;
 use function is_null;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
+use SRAG\Learnplaces\persistence\dto\Picture;
 use SRAG\Learnplaces\persistence\entity\Block;
 use SRAG\Learnplaces\persistence\entity\PictureGalleryEntry;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -81,6 +82,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 	public function store(Learnplace $learnplace) : Learnplace {
 		$activeRecord = $this->mapToEntity($learnplace);
 		$activeRecord->store();
+		$this->storeAllPictureRelations($activeRecord->getPkId(), $learnplace->getPictures());
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -156,6 +158,31 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 			->setFkObjectId($learnplace->getObjectId());
 
 		return $activeRecord;
+	}
+
+
+	/**
+	 * Stores all picture relations to the given learnplace.
+	 *
+	 * @param int       $learnplaceId   The id of the leanplace which should be used to save the picture relations.
+	 * @param Picture[] $pictures       An array of pictures which should be associated with the given leanplace id.
+	 *
+	 * @return void
+	 */
+	private function storeAllPictureRelations(int $learnplaceId, array $pictures) {
+		/**
+		 * @var Picture $picture
+		 */
+		foreach($pictures as $picture) {
+			$galleryEntry = PictureGalleryEntry::where(['' => $picture->getId()])->first();
+			if(is_null($galleryEntry)) {
+				$galleryEntry = new PictureGalleryEntry();
+				$galleryEntry
+					->setFkPictureId($picture->getId())
+					->setFkLearnplaceId($learnplaceId);
+				$galleryEntry->store();
+			}
+		}
 	}
 
 	private function fetchAllPicturesByLearnplaceId(int $id) : array {
