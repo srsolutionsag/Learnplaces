@@ -90,6 +90,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		$this->storeAllFeedbackRelations($activeRecord->getPkId(), $learnplace->getFeedback());
 		$this->storeAllVisitJournals($activeRecord->getPkId(), $learnplace->getVisitJournals());
 		$this->storeLocationRelations($activeRecord->getPkId(), $learnplace->getLocation());
+		$this->storeBlockRelations($activeRecord->getPkId(), $learnplace->getBlocks());
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -202,6 +203,26 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		catch (arException $ex) {
 			throw new InvalidArgumentException('Could not save location relation to learnplace for non persistent entity.', 0, $ex);
 		}
+	}
+
+	private function storeBlockRelations(int $learnplaceId, array $blocks) {
+		try{
+			/**
+			 * @var \SRAG\Learnplaces\persistence\dto\Block $block
+			 */
+			foreach($blocks as $block) {
+				$blockEntity = Block::findOrFail($block->getId());
+				/**
+				 * @var Block $blockEntity
+				 */
+				$blockEntity->setFkLearnplaceId($learnplaceId);
+				$blockEntity->store();
+			}
+		}
+		catch (arException $ex) {
+			throw new InvalidArgumentException('Could not store relation to learnplace for non persistent block.', 0, $ex);
+		}
+
 	}
 
 	private function storeAllVisitJournals(int $learnplaceId, array $visitJournals) {
