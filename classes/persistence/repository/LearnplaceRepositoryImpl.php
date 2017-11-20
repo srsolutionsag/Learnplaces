@@ -6,9 +6,13 @@ namespace SRAG\Learnplaces\persistence\repository;
 use arException;
 use function array_map;
 use ilDatabaseException;
+use InvalidArgumentException;
 use function is_null;
+use SRAG\Learnplaces\persistence\dto\Feedback;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
+use SRAG\Learnplaces\persistence\dto\Location;
 use SRAG\Learnplaces\persistence\dto\Picture;
+use SRAG\Learnplaces\persistence\dto\VisitJournal;
 use SRAG\Learnplaces\persistence\entity\Block;
 use SRAG\Learnplaces\persistence\entity\PictureGalleryEntry;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -83,6 +87,9 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		$activeRecord = $this->mapToEntity($learnplace);
 		$activeRecord->store();
 		$this->storeAllPictureRelations($activeRecord->getPkId(), $learnplace->getPictures());
+		$this->storeAllFeedbackRelations($activeRecord->getPkId(), $learnplace->getFeedback());
+		$this->storeAllVisitJournals($activeRecord->getPkId(), $learnplace->getVisitJournals());
+		$this->storeLocationRelations($activeRecord->getPkId(), $learnplace->getLocation());
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -174,14 +181,67 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		 * @var Picture $picture
 		 */
 		foreach($pictures as $picture) {
-			$galleryEntry = PictureGalleryEntry::where(['' => $picture->getId()])->first();
+			$galleryEntry = PictureGalleryEntry::where(['fk_picture_id' => $picture->getId()])->first();
 			if(is_null($galleryEntry)) {
 				$galleryEntry = new PictureGalleryEntry();
-				$galleryEntry
-					->setFkPictureId($picture->getId())
-					->setFkLearnplaceId($learnplaceId);
-				$galleryEntry->store();
+				$galleryEntry->setFkPictureId($picture->getId());
 			}
+			$galleryEntry->setFkLearnplaceId($learnplaceId);
+			$galleryEntry->store();
+		}
+	}
+
+	private function storeLocationRelations(int $learnplaceId, Location $location) {
+		try {
+			/**
+			 * @var \SRAG\Learnplaces\persistence\entity\Location $locationEntity
+			 */
+			$locationEntity = \SRAG\Learnplaces\persistence\entity\Location::findOrFail($location->getId());
+			$locationEntity->setFkLearnplaceId($learnplaceId);
+		}
+		catch (arException $ex) {
+			throw new InvalidArgumentException('Could not save location relation to learnplace for non persistent entity.', 0, $ex);
+		}
+	}
+
+	private function storeAllVisitJournals(int $learnplaceId, array $visitJournals) {
+		try {
+			/**
+			 * @var VisitJournal $visitJournal
+			 */
+			foreach($visitJournals as $visitJournal) {
+
+				/**
+				 * @var $feedbackEntity \SRAG\Learnplaces\persistence\entity\VisitJournal
+				 */
+				$feedbackEntity = \SRAG\Learnplaces\persistence\entity\VisitJournal::findOrFail($visitJournal->getId());
+				$feedbackEntity->setFkLearnplaceId($learnplaceId);
+				$feedbackEntity->store();
+			}
+		}
+		catch (arException $ex) {
+			throw new InvalidArgumentException('Could not save visit journal relation to learnplace, due to non persistent visit journal entities.', 0, $ex);
+		}
+	}
+
+	private function storeAllFeedbackRelations(int $learnplaceId, array $feedbacks) {
+
+		try {
+			/**
+			 * @var Feedback $feedback
+			 */
+			foreach($feedbacks as $feedback) {
+
+				/**
+				 * @var $feedbackEntity \SRAG\Learnplaces\persistence\entity\Feedback
+				 */
+				$feedbackEntity = \SRAG\Learnplaces\persistence\entity\Feedback::findOrFail($feedback->getId());
+				$feedbackEntity->setFkLearnplaceId($learnplaceId);
+				$feedbackEntity->store();
+			}
+		}
+		catch (arException $ex) {
+			throw new InvalidArgumentException('Could not save feedback relation to learnplace, due to non persistent feedback entities.', 0, $ex);
 		}
 	}
 
