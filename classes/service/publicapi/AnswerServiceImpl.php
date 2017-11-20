@@ -50,7 +50,20 @@ class AnswerServiceImpl implements AnswerService {
 			return $dto->toModel();
 		}
 		catch (EntityNotFoundException $ex) {
-			throw new InvalidArgumentException("Invalid answer id \"$answerId\" provided.", 0, $ex);
+			throw new InvalidArgumentException("Invalid answer id \"$answerId\" provided, unable to find object.", 0, $ex);
+		}
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function delete(int $answerId) {
+		try {
+			$this->answerRepository->delete($answerId);
+		}
+		catch (EntityNotFoundException $ex) {
+			throw new InvalidArgumentException("Invalid answer id \"$answerId\" provided, unable to delete object.", 0, $ex);
 		}
 	}
 }

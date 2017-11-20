@@ -2,6 +2,7 @@
 
 namespace SRAG\Learnplaces\service\publicapi;
 
+use InvalidArgumentException;
 use SRAG\Learnplaces\service\publicapi\model\AnswerModel;
 
 /**
@@ -39,5 +40,16 @@ interface AnswerService {
 	 * @return AnswerModel                  The answer with the given id.
 	 */
 	public function find(int $answerId): AnswerModel;
+
+	/**
+	 * Deletes the answer with the given id.
+	 *
+	 * @param int $answerId                 The answer id which should be used to delete the answer.
+	 *
+	 * @return void
+	 *
+	 * @throws InvalidArgumentException     Thrown if the answer with the given id doesn't exist.
+	 */
+	public function delete(int $answerId);
 
 }
