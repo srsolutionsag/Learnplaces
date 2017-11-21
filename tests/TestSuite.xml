@@ -18,14 +18,13 @@
 		stopOnIncomplete="false"
 		stopOnSkipped="false"
 		stopOnRisky="false"
-		testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"
 		timeoutForSmallTests="1"
 		timeoutForMediumTests="10"
 		timeoutForLargeTests="60"
 		verbose="false">
 	<testsuites>
 		<testsuite name="ILIAS plugin Learnplaces Test Suite">
-			<directory suffix="Test.php" phpVersion="5.6.0" phpVersionOperator=">=">.</directory>
+			<directory suffix="Test.php" phpVersion="7.0.0" phpVersionOperator=">=">.</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
