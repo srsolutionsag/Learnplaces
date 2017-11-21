@@ -3,7 +3,7 @@
 namespace SRAG\Learnplaces\util;
 
 /**
- * Interface Visibilities
+ * Interface Visibility
  *
  * Lists all valid visibilities for the learnplace blocks.
  *
@@ -11,7 +11,7 @@ namespace SRAG\Learnplaces\util;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-interface Visibilities {
+interface Visibility {
 
 	/**
 	 * The block is always visible.
