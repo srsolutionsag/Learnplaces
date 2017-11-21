@@ -26,7 +26,7 @@ trait CommentDtoMappingAware {
 		$dto = new Comment();
 		$dto->setId($this->getId())
 			->setCreateDate($this->getCreateDate())
-			->setPicture($this->getPicture()->toDto())
+			->setPicture(is_null($this->getPicture()) ? NULL : $this->getPicture()->toDto())
 			->setUserId($this->getUserId())
 			->setContent($this->getContent())
 			->setTitle($this->getTitle())
@@ -35,10 +35,10 @@ trait CommentDtoMappingAware {
 		return $dto;
 	}
 
-	private function mapAnswer(array $answerDtos): array {
+	private function mapAnswer(array $answerModels): array {
 		return array_map(
-			function(Answer $answerDto) { return $answerDto->toModel(); },
-			$answerDtos
+			function(AnswerModel $answerDto) { return $answerDto->toDto(); },
+			$answerModels
 		);
 	}
 }
@@ -61,7 +61,7 @@ trait CommentModelMappingAware {
 		$model = new CommentModel();
 		$model->setId($this->getId())
 			->setCreateDate($this->getCreateDate())
-			->setPicture($this->getPicture()->toModel())
+			->setPicture((is_null($this->getPicture())) ? NULL : $this->getPicture()->toModel())
 			->setUserId($this->getUserId())
 			->setContent($this->getContent())
 			->setTitle($this->getTitle())
@@ -72,7 +72,7 @@ trait CommentModelMappingAware {
 
 	private function mapAnswer(array $answerModels): array {
 		return array_map(
-			function(AnswerModel $answerDto) { return $answerDto->toDto(); },
+			function(Answer $answerDto) { return $answerDto->toModel(); },
 			$answerModels
 		);
 	}

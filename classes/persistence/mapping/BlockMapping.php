@@ -23,7 +23,7 @@ trait BlockDtoMappingAware {
 		 */
 		$block
 			->setId($this->getId())
-			->setConstraint($this->getConstraint()->toDto())
+			->setConstraint(is_null($this->getConstraint()) ? NULL : $this->getConstraint()->toDto())
 			->setVisibility($this->getVisibility())
 			->setSequence($this->getSequence());
 

@@ -22,7 +22,7 @@ trait PictureBlockDtoMappingAware {
 		 * @var PictureBlockDtoMappingAware|PictureBlockModel $this
 		 */
 		$dto = new PictureBlock();
-		$dto->setPicture($this->getPicture()->toDto())
+		$dto->setPicture(is_null($this->getPicture()) ? NULL : $this->getPicture()->toDto())
 			->setTitle($this->getTitle())
 			->setDescription($this->getDescription());
 		$this->fillBaseBlock($dto);
@@ -48,7 +48,7 @@ trait PictureBlockModelMappingAware {
 		 */
 		$model = new PictureBlockModel();
 		$model
-			->setPicture($this->getPicture()->toModel())
+			->setPicture(is_null($this->getPicture()) ? NULL : $this->getPicture()->toModel())
 			->setTitle($this->getTitle())
 			->setDescription($this->getDescription());
 		$this->fillBaseBlock($model);

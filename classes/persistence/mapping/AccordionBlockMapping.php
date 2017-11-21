@@ -53,7 +53,7 @@ trait AccordionBlockDtoMappingAware {
  */
 trait AccordionBlockModelMappingAware {
 
-	public function toDto(): AccordionBlockModel {
+	public function toModel(): AccordionBlockModel {
 		/**
 		 * @var AccordionBlock|AccordionBlockModelMappingAware $this
 		 */

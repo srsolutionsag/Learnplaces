@@ -26,7 +26,7 @@ trait AnswerDtoMappingAware {
 			->setTitle($this->getTitle())
 			->setContent($this->getContent())
 			->setUserId($this->getUserId())
-			->setPicture($this->getPicture()->toDto())
+			->setPicture(is_null($this->getPicture()) ? NULL : $this->getPicture()->toDto())
 			->setCreateDate($this->getCreateDate());
 		return $dto;
 	}
@@ -54,7 +54,7 @@ trait AnswerModelMappingAware {
 			->setTitle($this->getTitle())
 			->setContent($this->getContent())
 			->setUserId($this->getUserId())
-			->setPicture($this->getPicture()->toModel())
+			->setPicture(is_null($this->getPicture()) ? NULL : $this->getPicture()->toModel())
 			->setCreateDate($this->getCreateDate());
 		return $dto;
 	}
