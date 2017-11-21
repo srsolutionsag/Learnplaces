@@ -26,6 +26,7 @@
             "SRAG\\Learnplaces\\": "classes/"
         },
         "classmap": [
+            "./classes/persistence/mapping",
             "./classes/class.ilLearnplacesPlugin.php",
             "./classes/class.ilObjLearnplaces.php",
             "./classes/class.ilObjLearnplacesAccess.php",
@@ -48,5 +49,9 @@
         "htaccess-protect": true,
         "secure-http": true,
         "process-timeout": 600
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.0",
+        "phpunit/phpunit": "^6.4"
     }
 }
