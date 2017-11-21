@@ -19,7 +19,7 @@ class ExternalStreamBlockModel extends BlockModel {
 	/**
 	 * @var string $url
 	 */
-	private $url;
+	private $url = "";
 
 
 	/**

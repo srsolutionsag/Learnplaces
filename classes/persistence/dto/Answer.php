@@ -20,7 +20,7 @@ class Answer {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var DateTime $createDate
 	 */
@@ -28,19 +28,27 @@ class Answer {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var string $content
 	 */
-	private $content;
+	private $content = "";
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	private $userId = 0;
 	/**
 	 * @var Picture|null $picture
 	 */
-	private $picture;
+	private $picture = NULL;
+
+
+	/**
+	 * Answer constructor.
+	 */
+	public function __construct() {
+		$this->createDate = new DateTime();
+	}
 
 
 	/**

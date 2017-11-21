@@ -18,6 +18,10 @@ interface Visibilities {
 	 */
 	const ALWAYS = "ALWAYS";
 	/**
+	 * The block is never visible.
+	 */
+	const NEVER = "NEVER";
+	/**
 	 * The block is only temporary visible at the learnplace location.
 	 */
 	const ONLY_AT_PLACE = "ONLY_AT_PLACE";

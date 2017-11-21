@@ -19,19 +19,19 @@ abstract class BlockModel {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var int $sequence
 	 */
-	private $sequence;
+	private $sequence = PHP_INT_MAX;
 	/**
 	 * @var string $visibility
 	 */
-	private $visibility;
+	private $visibility = "ALWAYS";
 	/**
 	 * @var BlockConstraint|null $constraint
 	 */
-	private $constraint;
+	private $constraint = NULL;
 
 
 	/**

@@ -19,15 +19,15 @@ class PictureBlock extends Block {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var string $description
 	 */
-	private $description;
+	private $description = "";
 	/**
 	 * @var Picture|null $picture
 	 */
-	private $picture;
+	private $picture = NULL;
 
 
 	/**

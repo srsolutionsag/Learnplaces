@@ -19,23 +19,23 @@ class Location {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var float $latitude
 	 */
-	private $latitude;
+	private $latitude = 0.0;
 	/**
 	 * @var float $longitude
 	 */
-	private $longitude;
+	private $longitude = 0.0;
 	/**
 	 * @var float $elevation
 	 */
-	private $elevation;
+	private $elevation = 0.0;
 	/**
 	 * @var int $radius
 	 */
-	private $radius;
+	private $radius = 0;
 
 
 	/**

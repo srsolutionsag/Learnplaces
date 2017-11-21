@@ -19,7 +19,7 @@ class AudioBlock extends Block {
 	/**
 	 * @var string $path
 	 */
-	private $path;
+	private $path = "";
 
 
 	/**

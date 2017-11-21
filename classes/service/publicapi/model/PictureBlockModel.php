@@ -19,15 +19,15 @@ class PictureBlockModel extends BlockModel {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var string $description
 	 */
-	private $description;
+	private $description = "";
 	/**
 	 * @var PictureModel|null $picture
 	 */
-	private $picture;
+	private $picture = NULL;
 
 
 	/**

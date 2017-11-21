@@ -19,16 +19,16 @@ class Feedback {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 
 	/**
 	 * @var string $content
 	 */
-	private $content;
+	private $content = "";
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	private $userId = 0;
 
 
 	/**

@@ -19,7 +19,7 @@ class RichTextBlock extends Block {
 	/**
 	 * @var string $content
 	 */
-	private $content;
+	private $content = "";
 
 
 	/**

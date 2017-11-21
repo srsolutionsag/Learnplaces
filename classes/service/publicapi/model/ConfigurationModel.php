@@ -19,16 +19,15 @@ class ConfigurationModel {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var bool $online
 	 */
-	private $online;
+	private $online = false;
 	/**
 	 * @var string $defaultVisibility
 	 */
-	private $defaultVisibility;
-
+	private $defaultVisibility = "ALWAYS";
 
 	/**
 	 * @return int

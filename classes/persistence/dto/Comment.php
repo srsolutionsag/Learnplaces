@@ -20,7 +20,7 @@ class Comment {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var DateTime $createDate
 	 */
@@ -28,23 +28,23 @@ class Comment {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var string $content
 	 */
-	private $content;
+	private $content = "";
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	private $userId = 0;
 	/**
 	 * @var Answer[]
 	 */
-	private $answers;
+	private $answers = [];
 	/**
 	 * @var Picture|null $picture
 	 */
-	private $picture;
+	private $picture = NULL;
 
 
 	/**

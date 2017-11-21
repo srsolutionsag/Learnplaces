@@ -20,7 +20,7 @@ class CommentModel {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var DateTime $createDate
 	 */
@@ -28,24 +28,27 @@ class CommentModel {
 	/**
 	 * @var string $title
 	 */
-	private $title;
+	private $title = "";
 	/**
 	 * @var string $content
 	 */
-	private $content;
+	private $content = "";
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	private $userId = 0;
 	/**
 	 * @var AnswerModel[]
 	 */
-	private $answers;
+	private $answers = [];
 	/**
 	 * @var PictureModel|null $picture
 	 */
-	private $picture;
+	private $picture = NULL;
 
+	public function __construct() {
+		$this->createDate = new DateTime();
+	}
 
 	/**
 	 * @return int

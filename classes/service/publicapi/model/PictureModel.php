@@ -19,16 +19,16 @@ class PictureModel {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 
 	/**
 	 * @var string $originalPath
 	 */
-	private $originalPath;
+	private $originalPath = "";
 	/**
 	 * @var string $previewPath
 	 */
-	private $previewPath;
+	private $previewPath = "";
 
 
 	/**

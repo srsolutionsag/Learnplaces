@@ -19,7 +19,7 @@ class ILIASLinkBlockModel extends BlockModel {
 	/**
 	 * @var int $refId
 	 */
-	private $refId;
+	private $refId = 0;
 
 
 	/**

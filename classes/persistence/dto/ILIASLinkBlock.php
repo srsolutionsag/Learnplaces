@@ -19,7 +19,7 @@ class ILIASLinkBlock extends Block {
 	/**
 	 * @var int $refId
 	 */
-	private $refId;
+	private $refId = 0;
 
 
 	/**

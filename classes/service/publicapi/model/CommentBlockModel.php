@@ -19,7 +19,7 @@ class CommentBlockModel extends BlockModel {
 	/**
 	 * @var CommentModel[]
 	 */
-	private $comments;
+	private $comments = [];
 
 
 	/**

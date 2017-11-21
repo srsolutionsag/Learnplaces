@@ -20,15 +20,23 @@ class VisitJournalModel {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var int $userId
 	 */
-	private $userId;
+	private $userId = 0;
 	/**
 	 * @var DateTime $time
 	 */
 	private $time;
+
+
+	/**
+	 * VisitJournalModel constructor.
+	 */
+	public function __construct() {
+		$this->time = new DateTime();
+	}
 
 
 	/**

@@ -19,11 +19,11 @@ class LearnplaceConstraintModel implements BlockConstraint {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var LearnplaceModel $previousLearnplace
 	 */
-	private $previousLearnplace;
+	private $previousLearnplace = 0;
 
 
 	/**

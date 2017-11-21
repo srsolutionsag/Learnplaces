@@ -19,11 +19,11 @@ class VideoBlock extends Block {
 	/**
 	 * @var string $path
 	 */
-	private $path;
+	private $path = "";
 	/**
 	 * @var string $coverPath
 	 */
-	private $coverPath;
+	private $coverPath = "";
 
 
 	/**

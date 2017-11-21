@@ -19,7 +19,7 @@ class AudioBlockModel extends BlockModel {
 	/**
 	 * @var string $path
 	 */
-	private $path;
+	private $path = "";
 
 
 	/**

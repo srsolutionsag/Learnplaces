@@ -19,19 +19,19 @@ abstract class Block {
 	/**
 	 * @var int $id
 	 */
-	private $id;
+	private $id = 0;
 	/**
 	 * @var int $sequence
 	 */
-	private $sequence;
+	private $sequence = 0;
 	/**
 	 * @var string $visibility
 	 */
-	private $visibility;
+	private $visibility = "";
 	/**
 	 * @var BlockConstraint|null $constraint
 	 */
-	private $constraint;
+	private $constraint = NULL;
 
 
 	/**

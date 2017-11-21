@@ -19,7 +19,7 @@ class CommentBlock extends Block {
 	/**
 	 * @var Comment[]
 	 */
-	private $comments;
+	private $comments = [];
 
 
 	/**
