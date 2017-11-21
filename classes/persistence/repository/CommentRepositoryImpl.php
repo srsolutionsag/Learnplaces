@@ -48,16 +48,22 @@ class CommentRepositoryImpl implements CommentRepository {
 		$activeRecord = $this->mapToEntity($comment);
 		$activeRecord->store();
 
-		//store all foreign keys
-		foreach ($comment->getAnswers() as $answer) {
+		try {
+			//store all foreign keys
+			foreach ($comment->getAnswers() as $answer) {
 
-			/**
-			 * @var Answer $answerEntity
-			 */
-			$answerEntity = Answer::findOrFail($answer->getId());
-			$answerEntity->setFkCommentId($comment->getId());
-			$answerEntity->store();
+				/**
+				 * @var Answer $answerEntity
+				 */
+				$answerEntity = Answer::findOrFail($answer->getId());
+				$answerEntity->setFkCommentId($comment->getId());
+				$answerEntity->store();
+			}
 		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("Unable to save answer relations, due to non persistent answers.");
+		}
+
 		return $this->mapToDTO($activeRecord);
 	}
 

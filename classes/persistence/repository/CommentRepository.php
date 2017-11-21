@@ -3,7 +3,6 @@
 namespace SRAG\Learnplaces\persistence\repository;
 
 use SRAG\Learnplaces\persistence\dto\Comment;
-use SRAG\Learnplaces\persistence\dto\CommentBlock;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
@@ -21,6 +20,9 @@ interface CommentRepository {
 	 * @param Comment $comment  The comment which should be updated or created.
 	 *
 	 * @return Comment          The updated or created comment.
+	 * @throws EntityNotFoundException
+	 *                          Thrown if the answers could not be found which belong to the comment, while saving the database relations.
+	 *                          This happens if at least one answer is missing in the database.
 	 */
 	public function store(Comment $comment): Comment;
 
