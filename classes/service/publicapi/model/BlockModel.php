@@ -27,7 +27,7 @@ abstract class BlockModel {
 	/**
 	 * @var string $visibility
 	 */
-	private $visibility = "ALWAYS";
+	private $visibility = "";
 	/**
 	 * @var BlockConstraint|null $constraint
 	 */
