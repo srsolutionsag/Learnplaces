@@ -30,7 +30,7 @@ trait BlockDtoMappingAware {
 		return $block;
 	}
 
-	public abstract function toDto(): Block;
+	//public abstract function toDto(): Block;
 
 }
 
@@ -51,12 +51,12 @@ trait BlockModelMappingAware {
 		 */
 		$blockModel
 			->setId($this->getId())
-			->setConstraint($this->getConstraint()->toModel())
+			->setConstraint(is_null($this->getConstraint()) ? NULL : $this->getConstraint()->toModel())
 			->setVisibility($this->getVisibility())
 			->setSequence($this->getSequence());
 
 		return $blockModel;
 	}
 
-	public abstract function toModel(): BlockModel;
+	//public abstract function toModel(): BlockModel;
 }
