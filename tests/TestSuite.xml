@@ -12,7 +12,7 @@
 		forceCoversAnnotation="false"
 		mapTestClassNameToCoveredClassName="false"
 		printerClass="PHPUnit_TextUI_ResultPrinter"
-		processIsolation="true"
+		processIsolation="false"
 		stopOnError="false"
 		stopOnFailure="false"
 		stopOnIncomplete="false"
