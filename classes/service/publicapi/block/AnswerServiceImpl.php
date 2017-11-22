@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Learnplaces\service\publicapi;
+namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use SRAG\Learnplaces\persistence\repository\AnswerRepository;

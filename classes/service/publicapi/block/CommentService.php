@@ -1,6 +1,6 @@
 <?php
 
-namespace SRAG\Learnplaces\service\publicapi;
+namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use SRAG\Learnplaces\service\publicapi\model\CommentModel;
