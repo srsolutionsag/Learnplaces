@@ -77,7 +77,7 @@ class VisitJournalRepositoryImpl implements VisitJournalRepository {
 	$visitJournal = new VisitJournal();
 	$visitJournal
 		->setId($visitJournalEntity->getPkId())
-		->setTime(new DateTime($visitJournalEntity->getTime()))
+		->setTime(new DateTime('@' . strval($visitJournalEntity->getTime())))
 		->setUserId($visitJournalEntity->getUserId());
 
 	return $visitJournal;

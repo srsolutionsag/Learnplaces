@@ -10,6 +10,7 @@ use ilDatabaseException;
 use function is_null;
 use SRAG\Learnplaces\persistence\dto\Answer;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
+use function stringValue;
 
 /**
  * Class AnswerRepositoryImpl
@@ -89,7 +90,7 @@ class AnswerRepositoryImpl implements AnswerRepository {
 			->setId($answerEntity->getPkId())
 			->setTitle($answer->getTitle())
 			->setContent($answer->getContent())
-			->setCreateDate(new DateTime($answerEntity->getCreateDate()))
+			->setCreateDate(new DateTime('@' . strval($answerEntity->getCreateDate())))
 			->setUserId($answerEntity->getFkIluserId())
 			->setPicture($this->pictureRepository->find($answerEntity->getFkPictureId()));
 

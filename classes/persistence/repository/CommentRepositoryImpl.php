@@ -118,7 +118,7 @@ class CommentRepositoryImpl implements CommentRepository {
 			->setId($commentEntity->getPkId())
 			->setTitle($comment->getTitle())
 			->setContent($comment->getContent())
-			->setCreateDate(new DateTime($commentEntity->getCreateDate()))
+			->setCreateDate(new DateTime('@' . strval($commentEntity->getCreateDate())))
 			->setUserId($commentEntity->getFkIluserId());
 		if(!is_null($commentEntity->getFkPictureId()))
 			$comment->setPicture($this->pictureRepository->find($commentEntity->getFkPictureId()));
