@@ -26,7 +26,7 @@ trait AccordionBlockDtoMappingAware {
 		 */
 
 		$blockDtos = array_map(
-			function(BlockModel $blockModel) {$blockModel->toDto();},
+			function(BlockModel $blockModel) {return $blockModel->toDto();},
 			$this->getBlocks()
 		);
 
@@ -59,7 +59,7 @@ trait AccordionBlockModelMappingAware {
 		 */
 
 		$blockModels = array_map(
-			function(Block $block) {$block->toModel();},
+			function(Block $block) {return $block->toModel();},
 			$this->getBlocks()
 		);
 
