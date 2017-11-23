@@ -15,9 +15,10 @@
     "minimum-stability": "stable",
     "require": {
         "php": "^7.0",
-        "goaop/framework": "^2.1",
         "doctrine/annotations": "1.4.*",
+        "goaop/framework": "^2.1",
         "league/flysystem": "^1.0",
+        "sabre/uri": "^2.1",
         "symfony/console": "^3.3",
         "symfony/expression-language": "^3.3"
     },
