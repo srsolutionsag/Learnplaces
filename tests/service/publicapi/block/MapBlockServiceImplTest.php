@@ -44,6 +44,7 @@ class MapBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreWhichShouldSucceed() {
 		$model = new MapBlockModel();
@@ -62,6 +63,7 @@ class MapBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
 		$model = new MapBlockModel();
@@ -80,6 +82,7 @@ class MapBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
@@ -100,6 +103,7 @@ class MapBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWhichShouldSucceed() {
 		$model = new MapBlockModel();
@@ -118,6 +122,7 @@ class MapBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWithInvalidIdWhichShouldFail() {
 		$blockId = 6;

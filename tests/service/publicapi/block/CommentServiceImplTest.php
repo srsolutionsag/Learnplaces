@@ -45,6 +45,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreCommentWithNoAnswersWhichShouldSucceed() {
 		$comment = new CommentModel();
@@ -66,6 +67,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreCommentWithNonPersistentAnswerWhichShouldFail() {
 		$comment = new CommentModel();
@@ -88,6 +90,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWhichShouldSucceed() {
 		$comment = new CommentModel();
@@ -108,6 +111,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWithMissingCommentWhichShouldFail() {
 		$comment = new CommentModel();
@@ -131,6 +135,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
 		$commentId = 6;
@@ -145,6 +150,7 @@ class CommentServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWithMissingCommentWhichShouldFail() {
 		$commentId = 6;

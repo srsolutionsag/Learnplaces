@@ -43,6 +43,7 @@ class PictureBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreWhichShouldSucceed() {
 		$model = new PictureBlockModel();
@@ -62,6 +63,7 @@ class PictureBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
 		$model = new PictureBlockModel();
@@ -81,6 +83,7 @@ class PictureBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
@@ -101,6 +104,7 @@ class PictureBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWhichShouldSucceed() {
 		$model = new PictureBlockModel();
@@ -120,6 +124,7 @@ class PictureBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWithInvalidIdWhichShouldFail() {
 		$blockId = 6;

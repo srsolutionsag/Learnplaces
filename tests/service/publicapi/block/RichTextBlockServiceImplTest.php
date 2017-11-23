@@ -43,6 +43,7 @@ class RichTextBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreWhichShouldSucceed() {
 		$model = new RichTextBlockModel();
@@ -63,6 +64,7 @@ class RichTextBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
 		$model = new RichTextBlockModel();
@@ -83,6 +85,7 @@ class RichTextBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
@@ -103,6 +106,7 @@ class RichTextBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWhichShouldSucceed() {
 		$model = new RichTextBlockModel();
@@ -123,6 +127,7 @@ class RichTextBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWithInvalidIdWhichShouldFail() {
 		$blockId = 6;

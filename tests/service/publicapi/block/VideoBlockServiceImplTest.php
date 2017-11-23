@@ -43,6 +43,7 @@ class VideoBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testStoreWhichShouldSucceed() {
 		$model = new VideoBlockModel();
@@ -61,6 +62,7 @@ class VideoBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
 		$model = new VideoBlockModel();
@@ -82,6 +84,7 @@ class VideoBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testDeleteWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
@@ -102,6 +105,7 @@ class VideoBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWhichShouldSucceed() {
 		$model = new VideoBlockModel();
@@ -123,6 +127,7 @@ class VideoBlockServiceImplTest extends TestCase {
 
 	/**
 	 * @Test
+	 * @small
 	 */
 	public function testFindWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
