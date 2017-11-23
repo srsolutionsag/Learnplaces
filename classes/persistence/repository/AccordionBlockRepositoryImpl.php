@@ -12,14 +12,7 @@ use SRAG\Learnplaces\persistence\entity\Visibility;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\util\BlockAccumulator;
 
-/**
- * Class AccordionBlockRepositoryImpl
- *
- * @package SRAG\Learnplaces\persistence\repository
- *
- * @author  Nicolas Schäfli <ns@studer-raimann.ch>
- */
-class AccordionBlockRepositoryImpl {
+class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 
 	use BlockMappingAware, BlockConstraintAware;
 
@@ -43,6 +36,7 @@ class AccordionBlockRepositoryImpl {
 		$this->learnplaceConstraintRepository = $learnplaceConstraintRepository;
 		$this->blockAccumulator = $blockAccumulator;
 	}
+
 
 	/**
 	 * @inheritdoc
