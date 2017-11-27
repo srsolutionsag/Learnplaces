@@ -5,6 +5,7 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\AccordionBlockRepository;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -23,7 +24,7 @@ use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
  */
 class AccordionBlockServiceImplTest extends TestCase {
 
-	use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+	use MockeryPHPUnitIntegration;
 
 	/**
 	 * @var AccordionBlockRepository|Mockery\MockInterface $accordionBlockRepositoryMock

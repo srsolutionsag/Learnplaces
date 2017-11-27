@@ -6,6 +6,7 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 use DateTime;
 use InvalidArgumentException;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\CommentRepository;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -21,7 +22,7 @@ use SRAG\Learnplaces\service\publicapi\model\CommentModel;
  */
 class CommentServiceImplTest extends TestCase {
 
-	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+	use MockeryPHPUnitIntegration;
 
 	/**
 	 * @var CommentRepository|Mockery\MockInterface $commentRepositoryMock
