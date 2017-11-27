@@ -16,6 +16,8 @@ use Psr\Http\Message\UploadedFileInterface;
 use SRAG\Learnplaces\persistence\dto\Picture;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
+use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
+use wapmorgan\FileTypeDetector\Detector;
 
 /**
  * Class PictureServiceImplTest
@@ -43,6 +45,10 @@ class PictureServiceImplTest extends TestCase {
 	 * @var ImageManager|MockInterface $imageManagerMock
 	 */
 	private $imageManagerMock;
+	/**
+	 * @var FileTypeDetector|MockInterface $fileTypeDetectorMock
+	 */
+	private $fileTypeDetectorMock;
 
 	/**
 	 * @var PictureServiceImpl $subject
@@ -55,7 +61,8 @@ class PictureServiceImplTest extends TestCase {
 		$this->pictureRepositoryMock = Mockery::mock(PictureRepository::class);
 		$this->requestMock = Mockery::mock(ServerRequestInterface::class);
 		$this->imageManagerMock = Mockery::mock(ImageManager::class);
-		$this->subject = new PictureServiceImpl($this->requestMock, $this->pictureRepositoryMock, $this->imageManagerMock);
+		$this->fileTypeDetectorMock = Mockery::mock(FileTypeDetector::class);
+		$this->subject = new PictureServiceImpl($this->requestMock, $this->pictureRepositoryMock, $this->imageManagerMock, $this->fileTypeDetectorMock);
 	}
 
 
@@ -106,6 +113,9 @@ class PictureServiceImplTest extends TestCase {
 	 * @small
 	 */
 	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail() {
+
+		$filename = 'TheAnswerIs42.php';
+
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
 		 */
@@ -118,7 +128,12 @@ class PictureServiceImplTest extends TestCase {
 			->shouldReceive('getClientFilename')
 				->once()
 				->withNoArgs()
-				->andReturn('TheAnswerIs42.php');
+				->andReturn($filename);
+
+		$this->fileTypeDetectorMock->shouldReceive('detectByFilename')
+			->once()
+			->with($filename)
+			->andReturn([Detector::VIDEO, Detector::AVI, '']);
 
 		$this->requestMock->shouldReceive('getUploadedFiles')
 			->twice()
@@ -137,9 +152,10 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWhichShoulSucceed() {
+	public function testStoreUploadWhichShouldSucceed() {
 
 		$webDir = './data/default';
+		$filename = 'TheAnswerIs42.png';
 		$ilUtil = Mockery::mock('alias:' . ilUtil::class);
 		$ilUtil->shouldReceive('getWebspaceDir')
 			->twice()
@@ -158,17 +174,28 @@ class PictureServiceImplTest extends TestCase {
 			->shouldReceive('getClientFilename')
 				->twice()
 				->withNoArgs()
-				->andReturn('TheAnswerIs42.png')
+				->andReturn($filename)
 				->getMock()
 			->shouldReceive('moveTo')
 				->once()
 				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"));
 
+		$this->fileTypeDetectorMock->shouldReceive('detectByFilename')
+				->once()
+				->with($filename)
+				->andReturn([Detector::IMAGE, Detector::PNG, ''])
+				->getMock()
+			->shouldReceive('detectByContent')
+				->once()
+				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
+				->andReturn([Detector::IMAGE, Detector::PNG, '']);
+
 		$image = Mockery::mock(Image::class);
 		$this->imageManagerMock->shouldReceive('make')
-			->once()
-			->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
-			->andReturn($image);
+				->once()
+				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
+				->andReturn($image)
+				->getMock();
 
 		$width = 2560;
 		$height = 1080;
@@ -210,5 +237,59 @@ class PictureServiceImplTest extends TestCase {
 
 		$this->assertRegExp("/\.\/data\/default\/.*?\.png/", $pictureModel->getOriginalPath(), 'Original path must match the path pattern.');
 		$this->assertRegExp("/\.\/data\/default\/.*?\.png/", $pictureModel->getPreviewPath(), 'Preview path must match the path pattern.');
+	}
+
+	/**
+	 * @Test
+	 * @small
+	 */
+	public function testStoreUploadWithInvalidPictureContentWhichShouldFail() {
+
+		$webDir = './data/default';
+		$filename = 'TheAnswerIs42.png';
+		$ilUtil = Mockery::mock('alias:' . ilUtil::class);
+		$ilUtil->shouldReceive('getWebspaceDir')
+			->once()
+			->withNoArgs()
+			->andReturn($webDir);
+
+		/**
+		 * @var UploadedFileInterface|MockInterface $file
+		 */
+		$file = Mockery::mock(UploadedFileInterface::class);
+		$file->shouldReceive('getError')
+			->once()
+			->withNoArgs()
+			->andReturn(UPLOAD_ERR_OK)
+			->getMock()
+			->shouldReceive('getClientFilename')
+			->twice()
+			->withNoArgs()
+			->andReturn($filename)
+			->getMock()
+			->shouldReceive('moveTo')
+			->once()
+			->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"));
+
+		$this->fileTypeDetectorMock->shouldReceive('detectByFilename')
+			->once()
+			->with($filename)
+			->andReturn([Detector::IMAGE, Detector::PNG, ''])
+			->getMock()
+			->shouldReceive('detectByContent')
+			->once()
+			->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
+			->andReturn([Detector::DISK_IMAGE, Detector::APK, '']);
+
+		$this->requestMock->shouldReceive('getUploadedFiles')
+			->twice()
+			->withNoArgs()
+			->andReturn([$file]);
+
+		$this->expectException(FileUploadException::class);
+		$this->expectExceptionMessage('Picture with invalid content uploaded.');
+
+		$this->subject->storeUpload(42);
+
 	}
 }

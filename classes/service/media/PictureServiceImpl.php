@@ -11,7 +11,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
+use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
+use wapmorgan\FileTypeDetector\Detector;
 
 /**
  * Class PictureServiceImpl
@@ -25,11 +27,11 @@ class PictureServiceImpl implements PictureService {
 	/**
 	 * The picture service will only accept uploads with the whitelisted extensions.
 	 *
-	 * @var string[] $allowedExtensions
+	 * @var string[] $allowedPictureTypes
 	 */
-	private static $allowedExtensions = [
-		'png',
-		'jpg'
+	private static $allowedPictureTypes = [
+		Detector::JPEG,
+		Detector::PNG
 	];
 
 
@@ -45,6 +47,10 @@ class PictureServiceImpl implements PictureService {
 	 * @var ImageManager $imageManager
 	 */
 	private $imageManager;
+	/**
+	 * @var FileTypeDetector $fileTypeDetector
+	 */
+	private $fileTypeDetector;
 
 
 	/**
@@ -53,11 +59,13 @@ class PictureServiceImpl implements PictureService {
 	 * @param ServerRequestInterface $request
 	 * @param PictureRepository      $pictureRepository
 	 * @param ImageManager           $imageManager
+	 * @param FileTypeDetector       $fileTypeDetector
 	 */
-	public function __construct(ServerRequestInterface $request, PictureRepository $pictureRepository, ImageManager $imageManager) {
+	public function __construct(ServerRequestInterface $request, PictureRepository $pictureRepository, ImageManager $imageManager, FileTypeDetector $fileTypeDetector) {
 		$this->request = $request;
 		$this->pictureRepository = $pictureRepository;
 		$this->imageManager = $imageManager;
+		$this->fileTypeDetector = $fileTypeDetector;
 	}
 
 
@@ -77,6 +85,8 @@ class PictureServiceImpl implements PictureService {
 
 		$path = $this->generatePicturePath($objectId, $file->getClientFilename() ?? '');
 		$file->moveTo($path);
+		$this->validateImageContent($path);
+
 		$previewPath = $this->generatePreview($objectId, $path);
 		
 		$picture = new PictureModel();
@@ -114,10 +124,17 @@ class PictureServiceImpl implements PictureService {
 		if($file->getError() !== UPLOAD_ERR_OK)
 			throw new FileUploadException('Unable to store picture due to an upload error.', $file->getError());
 
-		$extension = $this->extractExtensionFromName($file->getClientFilename() ?? '');
+		$typeInfo = $this->fileTypeDetector->detectByFilename($file->getClientFilename() ?? '');
 
-		if(in_array($extension, self::$allowedExtensions) === false)
+		if(in_array($typeInfo[1], self::$allowedPictureTypes) === false)
 			throw new FileUploadException('Picture with invalid extension uploaded.');
+	}
+
+	private function validateImageContent(string $pathToPicture) {
+		$typeInfo = $this->fileTypeDetector->detectByContent($pathToPicture);
+
+		if(in_array($typeInfo[1], self::$allowedPictureTypes) === false)
+			throw new FileUploadException('Picture with invalid content uploaded.');
 	}
 
 	private function extractExtensionFromName(string $filename): string {

@@ -21,7 +21,8 @@
         "league/flysystem": "^1.0",
         "sabre/uri": "^2.1",
         "symfony/console": "^3.3",
-        "symfony/expression-language": "^3.3"
+        "symfony/expression-language": "^3.3",
+        "wapmorgan/file-type-detector": "^1.1"
     },
     "autoload": {
         "psr-4": {
