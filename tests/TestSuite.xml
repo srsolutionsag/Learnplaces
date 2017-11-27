@@ -25,7 +25,7 @@
 		beStrictAboutChangesToGlobalState="true"
 		beStrictAboutOutputDuringTests="true"
 		beStrictAboutTestsThatDoNotTestAnything="true"
-		beStrictAboutResourceUsageDuringSmallTests="true"
+		beStrictAboutResourceUsageDuringSmallTests="false"
 		beStrictAboutTodoAnnotatedTests="true"
 		beStrictAboutCoversAnnotation="false"
 		convertDeprecationsToExceptions="true"
