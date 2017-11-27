@@ -17,6 +17,7 @@
         "php": "^7.0",
         "doctrine/annotations": "1.4.*",
         "goaop/framework": "^2.1",
+        "intervention/image": "^2.4",
         "league/flysystem": "^1.0",
         "sabre/uri": "^2.1",
         "symfony/console": "^3.3",
@@ -34,7 +35,9 @@
             "./classes/class.ilObjLearnplacesGUI.php",
             "./classes/class.ilObjLearnplacesListGUI.php",
             "./classes/gui",
-            "../../../../../../../Services/Repository"
+            "../../../../../../../Services/Repository",
+            "../../../../../../../Services/Utilities",
+            "../../../../../../../Services/Component"
         ]
     },
     "autoload-dev": {
