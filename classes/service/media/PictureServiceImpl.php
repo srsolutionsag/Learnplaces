@@ -10,6 +10,7 @@ use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
+use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
@@ -83,7 +84,7 @@ class PictureServiceImpl implements PictureService {
 		$file = $this->request->getUploadedFiles()[0];
 		$this->validateUpload($file);
 
-		$path = $this->generatePicturePath($objectId, $file->getClientFilename() ?? '');
+		$path = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
 		$file->moveTo($path);
 		$this->validateImageContent($path);
 
@@ -104,22 +105,6 @@ class PictureServiceImpl implements PictureService {
 		return count($files) > 0;
 	}
 
-	private function generatePicturePath(int $objectId, string $filename): string {
-		$path =
-			ilUtil::getWebspaceDir()
-			. '/'
-			. ilLearnplacesPlugin::PLUGIN_ID
-			. '_'
-			. strval($objectId)
-			. '/'
-			. uniqid(ilLearnplacesPlugin::PLUGIN_ID, true);
-
-		$extension = $this->extractExtensionFromName($filename);
-		$filePath = $path . '.' . $extension;
-
-		return $filePath;
-	}
-
 	private function validateUpload(UploadedFileInterface $file) {
 		if($file->getError() !== UPLOAD_ERR_OK)
 			throw new FileUploadException('Unable to store picture due to an upload error.', $file->getError());
@@ -137,11 +122,6 @@ class PictureServiceImpl implements PictureService {
 			throw new FileUploadException('Picture with invalid content uploaded.');
 	}
 
-	private function extractExtensionFromName(string $filename): string {
-		return pathinfo($filename, PATHINFO_EXTENSION);
-	}
-
-
 	/**
 	 * Generates a preview of the given picture.
 	 *
@@ -158,7 +138,7 @@ class PictureServiceImpl implements PictureService {
 		$targetHeight = intval(floor($targetWith / $ratio));
 		$image->resize($targetWith, $targetHeight);
 
-		$previewPath = $this->generatePicturePath($objectId, $originalPath);
+		$previewPath = PathHelper::generatePath($objectId, $originalPath);
 		$image->save($previewPath);
 
 		return $previewPath;

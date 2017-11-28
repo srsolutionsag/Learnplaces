@@ -15,6 +15,7 @@ use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use SRAG\Learnplaces\persistence\dto\Picture;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
+use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use wapmorgan\FileTypeDetector\Detector;
@@ -27,7 +28,7 @@ use wapmorgan\FileTypeDetector\Detector;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  *
  * Required due to the ilUtil hard dependency mock.
- *
+ * @runTestsInSeparateProcesses
  */
 class PictureServiceImplTest extends TestCase {
 
@@ -156,11 +157,11 @@ class PictureServiceImplTest extends TestCase {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';
-		$ilUtil = Mockery::mock('alias:' . ilUtil::class);
-		$ilUtil->shouldReceive('getWebspaceDir')
+		$ilUtil = Mockery::mock('alias:' . PathHelper::class);
+		$ilUtil->shouldReceive('generatePath')
 			->twice()
-			->withNoArgs()
-			->andReturn($webDir);
+			->withArgs([42, Mockery::any()])
+			->andReturn("$webDir/$filename");
 
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
@@ -247,11 +248,11 @@ class PictureServiceImplTest extends TestCase {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';
-		$ilUtil = Mockery::mock('alias:' . ilUtil::class);
-		$ilUtil->shouldReceive('getWebspaceDir')
+		$ilUtil = Mockery::mock('alias:' . PathHelper::class);
+		$ilUtil->shouldReceive('generatePath')
 			->once()
-			->withNoArgs()
-			->andReturn($webDir);
+			->withArgs([42, $filename])
+			->andReturn("$webDir/$filename");
 
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
