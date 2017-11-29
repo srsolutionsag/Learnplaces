@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
-use ilUtil;
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
 use LogicException;

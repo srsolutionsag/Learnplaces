@@ -3,8 +3,6 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
-use ilLearnplacesPlugin;
-use ilUtil;
 use Intervention\Image\ImageManager;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
