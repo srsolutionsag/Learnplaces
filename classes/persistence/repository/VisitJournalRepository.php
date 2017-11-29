@@ -50,4 +50,14 @@ interface VisitJournalRepository {
 	 * @return VisitJournal[] All visits found by the given learnplace id.
 	 */
 	public function findByLearnplaceId(int $id) : array;
+
+
+	/**
+	 * Searches all visit journals which belong to the given learnplace object id.
+	 *
+	 * @param int $id   The object of the learnplace which should be used to find all corresponding visit journals.
+	 *
+	 * @return VisitJournal[] All visit journals which belong to the given learnplace.
+	 */
+	public function findByObjectId(int $id): array;
 }

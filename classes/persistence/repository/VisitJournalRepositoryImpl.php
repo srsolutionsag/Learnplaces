@@ -8,6 +8,7 @@ use function array_map;
 use DateTime;
 use ilDatabaseException;
 use SRAG\Learnplaces\persistence\dto\VisitJournal;
+use SRAG\Learnplaces\persistence\entity\Learnplace;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
@@ -72,6 +73,21 @@ class VisitJournalRepositoryImpl implements VisitJournalRepository {
 			\SRAG\Learnplaces\persistence\entity\VisitJournal::where(['fk_learnplace_id' => $id])->get()         //input
 		);
 	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findByObjectId(int $id): array {
+		return array_map(
+			function($visit) { return $this->mapToDTO($visit); },                                                //mapping function
+			\SRAG\Learnplaces\persistence\entity\VisitJournal::innerjoinAR(new Learnplace(),
+				'fk_learnplace_id',
+				'pk_id'
+			)->where(['fk_learnplace_id' => $id])->get()                                                         //input
+		);
+	}
+
 
 	private function mapToDTO(\SRAG\Learnplaces\persistence\entity\VisitJournal $visitJournalEntity) : VisitJournal {
 	$visitJournal = new VisitJournal();
