@@ -4,10 +4,12 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
+use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 
 /**
@@ -19,12 +21,16 @@ use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
  */
 class PictureBlockServiceImplTest extends TestCase {
 
-	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+	use MockeryPHPUnitIntegration;
 
 	/**
-	 * @var PictureBlockRepository|MockInterface $videoBlockRepositoryMock
+	 * @var PictureBlockRepository|MockInterface $pictureBlockRepositoryMock
 	 */
-	private $videoBlockRepositoryMock;
+	private $pictureBlockRepositoryMock;
+	/**
+	 * @var PictureService|MockInterface $pictureService
+	 */
+	private $pictureService;
 	/**
 	 * @var PictureBlockServiceImpl $subject
 	 */
@@ -35,10 +41,9 @@ class PictureBlockServiceImplTest extends TestCase {
 	 */
 	protected function setUp() {
 		parent::setUp();
-
-
-		$this->videoBlockRepositoryMock = Mockery::mock(PictureBlockRepository::class);
-		$this->subject = new PictureBlockServiceImpl($this->videoBlockRepositoryMock);
+		$this->pictureService = Mockery::mock(PictureService::class);
+		$this->pictureBlockRepositoryMock = Mockery::mock(PictureBlockRepository::class);
+		$this->subject = new PictureBlockServiceImpl($this->pictureBlockRepositoryMock, $this->pictureService);
 	}
 
 	/**
@@ -52,7 +57,7 @@ class PictureBlockServiceImplTest extends TestCase {
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->videoBlockRepositoryMock
+		$this->pictureBlockRepositoryMock
 			->shouldReceive('store')
 			->once()
 			->with(Mockery::any())
@@ -72,7 +77,7 @@ class PictureBlockServiceImplTest extends TestCase {
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->videoBlockRepositoryMock
+		$this->pictureBlockRepositoryMock
 			->shouldReceive('delete')
 			->once()
 			->with($model->getId())
@@ -88,7 +93,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	public function testDeleteWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
 
-		$this->videoBlockRepositoryMock
+		$this->pictureBlockRepositoryMock
 			->shouldReceive('delete')
 			->once()
 			->with($blockId)
@@ -113,7 +118,7 @@ class PictureBlockServiceImplTest extends TestCase {
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->videoBlockRepositoryMock
+		$this->pictureBlockRepositoryMock
 			->shouldReceive('findByBlockId')
 			->once()
 			->with($model->getId())
@@ -129,7 +134,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	public function testFindWithInvalidIdWhichShouldFail() {
 		$blockId = 6;
 
-		$this->videoBlockRepositoryMock
+		$this->pictureBlockRepositoryMock
 			->shouldReceive('findByBlockId')
 			->once()
 			->with($blockId)

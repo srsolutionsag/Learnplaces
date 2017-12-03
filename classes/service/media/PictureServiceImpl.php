@@ -4,14 +4,17 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\service\media;
 
 use Intervention\Image\ImageManager;
+use InvalidArgumentException;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
 use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
+use function unlink;
 use wapmorgan\FileTypeDetector\Detector;
 
 /**
@@ -97,6 +100,24 @@ class PictureServiceImpl implements PictureService {
 
 		return $dto->toModel();
 	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function delete(int $pictureId) {
+		try {
+			$picture = $this->pictureRepository->find($pictureId);
+			$this->pictureRepository->delete($pictureId);
+
+			unlink(PathHelper::createAbsolutePath($picture->getOriginalPath()));
+			unlink(PathHelper::createAbsolutePath($picture->getPreviewPath()));
+		}
+		catch (EntityNotFoundException $ex) {
+			throw new InvalidArgumentException("Unable to delete picture with id \"$pictureId\".", 0, $ex);
+		}
+	}
+
 
 	private function hasUploadedFiles(): bool {
 		$files =  $this->request->getUploadedFiles();

@@ -37,4 +37,13 @@ interface PictureService {
 	 */
 	public function storeUpload(int $objectId): PictureModel;
 
+
+	/**
+	 * Deletes the picture with the given id.
+	 *
+	 * @param int $pictureId    The picture with the id which should be deleted.
+	 *
+	 * @return void
+	 */
+	public function delete(int $pictureId);
 }
