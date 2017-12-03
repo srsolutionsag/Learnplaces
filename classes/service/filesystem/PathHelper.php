@@ -5,6 +5,7 @@ namespace SRAG\Learnplaces\service\filesystem;
 
 use ilLearnplacesPlugin;
 use ilUtil;
+use function realpath;
 
 /**
  * Class PathHelper
@@ -40,5 +41,18 @@ final class PathHelper {
 		$filePath = $path . '.' . $extension;
 
 		return $filePath;
+	}
+
+
+	/**
+	 * Creates an absolute path.
+	 * Please not that this method is currently filesystem dependent.
+	 *
+	 * @param string $relativePath  The relative path which should be used.
+	 *
+	 * @return string               The absolute path.
+	 */
+	public static function createAbsolutePath(string $relativePath): string {
+		return realpath($relativePath);
 	}
 }
