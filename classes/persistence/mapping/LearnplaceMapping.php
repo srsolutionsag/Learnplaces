@@ -71,7 +71,7 @@ trait LearnplaceDtoMappingAware {
  */
 trait LearnplaceModelMappingAware {
 
-	public function toDto(): LearnplaceModel {
+	public function toModel(): LearnplaceModel {
 		/**
 		 * @var Learnplace|LearnplaceModelMappingAware $this
 		 */
