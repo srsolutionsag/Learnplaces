@@ -14,6 +14,7 @@ use SRAG\Learnplaces\service\publicapi\model\ExternalStreamBlockModel;
  * @package SRAG\Learnplaces\service\publicapi\block
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
+ * @deprecated Not needed for current version
  */
 interface ExternalStreamBlockService {
 

@@ -14,6 +14,7 @@ use SRAG\Learnplaces\service\publicapi\model\CommentModel;
  * @package SRAG\Learnplaces\service\publicapi
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
+ * @deprecated Not needed for current version
  */
 interface CommentService {
 
