@@ -51,7 +51,7 @@ trait LearnplaceDtoMappingAware {
 	private function mapModelArrayToDtoArray(array $models) : array {
 
 		$dtos = array_map(
-			function($model) {$model->toDto();},
+			function($model) {return $model->toDto();},
 			$models
 		);
 
@@ -102,7 +102,7 @@ trait LearnplaceModelMappingAware {
 	private function mapDtoArrayToModelArray(array $dtos) : array {
 
 		$models = array_map(
-			function($model) {$model->toModel();},
+			function($model) {return $model->toModel();},
 			$dtos
 		);
 
