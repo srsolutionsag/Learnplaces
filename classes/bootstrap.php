@@ -1,17 +1,8 @@
 <?php
+declare(strict_types=1);
 
-use SRAG\Learnplaces\aop\aspect\LearnplaceAspectKernel;
+use SRAG\Learnplaces\container\PluginContainer;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-/*
-LearnplaceAspectKernel::getInstance()
-	->init([
-		'debug' => true, // use 'false' for production mode
+PluginContainer::bootstrap();
 
-		// Cache directory
-		'cacheDir'  => __DIR__ . '/aop/cache/',
-
-		// Include paths restricts the directories where aspects should be applied, or empty for all source files
-		'includePaths' => [__DIR__]
-	]);
- */
