@@ -49,7 +49,7 @@ class Visibility extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 

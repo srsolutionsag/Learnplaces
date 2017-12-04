@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function intval;
 
 /**
  * Class HorizontalLineBlock
@@ -50,7 +51,7 @@ class HorizontalLineBlock extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -70,7 +71,7 @@ class HorizontalLineBlock extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkBlockId() {
-		return $this->fk_block_id;
+		return is_null($this->fk_block_id) ? NULL : intval($this->fk_block_id);
 	}
 
 

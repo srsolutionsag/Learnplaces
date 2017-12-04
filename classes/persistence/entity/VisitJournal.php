@@ -66,7 +66,7 @@ class VisitJournal extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -86,7 +86,7 @@ class VisitJournal extends ActiveRecord {
 	 * @return int
 	 */
 	public function getUserId(): int {
-		return $this->user_id;
+		return intval($this->user_id);
 	}
 
 
@@ -106,7 +106,7 @@ class VisitJournal extends ActiveRecord {
 	 * @return int
 	 */
 	public function getTime(): int {
-		return $this->time;
+		return intval($this->time);
 	}
 
 
@@ -126,7 +126,7 @@ class VisitJournal extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkLearnplaceId() {
-		return $this->fk_learnplace_id;
+		return is_null($this->fk_learnplace_id) ? NULL : intval($this->fk_learnplace_id);
 	}
 
 

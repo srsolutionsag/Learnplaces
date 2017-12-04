@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function intval;
+use function is_null;
 
 /**
  * Class PictureGalleryEntry
@@ -57,7 +59,7 @@ class PictureGalleryEntry extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -77,7 +79,7 @@ class PictureGalleryEntry extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkLearnplaceId() {
-		return $this->fk_learnplace_id;
+		return is_null($this->fk_learnplace_id) ? NULL : intval($this->fk_learnplace_id);
 	}
 
 
@@ -97,7 +99,7 @@ class PictureGalleryEntry extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkPictureId() {
-		return $this->fk_picture_id;
+		return is_null($this->fk_picture_id) ? NULL : intval($this->fk_learnplace_id);
 	}
 
 

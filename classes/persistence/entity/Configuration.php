@@ -57,7 +57,7 @@ class Configuration extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -77,7 +77,7 @@ class Configuration extends ActiveRecord {
 	 * @return int
 	 */
 	public function getOnline(): int {
-		return $this->online;
+		return intval($this->online);
 	}
 
 
@@ -97,7 +97,7 @@ class Configuration extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkVisibilityDefault() {
-		return $this->fk_visibility_default;
+		return is_null($this->fk_visibility_default) ? NULL : intval($this->fk_visibility_default);
 	}
 
 

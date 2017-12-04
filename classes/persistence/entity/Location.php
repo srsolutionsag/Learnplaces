@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function floatval;
+use function floatValue;
+use function intval;
 
 /**
  * Class Location
@@ -86,7 +89,7 @@ class Location extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -106,7 +109,7 @@ class Location extends ActiveRecord {
 	 * @return float
 	 */
 	public function getLatitude(): float {
-		return $this->latitude;
+		return floatval($this->latitude);
 	}
 
 
@@ -126,7 +129,7 @@ class Location extends ActiveRecord {
 	 * @return float
 	 */
 	public function getLongitude(): float {
-		return $this->longitude;
+		return floatval($this->longitude);
 	}
 
 
@@ -146,7 +149,7 @@ class Location extends ActiveRecord {
 	 * @return float
 	 */
 	public function getElevation(): float {
-		return $this->elevation;
+		return floatval($this->elevation);
 	}
 
 
@@ -166,7 +169,7 @@ class Location extends ActiveRecord {
 	 * @return int
 	 */
 	public function getRadius(): int {
-		return $this->radius;
+		return intval($this->radius);
 	}
 
 
@@ -186,7 +189,7 @@ class Location extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkLearnplaceId() {
-		return $this->fk_learnplace_id;
+		return is_null($this->fk_learnplace_id) ? NULL : intval($this->fk_learnplace_id);
 	}
 
 

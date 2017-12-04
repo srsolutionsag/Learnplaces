@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function intval;
 
 /**
  * Class Comment
@@ -94,7 +95,7 @@ class Comment extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -114,7 +115,7 @@ class Comment extends ActiveRecord {
 	 * @return int
 	 */
 	public function getCreateDate(): int {
-		return $this->create_date;
+		return intval($this->create_date);
 	}
 
 
@@ -174,7 +175,7 @@ class Comment extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkCommentBlock() {
-		return $this->fk_comment_block;
+		return is_null($this->fk_comment_block) ? NULL : intval($this->fk_comment_block);
 	}
 
 
@@ -194,7 +195,7 @@ class Comment extends ActiveRecord {
 	 * @return int
 	 */
 	public function getFkIluserId(): int {
-		return $this->fk_iluser_id;
+		return intval($this->fk_iluser_id);
 	}
 
 
@@ -214,7 +215,7 @@ class Comment extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkPictureId() {
-		return $this->fk_picture_id;
+		return is_null($this->fk_picture_id) ? NULL : intval($this->fk_picture_id);
 	}
 
 

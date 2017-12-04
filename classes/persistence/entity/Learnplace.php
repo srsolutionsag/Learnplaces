@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function is_null;
 
 /**
  * Class Learnplace
@@ -58,7 +59,7 @@ class Learnplace extends ActiveRecord {
 	 * @return int
 	 */
 	public function getPkId(): int {
-		return $this->pk_id;
+		return intval($this->pk_id);
 	}
 
 
@@ -78,7 +79,7 @@ class Learnplace extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkConfiguration() {
-		return $this->fk_configuration;
+		return is_null($this->fk_configuration) ? NULL : intval($this->fk_configuration);
 	}
 
 
@@ -98,7 +99,7 @@ class Learnplace extends ActiveRecord {
 	 * @return int|null
 	 */
 	public function getFkObjectId() {
-		return $this->fk_object_id;
+		return is_null($this->fk_object_id) ? NULL : intval($this->fk_object_id);
 	}
 
 
