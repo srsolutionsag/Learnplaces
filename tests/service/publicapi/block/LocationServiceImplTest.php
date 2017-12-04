@@ -10,8 +10,8 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\dto\Location;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
+use SRAG\Learnplaces\persistence\repository\LocationRepository;
 use SRAG\Learnplaces\service\publicapi\model\LocationModel;
-use SRAG\Lernplaces\persistence\repository\LocationRepository;
 
 /**
  * Class LocationServiceImplTest
