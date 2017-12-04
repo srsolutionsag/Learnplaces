@@ -1,6 +1,8 @@
 <#1>
 <?php
 
+use SRAG\Learnplaces\persistence\entity\Visibility;
+
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
 
 \SRAG\Learnplaces\persistence\entity\AccordionBlock::installDB();
@@ -28,4 +30,25 @@ require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/
 \SRAG\Learnplaces\persistence\entity\VideoBlock::installDB();
 \SRAG\Learnplaces\persistence\entity\Visibility::installDB();
 \SRAG\Learnplaces\persistence\entity\VisitJournal::installDB();
+
+$visibilityAlways = new Visibility();
+$visibilityNever = new Visibility();
+$visibilityOnlyAtPlace = new Visibility();
+$visibilityAfterVisitPlace = new Visibility();
+$visibilityAfterVisitOtherPlace = new Visibility();
+
+$visibilityAlways->setName(\SRAG\Learnplaces\util\Visibility::ALWAYS);
+$visibilityAlways->create();
+
+$visibilityNever->setName(\SRAG\Learnplaces\util\Visibility::NEVER);
+$visibilityNever->create();
+
+$visibilityOnlyAtPlace->setName(\SRAG\Learnplaces\util\Visibility::ONLY_AT_PLACE);
+$visibilityOnlyAtPlace->create();
+
+$visibilityAfterVisitPlace->setName(\SRAG\Learnplaces\util\Visibility::AFTER_VISIT_PLACE);
+$visibilityAfterVisitPlace->create();
+
+$visibilityAfterVisitOtherPlace->setName(\SRAG\Learnplaces\util\Visibility::AFTER_VISIT_OTHER_PLACE);
+$visibilityAfterVisitOtherPlace->create();
 ?>
