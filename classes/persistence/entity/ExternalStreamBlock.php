@@ -26,6 +26,7 @@ class ExternalStreamBlock extends ActiveRecord {
 	 * @var int
 	 *
 	 * @con_is_primary true
+	 * @con_sequence true
 	 * @con_is_unique  true
 	 * @con_has_field  true
 	 * @con_is_notnull true
