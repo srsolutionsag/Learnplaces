@@ -17,7 +17,6 @@ use SRAG\Learnplaces\persistence\entity\Block;
 use SRAG\Learnplaces\persistence\entity\PictureGalleryEntry;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\util\BlockAccumulator;
-use SRAG\Lernplaces\persistence\repository\LocationRepository;
 
 /**
  * Class LearnplaceRepositoryImpl

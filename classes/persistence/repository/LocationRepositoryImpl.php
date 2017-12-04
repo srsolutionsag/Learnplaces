@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Lernplaces\persistence\repository;
+namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
 use ilDatabaseException;

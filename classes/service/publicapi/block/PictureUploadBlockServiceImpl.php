@@ -5,7 +5,6 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
-use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
 use SRAG\Learnplaces\persistence\repository\PictureUploadBlockRepository;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 
@@ -27,9 +26,9 @@ class PictureUploadBlockServiceImpl implements PictureUploadBlockService {
 	/**
 	 * PictureBlockServiceImpl constructor.
 	 *
-	 * @param PictureBlockRepository $pictureBlockRepository
+	 * @param PictureUploadBlockRepository $pictureBlockRepository
 	 */
-	public function __construct(PictureBlockRepository $pictureBlockRepository) { $this->pictureUploadBlockRepository = $pictureBlockRepository; }
+	public function __construct(PictureUploadBlockRepository $pictureBlockRepository) { $this->pictureUploadBlockRepository = $pictureBlockRepository; }
 
 
 	/**

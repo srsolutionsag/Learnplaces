@@ -5,8 +5,8 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
+use SRAG\Learnplaces\persistence\repository\LocationRepository;
 use SRAG\Learnplaces\service\publicapi\model\LocationModel;
-use SRAG\Lernplaces\persistence\repository\LocationRepository;
 
 /**
  * Class LocationServiceImpl

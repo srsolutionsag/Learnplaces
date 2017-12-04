@@ -22,11 +22,17 @@ use SRAG\Learnplaces\persistence\repository\ExternalStreamBlockRepository;
 use SRAG\Learnplaces\persistence\repository\ExternalStreamBlockRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\FeedbackBlockRepository;
 use SRAG\Learnplaces\persistence\repository\FeedbackBlockRepositoryImpl;
+use SRAG\Learnplaces\persistence\repository\FeedbackRepository;
+use SRAG\Learnplaces\persistence\repository\FeedbackRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\HorizontalLineBlockRepository;
 use SRAG\Learnplaces\persistence\repository\HorizontalLineBlockRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\ILIASLinkBlockRepository;
 use SRAG\Learnplaces\persistence\repository\ILIASLinkBlockRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\LearnplaceConstraintRepository;
+use SRAG\Learnplaces\persistence\repository\LearnplaceRepository;
+use SRAG\Learnplaces\persistence\repository\LearnplaceRepositoryImpl;
+use SRAG\Learnplaces\persistence\repository\LocationRepository;
+use SRAG\Learnplaces\persistence\repository\LocationRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\MapBlockRepository;
 use SRAG\Learnplaces\persistence\repository\MapBlockRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
@@ -43,9 +49,6 @@ use SRAG\Learnplaces\persistence\repository\VideoBlockRepository;
 use SRAG\Learnplaces\persistence\repository\VideoBlockRepositoryImpl;
 use SRAG\Learnplaces\persistence\repository\VisitJournalRepository;
 use SRAG\Learnplaces\persistence\repository\VisitJournalRepositoryImpl;
-use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
-use SRAG\Lernplaces\persistence\repository\LocationRepository;
-use SRAG\Lernplaces\persistence\repository\LocationRepositoryImpl;
 
 /**
  * Class RepositoryProvider
@@ -93,17 +96,18 @@ final class RepositoryProvider implements ServiceProviderInterface {
 		};};
 
 		$pimple[VideoBlockRepository::class]            = function ($c) {return new VideoBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
-		$pimple[RichTextBlockService::class]            = function ($c) {return new RichTextBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
+		$pimple[RichTextBlockRepository::class]         = function ($c) {return new RichTextBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[PictureUploadBlockRepository::class]    = function ($c) {return new PictureUploadBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[PictureRepository::class]               = function ($c) {return new PictureRepositoryImpl(); };
 		$pimple[PictureBlockRepository::class]          = function ($c) {return new PictureBlockRepositoryImpl($c[LearnplaceConstraintRepository::class], $c[PictureRepository::class]); };
 		$pimple[MapBlockRepository::class]              = function ($c) {return new MapBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[ILIASLinkBlockRepository::class]        = function ($c) {return new ILIASLinkBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[HorizontalLineBlockRepository::class]   = function ($c) {return new HorizontalLineBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
+		$pimple[FeedbackRepository::class]              = function ($c) {return new FeedbackRepositoryImpl(); };
 		$pimple[FeedbackBlockRepository::class]         = function ($c) {return new FeedbackBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[ExternalStreamBlockRepository::class]   = function ($c) {return new ExternalStreamBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[AnswerRepository::class]                = function ($c) {return new AnswerRepositoryImpl($c[PictureRepository::class]); };
-		$pimple[CommentRepository::class]               = function ($c) {return new CommentRepositoryImpl($c[AnswerRepository::class], $c[PictureRepository::class]); };
+		$pimple[CommentRepository::class]               = function ($c) {return new CommentRepositoryImpl($c[PictureRepository::class], $c[AnswerRepository::class]); };
 		$pimple[CommentBlockRepository::class]          = function ($c) {return new CommentBlockRepositoryImpl($c[LearnplaceConstraintRepository::class], $c[CommentRepository::class]); };
 		$pimple[AudioBlockRepository::class]            = function ($c) {return new AudioBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
 		$pimple[BlockAccumulator::class]                = function ($c) {return new BlockAccumulatorImpl(
@@ -121,5 +125,14 @@ final class RepositoryProvider implements ServiceProviderInterface {
 																				);
 																		};
 		$pimple[AccordionBlockRepository::class]        = function ($c) {return new AccordionBlockRepositoryImpl($c[LearnplaceConstraintRepository::class], $c[BlockAccumulator::class]); };
+		$pimple[LearnplaceRepository::class]            = function ($c) {return new LearnplaceRepositoryImpl(
+																					$c[LocationRepository::class],
+																					$c[VisitJournalRepository::class],
+																					$c[ConfigurationRepository::class],
+																					$c[FeedbackRepository::class],
+																					$c[PictureRepository::class],
+																					$c[BlockAccumulator::class]
+																				);
+																		};
 	}
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace SRAG\Lernplaces\persistence\repository;
+namespace SRAG\Learnplaces\persistence\repository;
 
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\dto\Location;

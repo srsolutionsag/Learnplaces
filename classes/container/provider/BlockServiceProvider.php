@@ -12,6 +12,7 @@ use SRAG\Learnplaces\persistence\repository\ConfigurationRepository;
 use SRAG\Learnplaces\persistence\repository\ExternalStreamBlockRepository;
 use SRAG\Learnplaces\persistence\repository\ILIASLinkBlockRepository;
 use SRAG\Learnplaces\persistence\repository\LearnplaceRepository;
+use SRAG\Learnplaces\persistence\repository\LocationRepository;
 use SRAG\Learnplaces\persistence\repository\MapBlockRepository;
 use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
 use SRAG\Learnplaces\persistence\repository\PictureUploadBlockRepository;
@@ -48,7 +49,6 @@ use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
 use SRAG\Learnplaces\service\publicapi\block\VideoBlockServiceImpl;
 use SRAG\Learnplaces\service\publicapi\block\VisitJournalService;
 use SRAG\Learnplaces\service\publicapi\block\VisitJournalServiceImpl;
-use SRAG\Lernplaces\persistence\repository\LocationRepository;
 
 /**
  * Class BlockServiceProvider
