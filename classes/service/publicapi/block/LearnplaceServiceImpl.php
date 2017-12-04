@@ -82,6 +82,7 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 				$this->visitJournalService->delete($visit->getId());
 			foreach ($learnplace->getPictures() as $picture)
 				$this->pictureService->delete($picture->getId());
+			$this->learnplaceRepository->delete($id);
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException('Learnplace could not been deleted because the leanplace or one of its children do not exists.', 0, $ex);

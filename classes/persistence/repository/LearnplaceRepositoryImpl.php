@@ -198,6 +198,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 			 */
 			$locationEntity = \SRAG\Learnplaces\persistence\entity\Location::findOrFail($location->getId());
 			$locationEntity->setFkLearnplaceId($learnplaceId);
+			$locationEntity->store();
 		}
 		catch (arException $ex) {
 			throw new InvalidArgumentException('Could not save location relation to learnplace for non persistent entity.', 0, $ex);
