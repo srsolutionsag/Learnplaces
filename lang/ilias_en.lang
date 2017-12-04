@@ -1,0 +1,6 @@
+objs_xsrl#:#Learnplaces
+objs_xsrl_duplicate#:#Copy existing learnplace
+obj_xsrl#:#Learnplace
+xsrl_new#:#Create new learnplace
+
+xsrl_add#:#Create
