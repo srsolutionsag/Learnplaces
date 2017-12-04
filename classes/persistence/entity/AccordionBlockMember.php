@@ -18,7 +18,7 @@ class AccordionBlockMember extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_accordion_block_member';
+		return 'xsrl_accordion_block_m'; //xsrl_accordion_block_member
 	}
 
 	/**

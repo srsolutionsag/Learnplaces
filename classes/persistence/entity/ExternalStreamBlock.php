@@ -18,7 +18,7 @@ class ExternalStreamBlock extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_external_stream_block';
+		return 'xsrl_external_stream_b'; //xsrl_external_stream_block
 	}
 
 

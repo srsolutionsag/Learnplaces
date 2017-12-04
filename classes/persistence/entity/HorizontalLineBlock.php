@@ -18,7 +18,7 @@ class HorizontalLineBlock extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_horizontal_line_block';
+		return 'xsrl_horizontal_line_b'; //xsrl_horizontal_line_block
 	}
 
 	/**

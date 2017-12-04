@@ -18,7 +18,7 @@ class PictureGalleryEntry extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_picture_gallery_entry';
+		return 'xsrl_picture_gallery_e'; //xsrl_picture_gallery_entry
 	}
 
 	/**

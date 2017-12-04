@@ -18,7 +18,7 @@ class PictureUploadBlock extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_picture_upload_block';
+		return 'xsrl_picture_upload_bl'; //xsrl_picture_upload_block
 	}
 
 	/**

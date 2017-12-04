@@ -18,7 +18,7 @@ class LearnplaceConstraint extends ActiveRecord {
 	 * @return string
 	 */
 	static function returnDbTableName() : string {
-		return 'xsrl_learnplace_constraint';
+		return 'xsrl_learnplace_constr'; //xsrl_learnplace_constraint
 	}
 
 	/**
