@@ -6,6 +6,7 @@ namespace SRAG\Learnplaces\persistence\repository;
 use arException;
 use ilDatabaseException;
 use SRAG\Learnplaces\persistence\dto\Configuration;
+use SRAG\Learnplaces\persistence\entity\Learnplace;
 use SRAG\Learnplaces\persistence\entity\Visibility;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
@@ -47,6 +48,23 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 		catch(ilDatabaseException $ex) {
 			throw new ilDatabaseException("Unable to delete configuration with id \"$id\"");
 		}
+	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findByObjectId(int $objectId): Configuration {
+
+		$configurationEntity = \SRAG\Learnplaces\persistence\entity\Configuration
+			::innerjoinAR(new Learnplace(), 'pk_id', 'fk_configuration')
+			->where(['fk_object_id' => $objectId])
+			->first();
+
+		if(is_null($configurationEntity))
+			throw new EntityNotFoundException("No configuration ");
+
+		return $this->mapToDTO($configurationEntity);
 	}
 
 	private function mapToDTO(\SRAG\Learnplaces\persistence\entity\Configuration $configurationEntity) : Configuration {

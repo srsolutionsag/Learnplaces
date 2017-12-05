@@ -4,3 +4,7 @@ obj_xsrl#:#Lernort
 xsrl_new#:#Neuer Lernort erstellen
 
 xsrl_add#:#Erstellen
+
+common_status#:#Status
+common_offline#:#Inaktiv
+common_online#:#Aktiv

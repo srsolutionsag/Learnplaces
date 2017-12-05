@@ -51,4 +51,16 @@ interface ConfigurationService {
 	 *                              Thrown if the configuration with the given id was not found.
 	 */
 	public function find(int $id): ConfigurationModel;
+
+
+	/**
+	 * Searches a configuration by the learnplace object id.
+	 *
+	 * @param int $objectId         The object id which should be used to to find the specific learnplace configuration.
+	 *
+	 * @return ConfigurationModel   The configuration which belongs to the learnplace with the given id.
+	 * @throws InvalidArgumentException
+	 *                              Thrown if the given object id was not found.
+	 */
+	public function findByObjectId(int $objectId): ConfigurationModel;
 }

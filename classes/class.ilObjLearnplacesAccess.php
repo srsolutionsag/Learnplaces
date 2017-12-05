@@ -1,6 +1,8 @@
 <?php
 
+use ILIAS\DI\Container;
 use SRAG\Learnplaces\gui\helper\DIC;
+use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -10,19 +12,6 @@ require_once __DIR__ . '/bootstrap.php';
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class ilObjLearnplacesAccess extends ilObjectPluginAccess {
-
-	use DIC {
-		DIC::__construct as private traitConstructor;
-	}
-
-
-	/**
-	 * ilObjLearnLoc2Access constructor.
-	 */
-	public function __construct() {
-		$this->initFromDIC($GLOBALS['DIC']);
-	}
-
 
 	/**
 	 * Checks wether a user may invoke a command or not
@@ -41,12 +30,12 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 */
 	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = "") {
 		if ($a_user_id == "") {
-			$a_user_id = $this->user()->getId();
+			$a_user_id = $this->user->getId();
 		}
 		switch ($a_permission) {
 			case "read":
 				if (!self::checkOnline($a_obj_id)
-				    && !$this->access()->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
+				    && !$this->access->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
 					return false;
 				}
 				break;
@@ -62,6 +51,13 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 * @return bool
 	 */
 	public static function checkOnline($object_id) {
-		return true;
+		global $DIC;
+
+		/**
+		 * @var ConfigurationService $configurationService
+		 */
+		$configurationService = $DIC[ConfigurationService::class];
+		$config = $configurationService->findByObjectId($object_id);
+		return $config->isOnline();
 	}
 }

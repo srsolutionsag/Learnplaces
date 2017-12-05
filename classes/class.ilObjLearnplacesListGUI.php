@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 
@@ -10,6 +11,16 @@ use SRAG\Learnplaces\gui\helper\ICtrlAware;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
+
+	/**
+	 * ilObjLearnplacesListGUI constructor.
+	 *
+	 * @param int $context
+	 */
+	public function __construct($context = self::CONTEXT_REPOSITORY) {
+		parent::__construct($context);
+	}
+
 
 	/**
 	 * @return string
@@ -57,5 +68,19 @@ class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 
 	public function initType() {
 		$this->setType(ilLearnplacesPlugin::PLUGIN_ID);
+	}
+
+	function getProperties() {
+		$properties = parent::getProperties();
+
+		if(!ilObjLearnplacesAccess::checkOnline($this->obj_id)) {
+			$properties[] = [
+				'alert' => true,
+				'property' => $this->txt('common_status'),
+				'value' => $this->txt('common_offline'),
+			];
+		}
+
+		return $properties;
 	}
 }

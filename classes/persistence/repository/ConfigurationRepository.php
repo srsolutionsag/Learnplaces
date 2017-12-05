@@ -3,6 +3,7 @@
 namespace SRAG\Learnplaces\persistence\repository;
 
 use SRAG\Learnplaces\persistence\dto\Configuration;
+use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 
 /**
  * Interface ConfigurationRepository
@@ -41,4 +42,17 @@ interface ConfigurationRepository {
 	 * @return void
 	 */
 	public function delete(int $id);
+
+
+	/**
+	 * Searches a configuration by the learnplace object id.
+	 *
+	 * @param int $objectId     The object id which should be used to to find the specific learnplace configuration.
+	 *
+	 * @return Configuration    The configuration which belongs to the learnplace with the given id.
+	 *
+	 * @throws EntityNotFoundException
+	 *                          Thrown if no learnplace is found for the given object id.
+	 */
+	public function findByObjectId(int $objectId) : Configuration;
 }

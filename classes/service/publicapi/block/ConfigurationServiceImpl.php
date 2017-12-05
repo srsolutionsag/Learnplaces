@@ -65,4 +65,18 @@ class ConfigurationServiceImpl implements ConfigurationService {
 			throw new InvalidArgumentException('The configuration with the given id does not exist.', 0, $ex);
 		}
 	}
+
+
+	/**
+	 * @inheritDoc
+	 */
+	public function findByObjectId(int $objectId): ConfigurationModel {
+		try {
+			$dto = $this->configurationRepository->findByObjectId($objectId);
+			return $dto->toModel();
+		}
+		catch (EntityNotFoundException $ex) {
+			throw new InvalidArgumentException('The configuration could not be found, because the learnplace with the given object id is missing.', 0, $ex);
+		}
+	}
 }

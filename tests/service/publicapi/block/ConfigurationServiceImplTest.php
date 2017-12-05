@@ -136,4 +136,43 @@ class ConfigurationServiceImplTest extends TestCase {
 
 		$this->subject->find($blockId);
 	}
+
+	/**
+	 * @Test
+	 * @small
+	 */
+	public function testFindByObjectIdWhichShouldSucceed() {
+		$objectId = 280;
+		$dto = new Configuration();
+		$dto
+			->setId(6)
+			->setDefaultVisibility('ALWAYS');
+
+		$this->configurationRepositoryMock
+			->shouldReceive('findByObjectId')
+			->once()
+			->with($objectId)
+			->andReturn($dto);
+
+		$this->subject->findByObjectId($objectId);
+	}
+
+	/**
+	 * @Test
+	 * @small
+	 */
+	public function testFindByObjectIdWithInvalidIdWhichShouldFail() {
+		$objectId = 6;
+
+		$this->configurationRepositoryMock
+			->shouldReceive('findByObjectId')
+			->once()
+			->with($objectId)
+			->andThrow(new EntityNotFoundException('Entity not found'));
+
+		$this->expectException(InvalidArgumentException::class);
+		$this->expectExceptionMessage('The configuration could not be found, because the learnplace with the given object id is missing.');
+
+		$this->subject->findByObjectId($objectId);
+	}
 }

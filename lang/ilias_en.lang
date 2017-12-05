@@ -4,3 +4,7 @@ obj_xsrl#:#Learnplace
 xsrl_new#:#Create new learnplace
 
 xsrl_add#:#Create
+
+common_status#:#Status
+common_offline#:#Offline
+common_online#:#Online
