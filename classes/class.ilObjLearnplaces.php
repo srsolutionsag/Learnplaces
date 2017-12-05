@@ -1,5 +1,11 @@
 <?php
 
+use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
+use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
+use SRAG\Learnplaces\service\publicapi\block\LocationService;
+use SRAG\Learnplaces\service\publicapi\model\ConfigurationModel;
+use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
+use SRAG\Learnplaces\service\publicapi\model\LocationModel;
 
 /**
  * Class ilObjLearnplaces
@@ -8,13 +14,19 @@
  */
 class ilObjLearnplaces extends ilObjectPlugin {
 
+	private $container;
+
 	/**
 	 * ilObjLearnLoc2 constructor.
 	 *
 	 * @param int $ref_id The reference id of the current object.
 	 */
 	public function __construct($ref_id = 0) {
+		global $DIC;
+
 		parent::__construct($ref_id);
+
+		$this->container = $DIC;
 	}
 
 
@@ -24,22 +36,48 @@ class ilObjLearnplaces extends ilObjectPlugin {
 
 
 	protected function doCreate() {
-//		throw new Exception("Not Implemented yet.");
+		/**
+		 * @var LearnplaceService $learnplaceService
+		 */
+		$learnplaceService = $this->container[LearnplaceService::class];
+		/**
+		 * @var ConfigurationService $configService
+		 */
+		$configService = $this->container[ConfigurationService::class];
+		/**
+		 * @var LocationService $locationService
+		 */
+		$locationService = $this->container[LocationService::class];
+
+		$location = $locationService->store(new LocationModel());
+		$config = $configService->store(new ConfigurationModel());
+		$learnplace = new LearnplaceModel();
+		$learnplace
+			->setLocation($location)
+			->setConfiguration($config)
+			->setObjectId($this->getId());
+
+		$learnplaceService->store($learnplace);
 	}
 
 
 	protected function doRead() {
-//		throw new Exception("Not Implemented yet.");
+
 	}
 
 
 	protected function doUpdate() {
-//		throw new Exception("Not Implemented yet.");
+
 	}
 
 
 	protected function doDelete() {
-//		throw new Exception("Not Implemented yet.");
+		/**
+		 * @var LearnplaceService $learnplaceService
+		 */
+		$learnplaceService = $this->container[LearnplaceService::class];
+		$learnplace = $learnplaceService->findByObjectId($this->getId());
+		$learnplaceService->delete($learnplace->getId());
 	}
 
 
