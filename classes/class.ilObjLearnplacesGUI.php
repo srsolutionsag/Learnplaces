@@ -1,8 +1,10 @@
 <?php
+declare(strict_types=1);
+
 require_once __DIR__ . '/bootstrap.php';
 
-use SRAG\Learnplaces\gui\helper\CtrlHandler;
-use SRAG\Learnplaces\gui\helper\ICtrlAware;
+use SRAG\Learnplaces\container\PluginContainer;
+use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 
 /**
  * Class ilObjLearnplacesGUI
@@ -14,12 +16,12 @@ use SRAG\Learnplaces\gui\helper\ICtrlAware;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilCommonActionDispatcherGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlBlockGUI
- * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlLocationGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureUploadBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlContentGUI
  */
-class ilObjLearnplacesGUI extends ilObjectPluginGUI implements ICtrlAware {
+class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
-	use CtrlHandler;
-	const DEFAULT_CMD = ICtrlAware::CMD_INDEX;
+	const DEFAULT_CMD = CommonControllerAction::CMD_INDEX;
 
 
 	/**
@@ -34,37 +36,23 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI implements ICtrlAware {
 	 * Main Triage to following GUI-Classes
 	 */
 	public function executeCommand() {
-		$nextClass = $this->ctrl()->getNextClass();
+		$nextClass = $this->ctrl->getNextClass();
+		$this->renderTabs();
 		switch ($nextClass) {
 			case "":
 			case strtolower(static::class):
 				parent::executeCommand();
 				break;
+			case strtolower(xsrlContentGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlContentGUI::class));
+				break;
+			case strtolower(xsrlPictureUploadBlockGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlPictureUploadBlockGUI::class));
+				break;
 			default:
-				$this->handleNextClass($this);
+				$this->ctrl->redirectByClass(static::class);
 				break;
 		}
-	}
-
-
-	/**
-	 * @inheritdoc
-	 */
-	public function getPossibleNextClasses() {
-		return array(
-			xsrlBlockGUI::class,
-			xsrlLocationGUI::class,
-		);
-	}
-
-
-	public function getParentController() {
-		return $this;
-	}
-
-
-	public function setParentController(ICtrlAware $ctrlAware) {
-		// TODO: Implement setParentController() method.
 	}
 
 
@@ -72,7 +60,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI implements ICtrlAware {
 	 * @param $cmd string of command which should be
 	 */
 	public function performCommand($cmd) {
-		if (!$this->access()->checkAccess('read', '', $this->user()->getId())) {
+		if (!$this->access->checkAccess('read', $cmd, $this->user->getId())) {
 			$this->{$cmd}();
 		}
 	}
@@ -99,65 +87,13 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI implements ICtrlAware {
 
 
 	public function index() {
-		$this->ctrl()->redirectByClass((new \ReflectionClass(xsrlLocationGUI::class))->getShortName());
+		$this->ctrl->redirectByClass(xsrlContentGUI::class, self::DEFAULT_CMD);
 	}
 
-	//
-	// DIC Helper
-	//
-
-	/**
-	 * @return \ILIAS\DI\Container
-	 */
-	private function dic() {
-		return $GLOBALS['DIC'];
+	private function renderTabs() {
+		$this->tabs->addTab(xsrlContentGUI::class, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
+		$this->tabs->addTab(xsrlContentGUI::class, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
 	}
 
 
-	/**
-	 * @return \ilAccessHandler
-	 */
-	public function access() {
-		return $this->dic()->access();
-	}
-
-
-	/**
-	 * @return \ilCtrl
-	 */
-	public function ctrl() {
-		return $this->dic()->ctrl();
-	}
-
-
-	/**
-	 * @return \ilTemplate
-	 */
-	public function tpl() {
-		return $this->dic()->ui()->mainTemplate();
-	}
-
-
-	/**
-	 * @return \ilObjUser
-	 */
-	public function user() {
-		return $this->dic()->user();
-	}
-
-
-	/**
-	 * @return \ilLanguage
-	 */
-	public function language() {
-		return $this->dic()->language();
-	}
-
-
-	/**
-	 * @return \ilTabsGUI
-	 */
-	public function tabs() {
-		return $this->dic()->tabs();
-	}
 }

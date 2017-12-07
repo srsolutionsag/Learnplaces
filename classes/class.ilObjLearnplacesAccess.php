@@ -1,7 +1,6 @@
 <?php
+declare(strict_types=1);
 
-use ILIAS\DI\Container;
-use SRAG\Learnplaces\gui\helper\DIC;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 
 require_once __DIR__ . '/bootstrap.php';
@@ -50,7 +49,7 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 *
 	 * @return bool
 	 */
-	public static function checkOnline($object_id) {
+	public static function checkOnline(int $object_id) {
 		global $DIC;
 
 		/**

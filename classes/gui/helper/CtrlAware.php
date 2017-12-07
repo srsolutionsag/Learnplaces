@@ -75,7 +75,7 @@ trait CtrlAware {
 	/**
 	 * @return array of GUI_Class-Names which use CtrlAware
 	 */
-	protected function getPossibleNextClasses() {
+	public function getPossibleNextClasses() {
 		return array();
 	}
 

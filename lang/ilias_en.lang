@@ -5,6 +5,38 @@ xsrl_new#:#Create new learnplace
 
 xsrl_add#:#Create
 
+common_create#:#Create
 common_status#:#Status
+common_cancel#:#Cancel
 common_offline#:#Offline
 common_online#:#Online
+common_add#:#Add
+common_delete#:#Delete
+common_visibility#:#Visibility
+
+message_changes_save_success#:#Changes successfully saved.
+message_delete_success#:#Block successfully deleted.
+message_create_failure#:#An error occurred while creating the block.
+
+tabs_content#:#Content
+tabs_edit#:#Edit block
+tabs_settings#:#Settings
+block_specific_settings#:#Block specific settings
+picture_upload_block_content#:#Picture upload block
+
+confirm_delete_header#:#Warning, the block will be deleted permanently.
+
+block_rich_text#:#Rich text
+block_map#:#Map
+block_ilias_link#:#ILIAS link
+block_accordion#:#Accordion
+block_picture#:#Picture
+block_picture_upload#:#Picture upload
+block_type_title#:#Available blocks:
+block_add_header#:#Add block
+
+visibility_title#:#Available visibilities:
+visibility_always#:#Always visible
+visibility_after_visit_place#:#Visible after visit
+visibility_only_at_place#:#Visible at place
+visibility_never#:#Never visible

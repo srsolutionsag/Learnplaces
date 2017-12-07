@@ -73,7 +73,7 @@ class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 	function getProperties() {
 		$properties = parent::getProperties();
 
-		if(!ilObjLearnplacesAccess::checkOnline($this->obj_id)) {
+		if(!ilObjLearnplacesAccess::checkOnline(intval($this->obj_id))) {
 			$properties[] = [
 				'alert' => true,
 				'property' => $this->txt('common_status'),

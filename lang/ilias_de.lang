@@ -5,6 +5,38 @@ xsrl_new#:#Neuer Lernort erstellen
 
 xsrl_add#:#Erstellen
 
+common_create#:#Erstellen
 common_status#:#Status
+common_cancel#:#Abbrechen
 common_offline#:#Inaktiv
 common_online#:#Aktiv
+common_add#:#Hinzufügen
+common_delete#:#L&ouml;schen
+common_visibility#:#Sichtbarkeit
+
+message_changes_save_success#:#&Auml;nderungen erfolgreich gespeichert.
+message_delete_success#:#Block erfolgreich gel&ouml;scht.
+message_create_failure#:#Fehler bei der Block Erstellung.
+
+tabs_content#:#Inhalt
+tabs_edit#:#Block bearbeiten
+tabs_settings#:#Einstellungen
+block_specific_settings#:#Block spezifische Einstellungen
+picture_upload_block_content#:#Bildupload Block
+
+confirm_delete_header#:#Achtung, der block wird unwiderruflich gelöscht!
+
+block_rich_text#:#Rich text
+block_map#:#Karte
+block_ilias_link#:#ILIAS link
+block_accordion#:#Accordeon
+block_picture#:#Bild
+block_picture_upload#:#Bilderupload
+block_type_title#:#Verfügbare Blöcke:
+block_add_header#:#Block hinzufügen
+
+visibility_title#:#Verfügbare Sichtbarkeiten:
+visibility_always#:#Immer sichtbar
+visibility_after_visit_place#:#Nur sichtbar nach Lernort Besuch
+visibility_only_at_place#:#Nur sichtbar vor Ort
+visibility_never#:#Nie sichtbar
