@@ -41,6 +41,8 @@ picture_block_enter_title#:#Titel
 picture_block_enter_description#:#Beschreibung
 picture_block_select_picture#:#Bild
 
+rich_text_block_content#:#Inhalt
+
 visibility_title#:#Verfügbare Sichtbarkeiten:
 visibility_always#:#Immer sichtbar
 visibility_after_visit_place#:#Nur sichtbar nach Lernort Besuch

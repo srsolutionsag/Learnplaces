@@ -63,7 +63,6 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 	}
 
 	private function initButtons() {
-		$this->plugin->loadLanguageModule('common');
 		$this->addCommandButton(CommonControllerAction::CMD_CREATE, $this->plugin->txt('common_add'));
 		$this->addCommandButton(CommonControllerAction::CMD_CANCEL, $this->plugin->txt('common_cancel'));
 	}

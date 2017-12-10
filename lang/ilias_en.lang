@@ -41,6 +41,8 @@ picture_block_enter_title#:#Title
 picture_block_enter_description#:#Description
 picture_block_select_picture#:#Picture
 
+rich_text_block_content#:#Content
+
 visibility_title#:#Available visibilities:
 visibility_always#:#Always visible
 visibility_after_visit_place#:#Visible after visit

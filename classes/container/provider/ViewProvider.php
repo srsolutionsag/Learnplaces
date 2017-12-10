@@ -9,6 +9,7 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
+use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
 
 /**
  * Class ViewProvider
@@ -35,6 +36,13 @@ final class ViewProvider implements ServiceProviderInterface {
 
 		$pimple[PictureBlockPresentationView::class] = $pimple->factory(function ($c) {
 			return new PictureBlockPresentationView(
+				$c[ilLearnplacesPlugin::class],
+				$c[ilCtrl::class]
+			);
+		});
+
+		$pimple[RichTextBlockPresentationView::class] = $pimple->factory(function ($c) {
+			return new RichTextBlockPresentationView(
 				$c[ilLearnplacesPlugin::class],
 				$c[ilCtrl::class]
 			);

@@ -130,7 +130,6 @@ class RichTextBlockRepositoryImpl implements RichTextBlockRepository {
 			->setContent($richTextBlockEntity->getContent())
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		return $richTextBlock;

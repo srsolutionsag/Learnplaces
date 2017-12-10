@@ -8,9 +8,11 @@ use InvalidArgumentException;
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
+use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
 
 /**
  * Class RenderableBlockViewFactoryImpl
@@ -37,6 +39,8 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 				return $this->getPictureUploadPresentationView($blockModel);
 			case PictureBlockModel::class:
 				return $this->getPicturePresentationView($blockModel);
+			case RichTextBlockModel::class:
+				return $this->getRichTextView($blockModel);
 			default:
 				throw new InvalidArgumentException('Model has no corresponding view.');
 		}
@@ -56,6 +60,16 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		 * @var PictureBlockPresentationView $view
 		 */
 		$view = PluginContainer::resolve(PictureBlockPresentationView::class);
+		$view->setModel($model);
+		return $view;
+	}
+
+	private function getRichTextView(RichTextBlockModel $model): RichTextBlockPresentationView {
+
+		/**
+		 * @var RichTextBlockPresentationView $view
+		 */
+		$view = PluginContainer::resolve(RichTextBlockPresentationView::class);
 		$view->setModel($model);
 		return $view;
 	}

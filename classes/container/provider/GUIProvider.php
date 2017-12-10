@@ -13,9 +13,11 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
+use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use xsrlContentGUI;
 use xsrlPictureBlockGUI;
 use xsrlPictureUploadBlockGUI;
+use xsrlRichTextBlockGUI;
 
 /**
  * Class GUIProvider
@@ -66,6 +68,19 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[PictureService::class],
 			$c[PictureBlockService::class],
+			$c[LearnplaceService::class],
+			$c[ConfigurationService::class]
+		);
+		};
+
+		$pimple[xsrlRichTextBlockGUI::class] = function ($c) {return new xsrlRichTextBlockGUI(
+			$c['ilTabs'],
+			$c['tpl'],
+			$c['ilCtrl'],
+			$c['ilAccess'],
+			$c['http'],
+			$c[ilLearnplacesPlugin::class],
+			$c[RichTextBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class]
 		);

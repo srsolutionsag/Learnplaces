@@ -19,6 +19,7 @@ use SRAG\Learnplaces\gui\helper\CommonControllerAction;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureUploadBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlContentGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlRichTextBlockGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
@@ -52,6 +53,9 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				break;
 			case strtolower(xsrlPictureBlockGUI::class):
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlPictureBlockGUI::class));
+				break;
+			case strtolower(xsrlRichTextBlockGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlRichTextBlockGUI::class));
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class);

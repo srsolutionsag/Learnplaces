@@ -25,6 +25,7 @@ class xsrlContentGUI {
 	private static $blockTypeViewMapping = [
 		BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
 		BlockType::PICTURE          => xsrlPictureBlockGUI::class,
+		BlockType::RICH_TEXT        => xsrlRichTextBlockGUI::class,
 	];
 
 	/**
