@@ -63,7 +63,21 @@ class PictureUploadBlockRepositoryImpl implements PictureUploadBlockRepository {
 	 */
 	public function findByBlockId(int $id) : PictureUploadBlock {
 		try {
+
+			/*
+			 * active record bug workaround
+			 * BUG: AR overwrites fields of the FROM class with the fields of the JOIN class if they have the same name.
+			 *
+			 * $block = Block::innerjoinAR(new \SRAG\Learnplaces\persistence\entity\PictureUploadBlock(), 'pk_id', 'fk_block_id')
+				->where(['pk_id' => $id])->first();
+			 */
+
 			$block = Block::findOrFail($id);
+			$uploadBlock = \SRAG\Learnplaces\persistence\entity\PictureUploadBlock::where(['fk_block_id' => $id])->first();
+
+			if(is_null($uploadBlock))
+				throw new EntityNotFoundException("PictureUploadBlock with id \"$id\" was not found");
+
 			return $this->mapToDTO($block);
 		}
 		catch (arException $ex) {

@@ -70,6 +70,8 @@ class AudioBlockRepositoryImpl implements AudioBlockRepository {
 		try {
 			$block = Block::findOrFail($id);
 			$audioBlock = \SRAG\Learnplaces\persistence\entity\AudioBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($audioBlock))
+				throw new EntityNotFoundException("Audio block with id \"$id\" was not found");
 			return $this->mapToDTO($block, $audioBlock);
 		}
 		catch (arException $ex) {

@@ -67,7 +67,7 @@ class VideoBlockRepositoryImpl implements VideoBlockRepository {
 	 */
 	public function findByBlockId(int $id) : VideoBlock {
 		try {
-			$block = Block::findOrFail($id);
+			$block = \SRAG\Learnplaces\persistence\entity\VideoBlock::findOrFail($id);
 			$videoBlock = \SRAG\Learnplaces\persistence\entity\VideoBlock::where(['fk_block_id' => $id])->first();
 			return $this->mapToDTO($block, $videoBlock);
 		}

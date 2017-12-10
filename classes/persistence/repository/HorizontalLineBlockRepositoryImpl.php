@@ -68,7 +68,7 @@ class HorizontalLineBlockRepositoryImpl implements HorizontalLineBlockRepository
 	 */
 	public function findByBlockId(int $id) : HorizontalLineBlock {
 		try {
-			$block = Block::findOrFail($id);
+			$block = \SRAG\Learnplaces\persistence\entity\HorizontalLineBlock::findOrFail($id);
 			return $this->mapToDTO($block);
 		}
 		catch (arException $ex) {

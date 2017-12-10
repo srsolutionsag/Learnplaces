@@ -95,7 +95,7 @@ class CommentBlockRepositoryImpl implements CommentBlockRepository {
 	 */
 	public function findByBlockId(int $id) : CommentBlock {
 		try {
-			$block = Block::findOrFail($id);
+			$block = \SRAG\Learnplaces\persistence\entity\CommentBlock::findOrFail($id);
 			return $this->mapToDTO($block);
 		}
 		catch (arException $ex) {

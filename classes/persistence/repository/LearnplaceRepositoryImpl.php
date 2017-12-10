@@ -216,7 +216,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 				 * @var Block $blockEntity
 				 */
 				$blockEntity->setFkLearnplaceId($learnplaceId);
-				$blockEntity->store();
+				$blockEntity->update();
 			}
 		}
 		catch (arException $ex) {

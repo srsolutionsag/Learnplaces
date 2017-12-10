@@ -67,7 +67,7 @@ class MapBlockRepositoryImpl implements MapBlockRepository {
 	 */
 	public function findByBlockId(int $id) : MapBlock {
 		try {
-			$block = Block::findOrFail($id);
+			$block = \SRAG\Learnplaces\persistence\entity\MapBlock::findOrFail($id);
 			return $this->mapToDTO($block);
 		}
 		catch (arException $ex) {

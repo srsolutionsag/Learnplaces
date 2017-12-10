@@ -70,6 +70,9 @@ class ILIASLinkBlockRepositoryImpl implements ILIASLinkBlockRepository {
 		try {
 			$block = Block::findOrFail($id);
 			$linkBlock = \SRAG\Learnplaces\persistence\entity\ILIASLinkBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($linkBlock))
+				throw new EntityNotFoundException("PictureUploadBlock with id \"$id\" was not found");
+
 			return $this->mapToDTO($block, $linkBlock);
 		}
 		catch (arException $ex) {

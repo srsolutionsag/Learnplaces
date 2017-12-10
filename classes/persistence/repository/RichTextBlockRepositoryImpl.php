@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
+use function is_null;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\dto\RichTextBlock;
 use SRAG\Learnplaces\persistence\entity\Block;
@@ -69,6 +70,8 @@ class RichTextBlockRepositoryImpl implements RichTextBlockRepository {
 		try {
 			$block = Block::findOrFail($id);
 			$richTextBlock = \SRAG\Learnplaces\persistence\entity\RichTextBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($richTextBlock))
+				throw new EntityNotFoundException("Rich text block with id \"$id\" was not found");
 			return $this->mapToDTO($block, $richTextBlock);
 		}
 		catch (arException $ex) {

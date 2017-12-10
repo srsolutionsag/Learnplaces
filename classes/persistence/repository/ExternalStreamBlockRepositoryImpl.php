@@ -3,6 +3,7 @@
 namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
+use function is_null;
 use SRAG\Learnplaces\persistence\dto\ExternalStreamBlock;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\entity\Block;
@@ -69,6 +70,9 @@ class ExternalStreamBlockRepositoryImpl implements ExternalStreamBlockRepository
 		try {
 			$block = Block::findOrFail($id);
 			$streamBlock = \SRAG\Learnplaces\persistence\entity\ExternalStreamBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($streamBlock))
+				throw new EntityNotFoundException("External stream block with id \"$id\" was not found");
+
 			return $this->mapToDTO($block, $streamBlock);
 		}
 		catch (arException $ex) {

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
+use function is_null;
 use SRAG\Learnplaces\persistence\dto\FeedbackBlock;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\entity\Block;
@@ -70,6 +71,9 @@ class FeedbackBlockRepositoryImpl implements FeedbackBlockRepository {
 		try {
 			$block = Block::findOrFail($id);
 			$feedbackBlock = \SRAG\Learnplaces\persistence\entity\FeedbackBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($feedbackBlock))
+				throw new EntityNotFoundException("Feedback block with id \"$id\" was not found");
+
 			return $this->mapToDTO($block, $feedbackBlock);
 		}
 		catch (arException $ex) {

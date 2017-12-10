@@ -80,6 +80,9 @@ class PictureBlockRepositoryImpl implements PictureBlockRepository {
 		try {
 			$block = Block::findOrFail($id);
 			$pictureBlock = \SRAG\Learnplaces\persistence\entity\PictureBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($pictureBlock))
+				throw new EntityNotFoundException("Picture block with id \"$id\" was not found");
+
 			return $this->mapToDTO($block, $pictureBlock);
 		}
 		catch (arException $ex) {
@@ -139,7 +142,6 @@ class PictureBlockRepositoryImpl implements PictureBlockRepository {
 			->setDescription($pictureBlockEntity->getDescription())
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		if(!is_null($pictureBlockEntity->getFkPicture()))
