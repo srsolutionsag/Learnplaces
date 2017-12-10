@@ -2,24 +2,24 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
-use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockEditFormView;
+use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockEditFormView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\media\exception\FileUploadException;
+use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
-use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
-use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
+use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
+use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 
 /**
- * Class xsrlPictureUploadBlockGUI
- *
- * @package SRAG\Learnplaces\gui
+ * Class xsrlPictureBlockGUI
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-final class xsrlPictureUploadBlockGUI {
+final class xsrlPictureBlockGUI {
 
-	const TAB_ID = 'edit-block';
+	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
 
 	/**
@@ -47,9 +47,13 @@ final class xsrlPictureUploadBlockGUI {
 	 */
 	private $plugin;
 	/**
-	 * @var PictureUploadBlockService $pictureUploadService
+	 * @var PictureService $pictureService
 	 */
-	private $pictureUploadService;
+	private $pictureService;
+	/**
+	 * @var PictureBlockService $pictureBlockService
+	 */
+	private $pictureBlockService;
 	/**
 	 * @var LearnplaceService $learnplaceService
 	 */
@@ -61,26 +65,28 @@ final class xsrlPictureUploadBlockGUI {
 
 
 	/**
-	 * xsrlPictureUploadBlockGUI constructor.
+	 * xsrlPictureBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI                 $tabs
-	 * @param ilTemplate                $template
-	 * @param ilCtrl                    $controlFlow
-	 * @param ilAccessHandler           $access
-	 * @param GlobalHttpState           $http
-	 * @param ilLearnplacesPlugin       $plugin
-	 * @param PictureUploadBlockService $pictureUploadService
-	 * @param LearnplaceService         $learnplaceService
-	 * @param ConfigurationService      $configService
+	 * @param ilTabsGUI            $tabs
+	 * @param ilTemplate           $template
+	 * @param ilCtrl               $controlFlow
+	 * @param ilAccessHandler      $access
+	 * @param GlobalHttpState      $http
+	 * @param ilLearnplacesPlugin  $plugin
+	 * @param PictureService       $pictureService
+	 * @param PictureBlockService  $pictureBlockService
+	 * @param LearnplaceService    $learnplaceService
+	 * @param ConfigurationService $configService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureUploadBlockService $pictureUploadService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
 		$this->http = $http;
 		$this->plugin = $plugin;
-		$this->pictureUploadService = $pictureUploadService;
+		$this->pictureService = $pictureService;
+		$this->pictureBlockService = $pictureBlockService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 	}
@@ -129,20 +135,25 @@ final class xsrlPictureUploadBlockGUI {
 
 	private function add() {
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
-		$block = new PictureUploadBlockModel();
+		$block = new PictureBlockModel();
 
 		$block->setVisibility($config->getDefaultVisibility());
-		$form = new PictureUploadBlockEditFormView($block);
+		$form = new PictureBlockEditFormView($block);
 		$form->fillForm();
 		$this->template->setContent($form->getHTML());
 	}
 
 	private function create() {
-		$form = new PictureUploadBlockEditFormView(new PictureUploadBlockModel());
+		$form = new PictureBlockEditFormView(new PictureBlockModel());
 		try {
 			//store block
+			/**
+			 * @var PictureBlockModel $block
+			 */
 			$block = $form->getBlockModel();
-			$uploadBlock = $this->pictureUploadService->store($block);
+			$picture = $this->pictureService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
+			$block->setPicture($picture);
+			$uploadBlock = $this->pictureBlockService->store($block);
 
 			//fetch learnplace
 			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
@@ -160,15 +171,70 @@ final class xsrlPictureUploadBlockGUI {
 			$form->setValuesByPost();
 			$this->template->setContent($form->getHTML());
 		}
-		catch (InvalidArgumentException $ex) {
+		catch (LogicException $ex) {
+			$form->setValuesByPost();
+			$this->template->setContent($form->getHTML());
+		}
+		catch (FileUploadException $ex) {
+			$form->setValuesByPost();
+			$this->template->setContent($form->getHTML());
+		}
+	}
+
+	private function edit() {
+		$blockId = $this->getBlockId();
+		$block = $this->pictureBlockService->find($blockId);
+		$form = new PictureBlockEditFormView($block);
+		$form->fillForm();
+		$this->template->setContent($form->getHTML());
+	}
+
+	private function update() {
+		$tempBlock = new PictureBlockModel();
+		$tempBlock->setId(PHP_INT_MAX);
+		$form = new PictureBlockEditFormView($tempBlock);
+
+		try {
+			/**
+			 * @var PictureBlockModel $block
+			 */
+			$block = $form->getBlockModel();
+			$oldPictureBlock = $this->pictureBlockService->find($block->getId());
+			$picture = $oldPictureBlock->getPicture();
+			$block->setPicture($picture);
+
+			$uploadedFiles = $this->http->request()->getUploadedFiles();
+			if(count($uploadedFiles) === 1 && array_pop($uploadedFiles)->getError() === UPLOAD_ERR_OK) {
+				//delete old picture
+				$this->pictureService->delete($block->getPicture()->getId());
+
+				//store new picture
+				$picture = $this->pictureService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
+				$block->setPicture($picture);
+			}
+
+			$this->pictureBlockService->store($block);
+
+			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+		}
+		catch (ValidationException $ex) {
+			$form->setValuesByPost();
+			$this->template->setContent($form->getHTML());
+		}
+		catch (LogicException $ex) {
+			$form->setValuesByPost();
+			$this->template->setContent($form->getHTML());
+		}
+		catch (FileUploadException $ex) {
 			$form->setValuesByPost();
 			$this->template->setContent($form->getHTML());
 		}
 	}
 
 	private function delete() {
-		$blockId = intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
-		$this->pictureUploadService->delete($blockId);
+		$blockId = $this->getBlockId();
+		$this->pictureBlockService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
@@ -190,5 +256,9 @@ final class xsrlPictureUploadBlockGUI {
 
 	private function cancel() {
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+	}
+
+	private function getBlockId(): int {
+		return intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
 	}
 }

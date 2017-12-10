@@ -4,12 +4,9 @@ declare(strict_types=1);
 use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
-use SRAG\Learnplaces\gui\block\PictureUploadBlockEditFormView;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
-use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
-use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 
 /**
  *
@@ -26,7 +23,8 @@ class xsrlContentGUI {
 	const TAB_ID = 'content';
 
 	private static $blockTypeViewMapping = [
-		BlockType::PICTURE_UPLOAD => xsrlPictureUploadBlockGUI::class,
+		BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
+		BlockType::PICTURE          => xsrlPictureBlockGUI::class,
 	];
 
 	/**

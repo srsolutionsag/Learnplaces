@@ -3,19 +3,20 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\gui\block;
 
+use function array_merge_clobber;
 use ilFormSectionHeaderGUI;
+use ilHiddenInputGUI;
 use ilLearnplacesPlugin;
 use ilLinkButton;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
-use ilToolbarGUI;
 use function in_array;
+use function intval;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\util\Visibility;
-use xsrlContentGUI;
 
 /**
  * Class xsrlAbstractBlockFormGUI
@@ -27,6 +28,7 @@ use xsrlContentGUI;
 abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 
 	const POST_VISIBILITY = "post_visibility";
+	const POST_ID = 'post_id';
 
 	private static $validVisibilities = [
 		Visibility::ALWAYS,
@@ -38,11 +40,12 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 	/**
 	 * @var BlockModel $block
 	 */
-	private $block;
+	protected $block;
+
 	/**
-	 * @var
+	 * @var ilLearnplacesPlugin $plugin
 	 */
-	private $plugin;
+	protected $plugin;
 
 
 	/**
@@ -61,14 +64,11 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 
 		$this->setFormAction($this->getFormActionUrl());
 		$this->setPreventDoubleSubmission(true);
+		$this->setShowTopButtons(false);
 
-		//create toolbar
-		$toolbar = new ilToolbarGUI();
-		$button = ilLinkButton::getInstance();
-		$button->setCaption($this->plugin->txt('common_delete'));
-		$button->setUrl($this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, CommonControllerAction::CMD_DELETE) . '&block=' . $this->block->getId());
-		$toolbar->addButtonInstance($button);
-		//$this->addItem($toolbar);
+		$id = new ilHiddenInputGUI(self::POST_ID);
+		$id->setRequired(true);
+		$this->addItem($id);
 
 		//create visibility
 		$visibilitySectionHeader = new ilFormSectionHeaderGUI();
@@ -80,6 +80,7 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_after_visit_place'), Visibility::AFTER_VISIT_PLACE));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_only_at_place'), Visibility::ONLY_AT_PLACE));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_never'), Visibility::NEVER));
+		$radioGroup->setRequired(true);
 		$this->addItem($radioGroup);
 
 		if($this->hasBlockSpecificParts()) {
@@ -95,7 +96,7 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 
 	private function initButtons() {
 		if($this->block->getId() > 0) {
-			$this->addCommandButton(CommonControllerAction::CMD_UPDATE, $this->plugin->txt('common_update'));
+			$this->addCommandButton(CommonControllerAction::CMD_UPDATE, $this->plugin->txt('common_save'));
 			$this->addCommandButton(CommonControllerAction::CMD_CANCEL, $this->plugin->txt('common_cancel'));
 			return;
 		}
@@ -122,11 +123,16 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 
 
 	/**
-	 * Fill the block specific part of the gui with the post data.
+	 * Creates an array for the block specific form parts.
 	 *
-	 * @return void
+	 * Example:
+	 * [
+	 *      'POST_TEXT_INPUT' => 'Some text for this field',
+	 * ]
+	 *
+	 * @return array
 	 */
-	protected abstract function fillBlockSpecificFormParts();
+	protected abstract function createValueArrayForSpecificFormParts(): array;
 
 
 	/**
@@ -154,6 +160,7 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 
 		$this->getObject();
 		$this->block->setVisibility($visibility);
+		$this->block->setId(intval($this->getInput(self::POST_ID)));
 		return $this->block;
 	}
 
@@ -165,10 +172,12 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 	 */
 	public function fillForm() {
 		$values = [
+			self::POST_ID => $this->block->getId(),
 			self::POST_VISIBILITY => $this->block->getVisibility(),
 		];
 
-		$this->setValuesByArray($values);
-		$this->fillBlockSpecificFormParts();
+		$allValues = array_merge($values, $this->createValueArrayForSpecificFormParts());
+
+		$this->setValuesByArray($allValues);
 	}
 }

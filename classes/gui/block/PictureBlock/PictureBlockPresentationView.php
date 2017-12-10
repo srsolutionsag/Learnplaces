@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Learnplaces\gui\block\PictureUploadBlock;
+namespace SRAG\Learnplaces\gui\block\PictureBlock;
 
+use ilButtonToSplitButtonMenuItemAdapter;
 use ilCtrl;
 use ilLearnplacesPlugin;
 use ilLinkButton;
@@ -14,17 +15,17 @@ use function is_null;
 use LogicException;
 use SRAG\Learnplaces\gui\block\Renderable;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
-use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
-use xsrlPictureUploadBlockGUI;
+use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
+use xsrlPictureBlockGUI;
 
 /**
- * Class PictureUploadBlockPresentationView
+ * Class PictureBlockPresentationView
  *
- * @package SRAG\Learnplaces\gui\block
+ * @package SRAG\Learnplaces\gui\block\PictureBlock
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-final class PictureUploadBlockPresentationView implements Renderable {
+final class PictureBlockPresentationView implements Renderable {
 
 	const SEQUENCE_ID_PREFIX = 'picture_upload_';
 
@@ -41,7 +42,7 @@ final class PictureUploadBlockPresentationView implements Renderable {
 	 */
 	private $controlFlow;
 	/**
-	 * @var PictureUploadBlockModel $model
+	 * @var PictureBlockModel $model
 	 */
 	private $model;
 
@@ -55,17 +56,20 @@ final class PictureUploadBlockPresentationView implements Renderable {
 	public function __construct(ilLearnplacesPlugin $plugin, ilCtrl $controlFlow) {
 		$this->plugin = $plugin;
 		$this->controlFlow = $controlFlow;
-		$this->template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/block/tpl.picture_upload.html', true, true);
-		$this->initView();
+		$this->template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/block/tpl.picture.html', true, true);
 	}
-
 
 	private function initView() {
-		$this->template->setVariable('CONTENT', $this->plugin->txt('picture_upload_block_content'));
+		$this->template->setVariable('TITLE', $this->model->getTitle());
+		if(!is_null($this->model->getPicture()))
+			$this->template->setVariable('PICTURE_PATH', $this->model->getPicture()->getOriginalPath());
+
+		$this->template->setVariable('DESCRIPTION', $this->model->getDescription());
 	}
 
-	public function setModel(PictureUploadBlockModel $model) {
+	public function setModel(PictureBlockModel $model) {
 		$this->model = $model;
+		$this->initView();
 	}
 
 
@@ -74,11 +78,10 @@ final class PictureUploadBlockPresentationView implements Renderable {
 	 */
 	public function getHtml() {
 		if(is_null($this->model))
-			throw new LogicException('The picture upload block view requires a model to render its content.');
+			throw new LogicException('The picture block view requires a model to render its content.');
 
 		return $this->wrapWithBlockTemplate($this->template)->get();
 	}
-
 
 	/**
 	 * Wraps the given template with the tpl.block.html template.
@@ -95,8 +98,13 @@ final class PictureUploadBlockPresentationView implements Renderable {
 		$splitButton = ilSplitButtonGUI::getInstance();
 		$deleteAction = ilLinkButton::getInstance();
 		$deleteAction->setCaption($this->plugin->txt('common_delete'), false);
-		$deleteAction->setUrl($this->controlFlow->getLinkTargetByClass(xsrlPictureUploadBlockGUI::class, CommonControllerAction::CMD_CONFIRM) . '&' . xsrlPictureUploadBlockGUI::BLOCK_ID_QUERY_KEY . '=' . $this->model->getId());
-		$splitButton->setDefaultButton($deleteAction);
+		$deleteAction->setUrl($this->controlFlow->getLinkTargetByClass(xsrlPictureBlockGUI::class, CommonControllerAction::CMD_CONFIRM) . '&' . xsrlPictureBlockGUI::BLOCK_ID_QUERY_KEY . '=' . $this->model->getId());
+
+		$editAction = ilLinkButton::getInstance();
+		$editAction->setCaption($this->plugin->txt('common_edit'), false);
+		$editAction->setUrl($this->controlFlow->getLinkTargetByClass(xsrlPictureBlockGUI::class, CommonControllerAction::CMD_EDIT) . '&' . xsrlPictureBlockGUI::BLOCK_ID_QUERY_KEY . '=' . $this->model->getId());
+		$splitButton->setDefaultButton($editAction);
+		$splitButton->addMenuItem(new ilButtonToSplitButtonMenuItemAdapter($deleteAction));
 
 		//setup sequence number
 		$input = new ilTextInputGUI('', self::SEQUENCE_ID_PREFIX . $this->model->getId());

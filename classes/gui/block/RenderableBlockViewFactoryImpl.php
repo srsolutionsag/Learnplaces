@@ -6,7 +6,10 @@ namespace SRAG\Learnplaces\gui\block;
 use function get_class;
 use InvalidArgumentException;
 use SRAG\Learnplaces\container\PluginContainer;
+use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
+use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
+use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 
 /**
@@ -32,6 +35,8 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		switch ($modelClass) {
 			case PictureUploadBlockModel::class:
 				return $this->getPictureUploadPresentationView($blockModel);
+			case PictureBlockModel::class:
+				return $this->getPicturePresentationView($blockModel);
 			default:
 				throw new InvalidArgumentException('Model has no corresponding view.');
 		}
@@ -42,6 +47,15 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		 * @var PictureUploadBlockPresentationView $view
 		 */
 		$view = PluginContainer::resolve(PictureUploadBlockPresentationView::class);
+		$view->setModel($model);
+		return $view;
+	}
+
+	private function getPicturePresentationView(PictureBlockModel $model): PictureBlockPresentationView {
+		/**
+		 * @var PictureBlockPresentationView $view
+		 */
+		$view = PluginContainer::resolve(PictureBlockPresentationView::class);
 		$view->setModel($model);
 		return $view;
 	}
