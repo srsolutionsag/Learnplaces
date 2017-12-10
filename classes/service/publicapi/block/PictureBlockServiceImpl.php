@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
+use function is_null;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
 use SRAG\Learnplaces\service\media\PictureService;
@@ -54,7 +55,11 @@ class PictureBlockServiceImpl implements PictureBlockService {
 	 */
 	public function delete(int $id) {
 		try {
+			$block = $this->pictureBlockRepository->findByBlockId($id);
 			$this->pictureBlockRepository->delete($id);
+			if(!is_null($block->getPicture()))
+				$this->pictureService->delete($block->getPicture()->getId());
+
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException('The picture block with the given id could not be deleted, because the block was not found.', 0, $ex);
