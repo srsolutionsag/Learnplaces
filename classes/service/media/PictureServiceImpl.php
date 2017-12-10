@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
+use function array_pop;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
+use League\Flysystem\FilesystemInterface;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
@@ -14,6 +16,7 @@ use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
+use function str_replace;
 use function unlink;
 use wapmorgan\FileTypeDetector\Detector;
 
@@ -53,6 +56,10 @@ class PictureServiceImpl implements PictureService {
 	 * @var FileTypeDetector $fileTypeDetector
 	 */
 	private $fileTypeDetector;
+	/**
+	 * @var FilesystemInterface $filesystem
+	 */
+	private $filesystem;
 
 
 	/**
@@ -62,12 +69,14 @@ class PictureServiceImpl implements PictureService {
 	 * @param PictureRepository      $pictureRepository
 	 * @param ImageManager           $imageManager
 	 * @param FileTypeDetector       $fileTypeDetector
+	 * @param FilesystemInterface    $filesystem
 	 */
-	public function __construct(ServerRequestInterface $request, PictureRepository $pictureRepository, ImageManager $imageManager, FileTypeDetector $fileTypeDetector) {
+	public function __construct(ServerRequestInterface $request, PictureRepository $pictureRepository, ImageManager $imageManager, FileTypeDetector $fileTypeDetector, FilesystemInterface $filesystem) {
 		$this->request = $request;
 		$this->pictureRepository = $pictureRepository;
 		$this->imageManager = $imageManager;
 		$this->fileTypeDetector = $fileTypeDetector;
+		$this->filesystem = $filesystem;
 	}
 
 
@@ -82,11 +91,11 @@ class PictureServiceImpl implements PictureService {
 		/**
 		 * @var UploadedFileInterface $file
 		 */
-		$file = $this->request->getUploadedFiles()[0];
+		$file = array_pop($this->request->getUploadedFiles());
 		$this->validateUpload($file);
 
 		$path = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
-		$file->moveTo($path);
+		$this->filesystem->putStream($path, $file->getStream()->detach());
 		$this->validateImageContent($path);
 
 		$previewPath = $this->generatePreview($objectId, $path);
@@ -110,8 +119,8 @@ class PictureServiceImpl implements PictureService {
 			$picture = $this->pictureRepository->find($pictureId);
 			$this->pictureRepository->delete($pictureId);
 
-			unlink(PathHelper::createAbsolutePath($picture->getOriginalPath()));
-			unlink(PathHelper::createAbsolutePath($picture->getPreviewPath()));
+			$this->filesystem->delete($picture->getOriginalPath());
+			$this->filesystem->delete($picture->getPreviewPath());
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("Unable to delete picture with id \"$pictureId\".", 0, $ex);
