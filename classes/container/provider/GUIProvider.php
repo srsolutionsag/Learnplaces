@@ -8,10 +8,13 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactoryImpl;
+use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
+use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use xsrlContentGUI;
+use xsrlPictureBlockGUI;
 use xsrlPictureUploadBlockGUI;
 
 /**
@@ -35,7 +38,7 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['ilCtrl'],
 			$c['ilAccess'],
 			$c['http'],
-			ilLearnplacesPlugin::getInstance(),
+			$c[ilLearnplacesPlugin::class],
 			$c[RenderableBlockViewFactory::class],
 			$c[LearnplaceService::class]
 			);
@@ -47,8 +50,22 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['ilCtrl'],
 			$c['ilAccess'],
 			$c['http'],
-			ilLearnplacesPlugin::getInstance(),
+			$c[ilLearnplacesPlugin::class],
 			$c[PictureUploadBlockService::class],
+			$c[LearnplaceService::class],
+			$c[ConfigurationService::class]
+		);
+		};
+
+		$pimple[xsrlPictureBlockGUI::class] = function ($c) {return new xsrlPictureBlockGUI(
+			$c['ilTabs'],
+			$c['tpl'],
+			$c['ilCtrl'],
+			$c['ilAccess'],
+			$c['http'],
+			$c[ilLearnplacesPlugin::class],
+			$c[PictureService::class],
+			$c[PictureBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class]
 		);
