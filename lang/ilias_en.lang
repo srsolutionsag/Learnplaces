@@ -11,6 +11,8 @@ common_cancel#:#Cancel
 common_offline#:#Offline
 common_online#:#Online
 common_add#:#Add
+common_edit#:#Edit
+common_save#:#Save
 common_delete#:#Delete
 common_visibility#:#Visibility
 
@@ -34,6 +36,10 @@ block_picture#:#Picture
 block_picture_upload#:#Picture upload
 block_type_title#:#Available blocks:
 block_add_header#:#Add block
+
+picture_block_enter_title#:#Title
+picture_block_enter_description#:#Description
+picture_block_select_picture#:#Picture
 
 visibility_title#:#Available visibilities:
 visibility_always#:#Always visible

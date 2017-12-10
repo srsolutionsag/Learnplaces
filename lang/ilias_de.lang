@@ -11,6 +11,8 @@ common_cancel#:#Abbrechen
 common_offline#:#Inaktiv
 common_online#:#Aktiv
 common_add#:#Hinzufügen
+common_edit#:#Bearbeiten
+common_save#:#Speichern
 common_delete#:#L&ouml;schen
 common_visibility#:#Sichtbarkeit
 
@@ -34,6 +36,10 @@ block_picture#:#Bild
 block_picture_upload#:#Bilderupload
 block_type_title#:#Verfügbare Blöcke:
 block_add_header#:#Block hinzufügen
+
+picture_block_enter_title#:#Titel
+picture_block_enter_description#:#Beschreibung
+picture_block_select_picture#:#Bild
 
 visibility_title#:#Verfügbare Sichtbarkeiten:
 visibility_always#:#Immer sichtbar
