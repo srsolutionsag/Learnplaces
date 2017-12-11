@@ -34,6 +34,7 @@ block_ilias_link#:#ILIAS link
 block_accordion#:#Accordeon
 block_picture#:#Bild
 block_picture_upload#:#Bilderupload
+block_video#:#Video
 block_type_title#:#Verfügbare Blöcke:
 block_add_header#:#Block hinzufügen
 

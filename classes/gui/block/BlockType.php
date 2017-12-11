@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Learnplaces\gui\block;
 
@@ -17,5 +18,6 @@ interface BlockType {
 	const ILIAS_LINK = 4;
 	const ACCORDION = 5;
 	const RICH_TEXT = 6;
+	const VIDEO = 7;
 
 }
