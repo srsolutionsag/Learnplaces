@@ -5,6 +5,7 @@ require_once __DIR__ . '/bootstrap.php';
 
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
 
 /**
  * Class ilObjLearnplacesGUI
@@ -20,6 +21,7 @@ use SRAG\Learnplaces\gui\helper\CommonControllerAction;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlContentGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlRichTextBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlIliasLinkBlockGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
@@ -56,6 +58,12 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				break;
 			case strtolower(xsrlRichTextBlockGUI::class):
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlRichTextBlockGUI::class));
+				break;
+			case strtolower(xsrlIliasLinkBlockGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlIliasLinkBlockGUI::class));
+				break;
+			case strtolower(xsrlIliasLinkBlockEditFormViewGUI::class):
+				$this->ctrl->forwardCommand(new xsrlIliasLinkBlockEditFormViewGUI(new ILIASLinkBlockModel()));
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class);

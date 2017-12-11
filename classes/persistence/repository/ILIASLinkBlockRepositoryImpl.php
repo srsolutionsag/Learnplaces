@@ -131,7 +131,6 @@ class ILIASLinkBlockRepositoryImpl implements ILIASLinkBlockRepository {
 			->setRefId($linkBlockEntity->getRefId())
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		return $linkBlock;

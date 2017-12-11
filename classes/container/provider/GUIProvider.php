@@ -10,11 +10,13 @@ use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactoryImpl;
 use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
+use SRAG\Learnplaces\service\publicapi\block\ILIASLinkBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use xsrlContentGUI;
+use xsrlIliasLinkBlockGUI;
 use xsrlPictureBlockGUI;
 use xsrlPictureUploadBlockGUI;
 use xsrlRichTextBlockGUI;
@@ -81,6 +83,19 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[RichTextBlockService::class],
+			$c[LearnplaceService::class],
+			$c[ConfigurationService::class]
+		);
+		};
+
+		$pimple[xsrlIliasLinkBlockGUI::class] = function ($c) {return new xsrlIliasLinkBlockGUI(
+			$c['ilTabs'],
+			$c['tpl'],
+			$c['ilCtrl'],
+			$c['ilAccess'],
+			$c['http'],
+			$c[ilLearnplacesPlugin::class],
+			$c[ILIASLinkBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class]
 		);

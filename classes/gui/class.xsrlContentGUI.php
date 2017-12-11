@@ -26,6 +26,7 @@ class xsrlContentGUI {
 		BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
 		BlockType::PICTURE          => xsrlPictureBlockGUI::class,
 		BlockType::RICH_TEXT        => xsrlRichTextBlockGUI::class,
+		BlockType::ILIAS_LINK       => xsrlIliasLinkBlockGUI::class,
 	];
 
 	/**

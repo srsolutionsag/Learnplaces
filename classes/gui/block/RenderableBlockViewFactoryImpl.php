@@ -6,10 +6,12 @@ namespace SRAG\Learnplaces\gui\block;
 use function get_class;
 use InvalidArgumentException;
 use SRAG\Learnplaces\container\PluginContainer;
+use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
+use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
@@ -41,6 +43,8 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 				return $this->getPicturePresentationView($blockModel);
 			case RichTextBlockModel::class:
 				return $this->getRichTextView($blockModel);
+			case ILIASLinkBlockModel::class:
+				return $this->getIliasLinkView($blockModel);
 			default:
 				throw new InvalidArgumentException('Model has no corresponding view.');
 		}
@@ -70,6 +74,16 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		 * @var RichTextBlockPresentationView $view
 		 */
 		$view = PluginContainer::resolve(RichTextBlockPresentationView::class);
+		$view->setModel($model);
+		return $view;
+	}
+
+	private function getIliasLinkView(ILIASLinkBlockModel $model): IliasLinkBlockPresentationView {
+
+		/**
+		 * @var IliasLinkBlockPresentationView $view
+		 */
+		$view = PluginContainer::resolve(IliasLinkBlockPresentationView::class);
 		$view->setModel($model);
 		return $view;
 	}
