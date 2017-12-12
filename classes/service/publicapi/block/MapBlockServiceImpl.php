@@ -65,4 +65,18 @@ class MapBlockServiceImpl implements MapBlockService {
 			throw new InvalidArgumentException('The map block with the given id does not exist.', 0, $ex);
 		}
 	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function findByObjectId(int $objectId): MapBlockModel {
+		try {
+			$dto = $this->mapBlockRepository->findByObjectId($objectId);
+			return $dto->toModel();
+		}
+		catch (EntityNotFoundException $ex) {
+			throw new InvalidArgumentException('No map block belongs to the learnpalce with the given object id.', 0, $ex);
+		}
+	}
 }

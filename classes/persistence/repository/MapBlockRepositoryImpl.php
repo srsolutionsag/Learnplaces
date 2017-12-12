@@ -67,11 +67,40 @@ class MapBlockRepositoryImpl implements MapBlockRepository {
 	 */
 	public function findByBlockId(int $id) : MapBlock {
 		try {
-			$block = \SRAG\Learnplaces\persistence\entity\MapBlock::findOrFail($id);
+			//check if the id belongs to a map block
+			$mapBlock = \SRAG\Learnplaces\persistence\entity\MapBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($mapBlock))
+				throw new EntityNotFoundException("Map block with id \"$id\" was not found");
+
+			$block = Block::findOrFail($id);
 			return $this->mapToDTO($block);
 		}
 		catch (arException $ex) {
 			throw new EntityNotFoundException("Map block with id \"$id\" was not found", $ex);
+		}
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function findByObjectId(int $objectId): MapBlock {
+		try {
+			//check if the id belongs to a map block
+			/**
+			 * @var \SRAG\Learnplaces\persistence\entity\MapBlock $mapBlock
+			 */
+			$mapBlock = \SRAG\Learnplaces\persistence\entity\MapBlock::innerjoinAR(new Block(), 'fk_block_id', 'pk_id', ['pk_id', 'fk_learnplace_id'])
+				->innerjoinAR(new \SRAG\Learnplaces\persistence\entity\Learnplace(), 'fk_learnplace_id', 'pk_id', ['pk_id', 'fk_object_id'], '=', true)
+				->where(['fk_object_id' => $objectId])->first();
+			if(is_null($mapBlock))
+				throw new EntityNotFoundException("No map block belongs to the object id \"$objectId\".");
+
+			$block = Block::findOrFail($mapBlock->getFkBlockId());
+			return $this->mapToDTO($block);
+		}
+		catch (arException $ex) {
+			throw new EntityNotFoundException("No map block belongs to the object id \"$id\".", $ex);
 		}
 	}
 
@@ -100,7 +129,7 @@ class MapBlockRepositoryImpl implements MapBlockRepository {
 		/**
 		 * @var Block[] $blocks
 		 */
-		$blocks = Block::innerjoinAR(new \SRAG\Learnplaces\persistence\entity\MapBlock(), 'pk_id', 'fk_block_id')
+		$blocks = Block::innerjoinAR(new \SRAG\Learnplaces\persistence\entity\MapBlock(), 'pk_id', 'fk_block_id', ['fk_block_id'])
 			->where(['fk_learnplace_id' => $learnplace->getId()])->get();
 
 		$mappedBlocks = [];
@@ -124,7 +153,6 @@ class MapBlockRepositoryImpl implements MapBlockRepository {
 		$mapBlock
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		return $mapBlock;

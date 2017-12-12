@@ -39,6 +39,18 @@ interface MapBlockRepository {
 
 
 	/**
+	 * Searches a map block by the learnplace object id.
+	 *
+	 * @param int $objectId     Learnplace object id.
+	 *
+	 * @return MapBlock         The map block which belongs to the given object id.
+	 * @throws EntityNotFoundException
+	 *                          Thrown if no map was found which belongs to the given object id.
+	 */
+	public function findByObjectId(int $objectId): MapBlock;
+
+
+	/**
 	 * Removes the map block with the given id.
 	 *
 	 * @param int $id   The id which should be used to remove the map block.

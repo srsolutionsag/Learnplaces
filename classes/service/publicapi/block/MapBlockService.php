@@ -52,4 +52,17 @@ interface MapBlockService {
 	 */
 	public function find(int $id): MapBlockModel;
 
+
+	/**
+	 * Searches after a map within the learnplace which belongs to the given object id.
+	 *
+	 * @param int $objectId     The object id of the learnpalce which should be used to search for the map block.
+	 *
+	 * @return MapBlockModel    The map block model which belongs to the given learnplace.
+	 *
+	 * @throws InvalidArgumentException
+	 *                          Thrown if no map was found for the learnplace with the given object id.
+	 */
+	public function findByObjectId(int $objectId): MapBlockModel;
+
 }

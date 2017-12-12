@@ -19,10 +19,13 @@ common_visibility#:#Visibility
 message_changes_save_success#:#Changes successfully saved.
 message_delete_success#:#Block successfully deleted.
 message_create_failure#:#An error occurred while creating the block.
+error_message_no_map_found#:#No map found for the current learnplace.
 
 tabs_content#:#Content
 tabs_edit#:#Edit block
 tabs_settings#:#Settings
+tabs_map#:#Map
+
 block_specific_settings#:#Block specific settings
 picture_upload_block_content#:#Picture upload block
 

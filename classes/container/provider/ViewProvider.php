@@ -8,6 +8,7 @@ use ilLearnplacesPlugin;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
+use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
@@ -51,6 +52,13 @@ final class ViewProvider implements ServiceProviderInterface {
 
 		$pimple[IliasLinkBlockPresentationView::class] = $pimple->factory(function ($c) {
 			return new IliasLinkBlockPresentationView(
+				$c[ilLearnplacesPlugin::class],
+				$c[ilCtrl::class]
+			);
+		});
+
+		$pimple[MapBlockPresentationView::class] = $pimple->factory(function ($c) {
+			return new MapBlockPresentationView(
 				$c[ilLearnplacesPlugin::class],
 				$c[ilCtrl::class]
 			);

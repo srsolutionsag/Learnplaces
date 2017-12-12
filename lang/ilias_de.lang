@@ -19,10 +19,13 @@ common_visibility#:#Sichtbarkeit
 message_changes_save_success#:#&Auml;nderungen erfolgreich gespeichert.
 message_delete_success#:#Block erfolgreich gel&ouml;scht.
 message_create_failure#:#Fehler bei der Block Erstellung.
+error_message_no_map_found#:#Keine Karte gefunden f&uuml;r den aktuellen Lernort.
 
 tabs_content#:#Inhalt
 tabs_edit#:#Block bearbeiten
 tabs_settings#:#Einstellungen
+tabs_map#:#Karte
+
 block_specific_settings#:#Block spezifische Einstellungen
 picture_upload_block_content#:#Bildupload Block
 
