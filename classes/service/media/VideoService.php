@@ -33,4 +33,15 @@ interface VideoService {
 	 */
 	public function storeUpload(int $objectId): VideoModel;
 
+
+	/**
+	 * Deletes a files by video model.
+	 * This method will simply ignore missing files.
+	 *
+	 * @param VideoModel $video The video model which should be used to delete all related files.
+	 *
+	 * @return void
+	 */
+	public function delete(VideoModel $video);
+
 }

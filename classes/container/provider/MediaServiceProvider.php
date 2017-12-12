@@ -45,6 +45,11 @@ final class MediaServiceProvider implements ServiceProviderInterface {
 				$c[FilesystemInterface::class]
 			);
 		};
-		$pimple[VideoService::class]        = function ($c) {return new VideoServiceImpl($c['http']->request(), $c[FileTypeDetector::class]); };
+		$pimple[VideoService::class]        = function ($c) {return new VideoServiceImpl(
+				$c['http']->request(),
+				$c[FileTypeDetector::class],
+				$c[FilesystemInterface::class]
+			);
+		};
 	}
 }

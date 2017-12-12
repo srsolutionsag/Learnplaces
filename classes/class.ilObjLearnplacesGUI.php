@@ -17,13 +17,13 @@ use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
  * @ilCtrl_isCalledBy ilObjLearnplacesGUI: ilAdministrationGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilPermissionGUI, ilInfoScreenGUI, ilObjectCopyGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: ilCommonActionDispatcherGUI
- * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureUploadBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlPictureBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlContentGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlRichTextBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlIliasLinkBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlMapBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlVideoBlockGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
@@ -89,6 +89,9 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				break;
 			case strtolower(xsrlMapBlockGUI::class):
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlMapBlockGUI::class));
+				break;
+			case strtolower(xsrlVideoBlockGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlVideoBlockGUI::class));
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class);

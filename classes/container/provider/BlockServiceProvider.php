@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\container\provider;
 
+use League\Flysystem\FilesystemInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\persistence\repository\AccordionBlockRepository;
@@ -20,6 +21,7 @@ use SRAG\Learnplaces\persistence\repository\RichTextBlockRepository;
 use SRAG\Learnplaces\persistence\repository\VideoBlockRepository;
 use SRAG\Learnplaces\persistence\repository\VisitJournalRepository;
 use SRAG\Learnplaces\service\media\PictureService;
+use SRAG\Learnplaces\service\media\VideoService;
 use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\AccordionBlockServiceImpl;
 use SRAG\Learnplaces\service\publicapi\block\AnswerService;
@@ -66,7 +68,7 @@ final class BlockServiceProvider implements ServiceProviderInterface {
 	 */
 	public function register(Container $pimple) {
 		$pimple[VisitJournalService::class]             = function ($c) {return new VisitJournalServiceImpl($c[VisitJournalRepository::class]); };
-		$pimple[VideoBlockService::class]               = function ($c) {return new VideoBlockServiceImpl($c[VideoBlockRepository::class]); };
+		$pimple[VideoBlockService::class]               = function ($c) {return new VideoBlockServiceImpl($c[VideoBlockRepository::class], $c[VideoService::class]); };
 		$pimple[RichTextBlockService::class]            = function ($c) {return new RichTextBlockServiceImpl($c[RichTextBlockRepository::class]); };
 		$pimple[PictureUploadBlockService::class]       = function ($c) {return new PictureUploadBlockServiceImpl($c[PictureUploadBlockRepository::class]); };
 		$pimple[PictureBlockService::class]             = function ($c) {return new PictureBlockServiceImpl($c[PictureBlockRepository::class], $c[PictureService::class]); };

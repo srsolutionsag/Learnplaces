@@ -44,6 +44,10 @@ block_add_header#:#Block hinzufügen
 picture_block_enter_title#:#Titel
 picture_block_enter_description#:#Beschreibung
 picture_block_select_picture#:#Bild
+picture_block_upload_error#:#Bilderupload unvollst&auml;ndig oder das Format wird nicht unterst&uuml;tzt.
+
+video_block_select_video#:#Video
+video_block_upload_error#:#Videoupload unvollst&auml;ndig oder das Format wird nicht unterst&uuml;tzt.
 
 rich_text_block_content#:#Inhalt
 

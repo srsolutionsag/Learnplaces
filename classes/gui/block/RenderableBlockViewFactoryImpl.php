@@ -10,11 +10,13 @@ use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
+use SRAG\Learnplaces\gui\block\VideoBlock\VideoBlockPresentationView;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
 
 /**
  * Class RenderableBlockViewFactoryImpl
@@ -45,6 +47,8 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 				return $this->getRichTextView($blockModel);
 			case ILIASLinkBlockModel::class:
 				return $this->getIliasLinkView($blockModel);
+			case VideoBlockModel::class:
+				return $this->getVideoView($blockModel);
 			default:
 				throw new InvalidArgumentException('Model has no corresponding view.');
 		}
@@ -84,6 +88,16 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		 * @var IliasLinkBlockPresentationView $view
 		 */
 		$view = PluginContainer::resolve(IliasLinkBlockPresentationView::class);
+		$view->setModel($model);
+		return $view;
+	}
+
+	private function getVideoView(VideoBlockModel $model): VideoBlockPresentationView {
+
+		/**
+		 * @var VideoBlockPresentationView $view
+		 */
+		$view = PluginContainer::resolve(VideoBlockPresentationView::class);
 		$view->setModel($model);
 		return $view;
 	}

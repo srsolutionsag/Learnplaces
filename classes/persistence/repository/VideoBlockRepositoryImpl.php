@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
+use function is_null;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\dto\VideoBlock;
 use SRAG\Learnplaces\persistence\entity\Block;
@@ -67,8 +68,10 @@ class VideoBlockRepositoryImpl implements VideoBlockRepository {
 	 */
 	public function findByBlockId(int $id) : VideoBlock {
 		try {
-			$block = \SRAG\Learnplaces\persistence\entity\VideoBlock::findOrFail($id);
 			$videoBlock = \SRAG\Learnplaces\persistence\entity\VideoBlock::where(['fk_block_id' => $id])->first();
+			if(is_null($videoBlock))
+				throw new EntityNotFoundException("Video block with id \"$id\" was not found");
+			$block = Block::findOrFail($id);
 			return $this->mapToDTO($block, $videoBlock);
 		}
 		catch (arException $ex) {
@@ -128,7 +131,6 @@ class VideoBlockRepositoryImpl implements VideoBlockRepository {
 			->setCoverPath($videoBlockEntity->getCoverPath())
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		return $videoBlock;

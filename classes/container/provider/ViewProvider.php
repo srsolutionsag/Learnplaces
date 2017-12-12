@@ -12,6 +12,7 @@ use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
+use SRAG\Learnplaces\gui\block\VideoBlock\VideoBlockPresentationView;
 
 /**
  * Class ViewProvider
@@ -59,6 +60,13 @@ final class ViewProvider implements ServiceProviderInterface {
 
 		$pimple[MapBlockPresentationView::class] = $pimple->factory(function ($c) {
 			return new MapBlockPresentationView(
+				$c[ilLearnplacesPlugin::class],
+				$c[ilCtrl::class]
+			);
+		});
+
+		$pimple[VideoBlockPresentationView::class] = $pimple->factory(function ($c) {
+			return new VideoBlockPresentationView(
 				$c[ilLearnplacesPlugin::class],
 				$c[ilCtrl::class]
 			);

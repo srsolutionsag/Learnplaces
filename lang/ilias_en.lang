@@ -44,6 +44,10 @@ block_add_header#:#Add block
 picture_block_enter_title#:#Title
 picture_block_enter_description#:#Description
 picture_block_select_picture#:#Picture
+picture_block_upload_error#:#Picture only partially uploaded, or unsupported video format.
+
+video_block_select_video#:#Video
+video_block_upload_error#:#Video only partially uploaded, or unsupported video format.
 
 rich_text_block_content#:#Content
 

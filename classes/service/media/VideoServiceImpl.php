@@ -3,9 +3,12 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
+use function array_pop;
+use League\Flysystem\FilesystemInterface;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
@@ -39,17 +42,23 @@ class VideoServiceImpl implements VideoService {
 	 * @var FileTypeDetector $fileTypeDetector
 	 */
 	private $fileTypeDetector;
+	/**
+	 * @var FilesystemInterface $filesystem
+	 */
+	private $filesystem;
 
 
 	/**
 	 * VideoServiceImpl constructor.
 	 *
-	 * @param $request
-	 * @param $fileTypeDetector
+	 * @param ServerRequestInterface $request
+	 * @param FileTypeDetector       $fileTypeDetector
+	 * @param FilesystemInterface    $filesystem
 	 */
-	public function __construct($request, $fileTypeDetector) {
+	public function __construct(ServerRequestInterface $request, FileTypeDetector $fileTypeDetector, FilesystemInterface $filesystem) {
 		$this->request = $request;
 		$this->fileTypeDetector = $fileTypeDetector;
+		$this->filesystem = $filesystem;
 	}
 
 
@@ -63,16 +72,31 @@ class VideoServiceImpl implements VideoService {
 		/**
 		 * @var UploadedFileInterface $file
 		 */
-		$file = $this->request->getUploadedFiles()[0];
+		$file = array_pop($this->request->getUploadedFiles());
 		$this->validateUpload($file);
 		$videoPath = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
-		$file->moveTo($videoPath);
+
+		$this->filesystem->putStream($videoPath, $file->getStream()->detach());
 		$this->validateVideoContent($videoPath);
 
 		$videoModel = new VideoModel();
 		$videoModel->setVideoPath($videoPath);
 
 		return $videoModel;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function delete(VideoModel $video) {
+		$this->deleteFile($video->getVideoPath());
+		$this->deleteFile($video->getCoverPath());
+	}
+
+	private function deleteFile(string $path) {
+		if($this->filesystem->has($path))
+			$this->filesystem->delete($path);
 	}
 
 	private function hasUploadedFiles(): bool {
@@ -90,11 +114,32 @@ class VideoServiceImpl implements VideoService {
 			throw new FileUploadException('Video with invalid extension uploaded.');
 	}
 
-	private function validateVideoContent(string $pathToPicture) {
-		$typeInfo = $this->fileTypeDetector->detectByContent($pathToPicture);
+	private function validateVideoContent(string $pathToVideo) {
+		try {
+			/*
+			 * Supported headers:
+			 * offset 4: ftyp = 0x66747970
+			 *
+			 * Possible sup types:
+			 * offset 8: isom = 0x69736F6D
+			 * offset 8: 3gp5 = 0x33677035
+			 * offset 8: MSNV = 0x4D534E56
+			 * offset 8: M4A  = 0x4D344120
+			 *
+			 * documentation: https://github.com/wapmorgan/FileTypeDetector
+			 */
+			$typeInfo = $this->fileTypeDetector->detectByContent($pathToVideo);
 
-		if(in_array($typeInfo[1], self::$allowedVideoTypes) === false)
-			throw new FileUploadException('Video with invalid content uploaded.');
+			if(in_array($typeInfo[1], self::$allowedVideoTypes) === false) {
+				$this->deleteFile($pathToVideo);
+				throw new FileUploadException('Video with invalid content uploaded.');
+			}
+		}
+		catch (RuntimeException $ex) {
+			$this->deleteFile($pathToVideo);
+			throw new FileUploadException('Video with unknown header uploaded.');
+		}
+
 	}
 
 }

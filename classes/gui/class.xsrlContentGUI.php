@@ -28,6 +28,7 @@ class xsrlContentGUI {
 		BlockType::RICH_TEXT        => xsrlRichTextBlockGUI::class,
 		BlockType::ILIAS_LINK       => xsrlIliasLinkBlockGUI::class,
 		BlockType::MAP              => xsrlMapBlockGUI::class,
+		BlockType::VIDEO            => xsrlVideoBlockGUI::class,
 	];
 
 	/**

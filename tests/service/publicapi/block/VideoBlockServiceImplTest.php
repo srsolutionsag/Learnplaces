@@ -1,9 +1,12 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\publicapi\block;
 
 use InvalidArgumentException;
+use League\Flysystem\FilesystemInterface;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -19,12 +22,16 @@ use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
  */
 class VideoBlockServiceImplTest extends TestCase {
 
-	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+	use MockeryPHPUnitIntegration;
 
 	/**
 	 * @var VideoBlockRepository|MockInterface $videoBlockRepositoryMock
 	 */
 	private $videoBlockRepositoryMock;
+	/**
+	 * @var FilesystemInterface|MockInterface $filesystemMock
+	 */
+	private $filesystemMock;
 	/**
 	 * @var VideoBlockServiceImpl $subject
 	 */
@@ -36,9 +43,9 @@ class VideoBlockServiceImplTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-
+		$this->filesystemMock = Mockery::mock(FilesystemInterface::class);
 		$this->videoBlockRepositoryMock = Mockery::mock(VideoBlockRepository::class);
-		$this->subject = new VideoBlockServiceImpl($this->videoBlockRepositoryMock);
+		$this->subject = new VideoBlockServiceImpl($this->videoBlockRepositoryMock, $this->filesystemMock);
 	}
 
 	/**
@@ -74,10 +81,27 @@ class VideoBlockServiceImplTest extends TestCase {
 			->setVisibility("ALWAYS");
 
 		$this->videoBlockRepositoryMock
-			->shouldReceive('delete')
+			->shouldReceive('findByBlockId')
 			->once()
 			->with($model->getId())
-			->andReturn($model->toDto());
+			->andReturn($model->toDto())
+			->getMock()
+			->shouldReceive('delete')
+			->once()
+			->with($model->getId());
+
+		$this->filesystemMock
+			->shouldReceive('has')
+			->once()
+			->andReturn(true)
+			->getMock()
+			->shouldReceive('delete')
+			->once()
+			->with($model->getCoverPath())
+			->getMock()
+			->shouldReceive('delete')
+			->once()
+			->with($model->getPath());
 
 		$this->subject->delete($model->getId());
 	}
@@ -90,7 +114,7 @@ class VideoBlockServiceImplTest extends TestCase {
 		$blockId = 6;
 
 		$this->videoBlockRepositoryMock
-			->shouldReceive('delete')
+			->shouldReceive('findByBlockId')
 			->once()
 			->with($blockId)
 			->andThrow(new EntityNotFoundException('Entity not found'));
