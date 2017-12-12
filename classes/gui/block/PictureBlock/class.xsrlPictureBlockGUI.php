@@ -177,6 +177,7 @@ final class xsrlPictureBlockGUI {
 		}
 		catch (FileUploadException $ex) {
 			$form->setValuesByPost();
+			ilUtil::sendFailure($this->plugin->txt('video_block_upload_error'));
 			$this->template->setContent($form->getHTML());
 		}
 	}
@@ -200,17 +201,17 @@ final class xsrlPictureBlockGUI {
 			 */
 			$block = $form->getBlockModel();
 			$oldPictureBlock = $this->pictureBlockService->find($block->getId());
-			$picture = $oldPictureBlock->getPicture();
-			$block->setPicture($picture);
+			$oldPicture = $oldPictureBlock->getPicture();
+			$block->setPicture($oldPicture);
 
 			$uploadedFiles = $this->http->request()->getUploadedFiles();
 			if(count($uploadedFiles) === 1 && array_pop($uploadedFiles)->getError() === UPLOAD_ERR_OK) {
-				//delete old picture
-				$this->pictureService->delete($block->getPicture()->getId());
-
 				//store new picture
 				$picture = $this->pictureService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
 				$block->setPicture($picture);
+
+				//delete old picture
+				$this->pictureService->delete($oldPicture->getId());
 			}
 
 			$this->pictureBlockService->store($block);
@@ -228,6 +229,7 @@ final class xsrlPictureBlockGUI {
 		}
 		catch (FileUploadException $ex) {
 			$form->setValuesByPost();
+			ilUtil::sendFailure($this->plugin->txt('picture_block_upload_error'));
 			$this->template->setContent($form->getHTML());
 		}
 	}

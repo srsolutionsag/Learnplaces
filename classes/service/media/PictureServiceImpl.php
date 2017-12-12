@@ -10,6 +10,7 @@ use League\Flysystem\FilesystemInterface;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
+use RuntimeException;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
 use SRAG\Learnplaces\service\filesystem\PathHelper;
@@ -119,12 +120,17 @@ class PictureServiceImpl implements PictureService {
 			$picture = $this->pictureRepository->find($pictureId);
 			$this->pictureRepository->delete($pictureId);
 
-			$this->filesystem->delete($picture->getOriginalPath());
-			$this->filesystem->delete($picture->getPreviewPath());
+			$this->deleteFile($picture->getOriginalPath());
+			$this->deleteFile($picture->getPreviewPath());
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("Unable to delete picture with id \"$pictureId\".", 0, $ex);
 		}
+	}
+
+	private function deleteFile(string $path) {
+		if($this->filesystem->has($path))
+			$this->filesystem->delete($path);
 	}
 
 
@@ -139,15 +145,24 @@ class PictureServiceImpl implements PictureService {
 
 		$typeInfo = $this->fileTypeDetector->detectByFilename($file->getClientFilename() ?? '');
 
-		if(in_array($typeInfo[1], self::$allowedPictureTypes) === false)
+		if(in_array($typeInfo[1], self::$allowedPictureTypes) === false) {
 			throw new FileUploadException('Picture with invalid extension uploaded.');
+		}
 	}
 
 	private function validateImageContent(string $pathToPicture) {
-		$typeInfo = $this->fileTypeDetector->detectByContent($pathToPicture);
+		try {
+			$typeInfo = $this->fileTypeDetector->detectByContent($pathToPicture);
 
-		if(in_array($typeInfo[1], self::$allowedPictureTypes) === false)
-			throw new FileUploadException('Picture with invalid content uploaded.');
+			if(in_array($typeInfo[1], self::$allowedPictureTypes) === false) {
+				$this->deleteFile($pathToPicture);
+				throw new FileUploadException('Picture with invalid content uploaded.');
+			}
+		}
+		catch (RuntimeException $ex) {
+			$this->deleteFile($pathToPicture);
+			throw new FileUploadException('Video with unknown header uploaded.');
+		}
 	}
 
 	/**
