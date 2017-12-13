@@ -14,6 +14,7 @@ use ilTextInputGUI;
 use function is_null;
 use LogicException;
 use SRAG\Learnplaces\gui\block\Renderable;
+use SRAG\Learnplaces\gui\block\util\ReadOnlyViewAware;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use xsrlPictureBlockGUI;
@@ -26,6 +27,8 @@ use xsrlPictureBlockGUI;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class PictureBlockPresentationView implements Renderable {
+
+	use ReadOnlyViewAware;
 
 	const SEQUENCE_ID_PREFIX = 'picture_';
 
@@ -114,8 +117,10 @@ final class PictureBlockPresentationView implements Renderable {
 		$input->setRequired(true);
 
 		//fill outer template
-		$outerTemplate->setVariable('ACTION_BUTTON', $splitButton->render());
-		$outerTemplate->setVariable('SEQUENCE_INPUT', $input->render());
+		if(!$this->isReadonly()) {
+			$outerTemplate->setVariable('ACTION_BUTTON', $splitButton->render());
+			$outerTemplate->setVariable('SEQUENCE_INPUT', $input->render());
+		}
 		$outerTemplate->setVariable('CONTENT', $blockTemplate->get());
 		return $outerTemplate;
 	}

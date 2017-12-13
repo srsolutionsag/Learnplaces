@@ -140,6 +140,8 @@ final class xsrlMapBlockGUI {
 			$view = PluginContainer::resolve(MapBlockPresentationView::class);
 			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$view->setModels($this->fetchMapModelFromLearnplace($learnplace), $learnplace->getLocation());
+			$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId());
+			$view->setReadonly(!$writePermission);
 			$this->template->setContent($view->getHTML());
 		}
 		catch (LogicException $ex) {

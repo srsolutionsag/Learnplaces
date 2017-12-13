@@ -10,6 +10,7 @@ use ilMapUtil;
 use ilTemplate;
 use ilToolbarGUI;
 use LogicException;
+use SRAG\Learnplaces\gui\block\util\ReadOnlyViewAware;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\model\LocationModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
@@ -24,6 +25,8 @@ use xsrlMapBlockGUI;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class MapBlockPresentationView {
+
+	use ReadOnlyViewAware;
 
 	const MAP_ZOOM = 10;
 
@@ -88,7 +91,9 @@ final class MapBlockPresentationView {
 				->setWidth('100%')
 				->setHeight('500px');
 
-		$this->template->setVariable('TOOLBAR', $toolbar->getHTML());
+		if(!$this->isReadonly()) {
+			$this->template->setVariable('TOOLBAR', $toolbar->getHTML());
+		}
 		$this->template->setVariable('CONTENT', $map->getHtml());
 	}
 

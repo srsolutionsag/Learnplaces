@@ -169,10 +169,6 @@ final class xsrlRichTextBlockGUI {
 			$form->setValuesByPost();
 			$this->template->setContent($form->getHTML());
 		}
-		catch (FileUploadException $ex) {
-			$form->setValuesByPost();
-			$this->template->setContent($form->getHTML());
-		}
 	}
 
 	private function edit() {
