@@ -89,7 +89,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		$this->storeAllFeedbackRelations($activeRecord->getPkId(), $learnplace->getFeedback());
 		$this->storeAllVisitJournals($activeRecord->getPkId(), $learnplace->getVisitJournals());
 		$this->storeLocationRelations($activeRecord->getPkId(), $learnplace->getLocation());
-		$this->storeBlockRelations($activeRecord->getPkId(), $learnplace->getBlocks());
+		$this->storeBlockRelationsAndSequence($activeRecord->getPkId(), $learnplace->getBlocks());
 		return $this->mapToDTO($activeRecord);
 	}
 
@@ -205,7 +205,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		}
 	}
 
-	private function storeBlockRelations(int $learnplaceId, array $blocks) {
+	private function storeBlockRelationsAndSequence(int $learnplaceId, array $blocks) {
 		try{
 			/**
 			 * @var \SRAG\Learnplaces\persistence\dto\Block $block
@@ -216,6 +216,7 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 				 * @var Block $blockEntity
 				 */
 				$blockEntity->setFkLearnplaceId($learnplaceId);
+				$blockEntity->setSequence($block->getSequence());
 				$blockEntity->update();
 			}
 		}

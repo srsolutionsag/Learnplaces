@@ -5,6 +5,8 @@ use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\MapBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\persistence\entity\Learnplace;
@@ -22,6 +24,8 @@ use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlMapBlockGUI {
+
+	use InsertPositionAware;
 
 	const TAB_ID = 'Map';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -151,6 +155,8 @@ final class xsrlMapBlockGUI {
 	}
 
 	private function add() {
+		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
+
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new MapBlockModel();
 
@@ -172,7 +178,7 @@ final class xsrlMapBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			$blocks[] = $block;
+			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 

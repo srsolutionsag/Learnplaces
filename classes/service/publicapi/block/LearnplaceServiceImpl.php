@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\publicapi\block;
 
+use function intval;
 use InvalidArgumentException;
 use LogicException;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -96,7 +97,9 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 	public function findByObjectId(int $objectId): LearnplaceModel {
 		try {
 			$dto = $this->learnplaceRepository->findByObjectId($objectId);
-			return $this->filterBlocksWhichBelongToAccordions($dto->toModel());
+			$model = $this->filterBlocksWhichBelongToAccordions($dto->toModel());
+			$model->setBlocks($this->sortBySequence($model->getBlocks()));
+			return $model;
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("The leanplace could not been found, reason the given object id \"$objectId\" was not found.", 0, $ex);
@@ -109,6 +112,7 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 	 */
 	public function store(LearnplaceModel $learnplaceModel): LearnplaceModel {
 		try {
+			$learnplaceModel->setBlocks($this->regenerateSequence($learnplaceModel->getBlocks()));
 			$model = $this->learnplaceRepository->store($learnplaceModel->toDto());
 			return $model->toModel();
 		}
@@ -124,7 +128,9 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 	public function find(int $id): LearnplaceModel {
 		try {
 			$dto = $this->learnplaceRepository->find($id);
-			return $this->filterBlocksWhichBelongToAccordions($dto->toModel());
+			$model = $this->filterBlocksWhichBelongToAccordions($dto->toModel());
+			$model->setBlocks($this->sortBySequence($model->getBlocks()));
+			return $model;
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("The leanplace could not been found, reason the given id \"$id\" was not found.", 0, $ex);
@@ -150,4 +156,37 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 	}
 
 
+	/**
+	 * Sorts block models by sequence id.
+	 *
+	 * @param BlockModel[] $blocks  Unsorted block model list.
+	 *
+	 * @return BlockModel[]         Sorted block model list.
+	 */
+	private function sortBySequence(array $blocks): array {
+		$sorted = $blocks;
+		usort($sorted, function (BlockModel $i, BlockModel $y) {
+			return ($i->getSequence() > $y->getSequence()) ? 1 : -1;
+		});
+
+		return $sorted;
+	}
+
+
+	/**
+	 * Regenerate the sequence numbers of the block in the current order.
+	 *
+	 * @param BlockModel[] $blocks  List of blocks with possible inconsistent sequence numbers.
+	 *
+	 * @return BlockModel[]         Blocks with regenerated sequence numbers.
+	 */
+	private function regenerateSequence(array $blocks): array {
+		$regenerated = [];
+		foreach ($blocks as $key => $block) {
+			$block->setSequence($key + 1);
+			$regenerated[] = $block;
+		}
+
+		return $regenerated;
+	}
 }

@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
@@ -18,6 +20,8 @@ use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlAccordionBlockGUI {
+
+	use InsertPositionAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -126,6 +130,8 @@ final class xsrlAccordionBlockGUI {
 	}
 
 	private function add() {
+		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
+
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new AccordionBlockModel();
 
@@ -150,7 +156,7 @@ final class xsrlAccordionBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			$blocks[] = $block;
+			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 

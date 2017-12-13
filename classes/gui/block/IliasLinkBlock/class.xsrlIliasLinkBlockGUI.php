@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
+use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
@@ -21,6 +23,8 @@ use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
  * @ilCtrl_isCalledBy      xsrlIliasLinkBlockGUI: ilInternalLinkGUI
  */
 final class xsrlIliasLinkBlockGUI {
+
+	use InsertPositionAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -133,6 +137,7 @@ $next_class = $this->controlFlow->getNextClass();
 	}
 
 	private function add() {
+		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
 
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new ILIASLinkBlockModel();
@@ -159,7 +164,7 @@ $next_class = $this->controlFlow->getNextClass();
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			$blocks[] = $block;
+			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 

@@ -23,4 +23,14 @@ interface BlockOperationDispatcher {
 	 * @return void
 	 */
 	public function deleteAll(array $blocks);
+
+
+	/**
+	 * Stores all given blocks.
+	 *
+	 * @param BlockModel[] $blocks The array of blocks which should be stored.
+	 *
+	 * @return void
+	 */
+	public function storeAll(array $blocks);
 }

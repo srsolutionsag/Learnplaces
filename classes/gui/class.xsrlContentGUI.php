@@ -5,6 +5,7 @@ use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 
@@ -140,17 +141,19 @@ class xsrlContentGUI {
 		$toolbar->addStickyItem($buttonAdd);
 
 		$template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/tpl.block_list.html', true, true);
-		$template->setVariable('TOOLBAR', $toolbar->getHTML());
+		if($this->access->checkAccess('write', '', $this->getCurrentRefId()) === true)
+			$template->setVariable('TOOLBAR', $toolbar->getHTML());
 
 		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId());
 
-		$blockHtml = '';
-		foreach ($learnplace->getBlocks() as $block) {
+		$blockHtml = $this->getPlusView(0)->getHTML();
+		foreach ($learnplace->getBlocks() as $position => $block) {
 			try {
 				$view = $this->renderableFactory->getInstance($block);
 				$view->setReadonly(!$writePermission);
 				$blockHtml .= $view->getHtml();
+				$blockHtml .= $this->getPlusView(intval($position) + 1)->getHTML();
 			}
 			catch (InvalidArgumentException $exception) {
 				//ignore the models without view
@@ -170,6 +173,7 @@ class xsrlContentGUI {
 		if($blockAdd->checkInput()) {
 			$input = intval($blockAdd->getInput(BlockAddFormGUI::POST_BLOCK_TYPES, true));
 			$controller = static::$blockTypeViewMapping[$input];
+			$this->controlFlow->saveParameterByClass($controller, PlusView::POSITION_QUERY_PARAM);
 
 			//dispatch to controller which knows how to handle that block
 			$this->controlFlow->redirectByClass($controller, CommonControllerAction::CMD_ADD);
@@ -182,6 +186,10 @@ class xsrlContentGUI {
 
 	private function cancel() {
 		$this->controlFlow->redirect($this, CommonControllerAction::CMD_INDEX);
+	}
+
+	private function getPlusView(int $position): PlusView {
+		return new PlusView($position, $this->controlFlow->getLinkTarget($this, CommonControllerAction::CMD_ADD));
 	}
 
 

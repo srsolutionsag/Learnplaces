@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\publicapi\block\util;
 
@@ -25,7 +26,7 @@ use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class DefaultBlockOperationDispatcher implements BlockOperationDispatcher {
+final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher {
 
 	/**
 	 * @var AccordionBlockService $accordionBlockService
@@ -82,6 +83,14 @@ class DefaultBlockOperationDispatcher implements BlockOperationDispatcher {
 		}
 	}
 
+	public function storeAll(array $blocks) {
+		foreach ($blocks as $block) {
+			$this->storeBlockByType($block);
+		}
+	}
+
+
+
 	private function deleteBlockByType(BlockModel $block) {
 		switch (true) {
 			case $block instanceof AccordionBlockModel:
@@ -104,6 +113,31 @@ class DefaultBlockOperationDispatcher implements BlockOperationDispatcher {
 				return;
 			default:
 				throw new LogicException('Unable to dispatch block delete operation');
+		}
+	}
+
+	private function storeBlockByType(BlockModel $block) {
+		switch (true) {
+			case $block instanceof AccordionBlockModel:
+				$this->accordionBlockService->store($block);
+				return;
+			case $block instanceof PictureBlockModel:
+				$this->pictureBlockService->store($block);
+				return;
+			case $block instanceof ILIASLinkBlockModel:
+				$this->iliasLinkBlockService->store($block);
+				return;
+			case $block instanceof PictureUploadBlockModel:
+				$this->pictureUploadBlockService->store($block);
+				return;
+			case $block instanceof MapBlockModel:
+				$this->mapBlockService->store($block);
+				return;
+			case $block instanceof RichTextBlockModel:
+				$this->richTextBlockService->store($block);
+				return;
+			default:
+				throw new LogicException('Unable to dispatch block store operation');
 		}
 	}
 }

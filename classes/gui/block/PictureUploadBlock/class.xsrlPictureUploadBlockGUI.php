@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
@@ -18,6 +20,8 @@ use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlPictureUploadBlockGUI {
+
+	use InsertPositionAware;
 
 	const TAB_ID = 'edit-block';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -128,6 +132,8 @@ final class xsrlPictureUploadBlockGUI {
 	}
 
 	private function add() {
+		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
+
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new PictureUploadBlockModel();
 
@@ -149,7 +155,7 @@ final class xsrlPictureUploadBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			$blocks[] = $uploadBlock;
+			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$uploadBlock]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 

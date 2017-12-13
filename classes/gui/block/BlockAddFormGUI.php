@@ -4,10 +4,12 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\gui\block;
 
 use ilFormSectionHeaderGUI;
+use ilHiddenInputGUI;
 use ilLearnplacesPlugin;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
+use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use xsrlContentGUI;
 
@@ -23,6 +25,7 @@ use xsrlContentGUI;
 final class BlockAddFormGUI extends ilPropertyFormGUI {
 
 	const POST_BLOCK_TYPES = 'post_block_types';
+	const POST_SEQUENCE = 'post_sequence';
 	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
@@ -41,6 +44,7 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 
 	private function initForm() {
 
+		$this->ctrl->saveParameterByClass(xsrlContentGUI::class, PlusView::POSITION_QUERY_PARAM);
 		$this->setFormAction($this->ctrl->getFormActionByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX));
 		$this->setPreventDoubleSubmission(true);
 
