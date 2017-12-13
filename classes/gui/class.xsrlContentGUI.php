@@ -29,6 +29,7 @@ class xsrlContentGUI {
 		BlockType::ILIAS_LINK       => xsrlIliasLinkBlockGUI::class,
 		BlockType::MAP              => xsrlMapBlockGUI::class,
 		BlockType::VIDEO            => xsrlVideoBlockGUI::class,
+		BlockType::ACCORDION        => xsrlAccordionBlockGUI::class,
 	];
 
 	/**
@@ -142,15 +143,17 @@ class xsrlContentGUI {
 		$template->setVariable('TOOLBAR', $toolbar->getHTML());
 
 		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId());
 
 		$blockHtml = '';
 		foreach ($learnplace->getBlocks() as $block) {
 			try {
 				$view = $this->renderableFactory->getInstance($block);
+				$view->setReadonly(!$writePermission);
 				$blockHtml .= $view->getHtml();
 			}
-			catch (InvalidArgumentException $ex) {
-				//only temporary unitl all blocks are implemented
+			catch (InvalidArgumentException $exception) {
+				//ignore the models without view
 			}
 		}
 		$template->setVariable('CONTENT', $blockHtml);

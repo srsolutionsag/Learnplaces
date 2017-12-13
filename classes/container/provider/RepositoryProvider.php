@@ -110,21 +110,32 @@ final class RepositoryProvider implements ServiceProviderInterface {
 		$pimple[CommentRepository::class]               = function ($c) {return new CommentRepositoryImpl($c[PictureRepository::class], $c[AnswerRepository::class]); };
 		$pimple[CommentBlockRepository::class]          = function ($c) {return new CommentBlockRepositoryImpl($c[LearnplaceConstraintRepository::class], $c[CommentRepository::class]); };
 		$pimple[AudioBlockRepository::class]            = function ($c) {return new AudioBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]); };
-		$pimple[BlockAccumulator::class]                = function ($c) {return new BlockAccumulatorImpl(
-																					$c[PictureUploadBlockRepository::class],
-																					$c[ILIASLinkBlockRepository::class],
-																					$c[AudioBlockRepository::class],
-																					$c[HorizontalLineBlockRepository::class],
-																					$c[MapBlockRepository::class],
-																					$c[CommentBlockRepository::class],
-																					$c[VideoBlockRepository::class],
-																					$c[RichTextBlockRepository::class],
-																					$c[PictureBlockRepository::class],
-																					$c[ExternalStreamBlockRepository::class],
-																					$c[FeedbackBlockRepository::class]
-																				);
-																		};
-		$pimple[AccordionBlockRepository::class]        = function ($c) {return new AccordionBlockRepositoryImpl($c[LearnplaceConstraintRepository::class], $c[BlockAccumulator::class]); };
+		$pimple[BlockAccumulator::class]                = function ($c) {
+
+			/**
+			 * @var AccordionBlockRepositoryImpl $accordion
+			 */
+			$accordion = $c[AccordionBlockRepository::class];
+			$accumulator = new BlockAccumulatorImpl(
+			$c[PictureUploadBlockRepository::class],
+			$c[ILIASLinkBlockRepository::class],
+			$c[AudioBlockRepository::class],
+			$c[HorizontalLineBlockRepository::class],
+			$c[MapBlockRepository::class],
+			$c[CommentBlockRepository::class],
+			$c[VideoBlockRepository::class],
+			$c[RichTextBlockRepository::class],
+			$c[PictureBlockRepository::class],
+			$c[ExternalStreamBlockRepository::class],
+			$c[FeedbackBlockRepository::class],
+			$accordion
+			);
+
+			$accordion->postConstruct($accumulator);
+			return $accumulator;
+		};
+
+		$pimple[AccordionBlockRepository::class]        = function ($c) {return new AccordionBlockRepositoryImpl($c[LearnplaceConstraintRepository::class]);};
 		$pimple[LearnplaceRepository::class]            = function ($c) {return new LearnplaceRepositoryImpl(
 																					$c[LocationRepository::class],
 																					$c[VisitJournalRepository::class],
@@ -133,6 +144,7 @@ final class RepositoryProvider implements ServiceProviderInterface {
 																					$c[PictureRepository::class],
 																					$c[BlockAccumulator::class]
 																				);
+
 																		};
 	}
 }

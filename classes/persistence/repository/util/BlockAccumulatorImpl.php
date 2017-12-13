@@ -5,6 +5,7 @@ namespace SRAG\Learnplaces\persistence\repository\util;
 
 use function is_null;
 use SRAG\Learnplaces\persistence\dto\Block;
+use SRAG\Learnplaces\persistence\repository\AccordionBlockRepository;
 use SRAG\Learnplaces\persistence\repository\AudioBlockRepository;
 use SRAG\Learnplaces\persistence\repository\CommentBlockRepository;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
@@ -75,6 +76,10 @@ class BlockAccumulatorImpl implements BlockAccumulator {
 	 * @var FeedbackBlockRepository $feedbackBlockRepository
 	 */
 	private $feedbackBlockRepository;
+	/**
+	 * @var AccordionBlockRepository $accordionBlockRepository
+	 */
+	private $accordionBlockRepository;
 
 
 	/**
@@ -91,20 +96,9 @@ class BlockAccumulatorImpl implements BlockAccumulator {
 	 * @param PictureBlockRepository        $pictureBlockRepository
 	 * @param ExternalStreamBlockRepository $externalStreamBlockRepository
 	 * @param FeedbackBlockRepository       $feedbackBlockRepository
+	 * @param AccordionBlockRepository      $accordionBlockRepository
 	 */
-	public function __construct(
-		PictureUploadBlockRepository $pictureUploadRepository,
-		ILIASLinkBlockRepository $iliasLinkBlockRepository,
-		AudioBlockRepository $audioBlockRepository,
-		HorizontalLineBlockRepository $horizontalLineRepository,
-		MapBlockRepository $mapBlockRepository,
-		CommentBlockRepository $commentBlockRepository,
-		VideoBlockRepository $videoBlockRepository,
-		RichTextBlockRepository $richTextBlockRepository,
-		PictureBlockRepository $pictureBlockRepository,
-		ExternalStreamBlockRepository $externalStreamBlockRepository,
-		FeedbackBlockRepository $feedbackBlockRepository
-	) {
+	public function __construct(PictureUploadBlockRepository $pictureUploadRepository, ILIASLinkBlockRepository $iliasLinkBlockRepository, AudioBlockRepository $audioBlockRepository, HorizontalLineBlockRepository $horizontalLineRepository, MapBlockRepository $mapBlockRepository, CommentBlockRepository $commentBlockRepository, VideoBlockRepository $videoBlockRepository, RichTextBlockRepository $richTextBlockRepository, PictureBlockRepository $pictureBlockRepository, ExternalStreamBlockRepository $externalStreamBlockRepository, FeedbackBlockRepository $feedbackBlockRepository, AccordionBlockRepository $accordionBlockRepository) {
 		$this->pictureUploadRepository = $pictureUploadRepository;
 		$this->iliasLinkBlockRepository = $iliasLinkBlockRepository;
 		$this->audioBlockRepository = $audioBlockRepository;
@@ -116,6 +110,7 @@ class BlockAccumulatorImpl implements BlockAccumulator {
 		$this->pictureBlockRepository = $pictureBlockRepository;
 		$this->externalStreamBlockRepository = $externalStreamBlockRepository;
 		$this->feedbackBlockRepository = $feedbackBlockRepository;
+		$this->accordionBlockRepository = $accordionBlockRepository;
 	}
 
 
@@ -133,6 +128,7 @@ class BlockAccumulatorImpl implements BlockAccumulator {
 					??  $this->fetchBlock($id, $this->richTextBlockRepository)
 					??  $this->fetchBlock($id, $this->pictureBlockRepository)
 					??  $this->fetchBlock($id, $this->externalStreamBlockRepository)
+					??  $this->fetchBlock($id, $this->accordionBlockRepository)
 					??  $this->fetchBlock($id, $this->feedbackBlockRepository);
 
 		if(is_null($block))

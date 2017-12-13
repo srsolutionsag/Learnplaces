@@ -6,11 +6,13 @@ namespace SRAG\Learnplaces\gui\block;
 use function get_class;
 use InvalidArgumentException;
 use SRAG\Learnplaces\container\PluginContainer;
+use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockPresentationView;
 use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
 use SRAG\Learnplaces\gui\block\VideoBlock\VideoBlockPresentationView;
+use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
@@ -49,6 +51,8 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 				return $this->getIliasLinkView($blockModel);
 			case VideoBlockModel::class:
 				return $this->getVideoView($blockModel);
+			case AccordionBlockModel::class:
+				return $this->getAccordionView($blockModel);
 			default:
 				throw new InvalidArgumentException('Model has no corresponding view.');
 		}
@@ -98,6 +102,16 @@ final class RenderableBlockViewFactoryImpl implements RenderableBlockViewFactory
 		 * @var VideoBlockPresentationView $view
 		 */
 		$view = PluginContainer::resolve(VideoBlockPresentationView::class);
+		$view->setModel($model);
+		return $view;
+	}
+
+	private function getAccordionView(AccordionBlockModel $model): AccordionBlockPresentationView {
+
+		/**
+		 * @var AccordionBlockPresentationView $view
+		 */
+		$view = PluginContainer::resolve(AccordionBlockPresentationView::class);
 		$view->setModel($model);
 		return $view;
 	}

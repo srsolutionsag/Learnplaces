@@ -7,6 +7,7 @@ use ilCtrl;
 use ilLearnplacesPlugin;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockPresentationView;
 use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
@@ -67,6 +68,13 @@ final class ViewProvider implements ServiceProviderInterface {
 
 		$pimple[VideoBlockPresentationView::class] = $pimple->factory(function ($c) {
 			return new VideoBlockPresentationView(
+				$c[ilLearnplacesPlugin::class],
+				$c[ilCtrl::class]
+			);
+		});
+
+		$pimple[AccordionBlockPresentationView::class] = $pimple->factory(function ($c) {
+			return new AccordionBlockPresentationView(
 				$c[ilLearnplacesPlugin::class],
 				$c[ilCtrl::class]
 			);

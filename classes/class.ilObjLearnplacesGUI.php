@@ -24,14 +24,20 @@ use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlIliasLinkBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlMapBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlVideoBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlAccordionBlockGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	const DEFAULT_CMD = CommonControllerAction::CMD_INDEX;
+	const TAB_ID_PERMISSION = 'id_permissions';
 	/**
 	 * @var MapBlockService $mapBlockService
 	 */
 	private $mapBlockService;
+	/**
+	 * @var int $objectId
+	 */
+	private $objectId;
 
 
 	/**
@@ -46,6 +52,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	public function __construct(int $a_ref_id = 0, int $a_id_type = self::REPOSITORY_NODE_ID, int $a_parent_node_id = 0) {
 		parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
 		$this->mapBlockService = PluginContainer::resolve(MapBlockService::class);
+		$this->objectId = intval(ilObject::_lookupObjectId($this->ref_id));
 	}
 
 
@@ -93,6 +100,13 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 			case strtolower(xsrlVideoBlockGUI::class):
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlVideoBlockGUI::class));
 				break;
+			case strtolower(xsrlAccordionBlockGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlAccordionBlockGUI::class));
+				break;
+			case strtolower(ilPermissionGUI::class):
+				$this->tabs->activateTab(self::TAB_ID_PERMISSION);
+				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
+				break;
 			default:
 				$this->ctrl->redirectByClass(static::class);
 				break;
@@ -138,19 +152,19 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$this->tabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
 		if($this->hasMap())
 			$this->tabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
-		if($this->access->checkAccess('write', '', $this->ref_id) === true)
+		if($this->access->checkAccess('write', '', $this->ref_id) === true) {
 			$this->tabs->addTab(xsrlContentGUI::class, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
+		}
+		parent::setTabs();
 	}
 
 	private function hasMap(): bool {
 		try {
-			$this->mapBlockService->findByObjectId(ilObject::_lookupObjectId($this->ref_id));
+			$this->mapBlockService->findByObjectId($this->objectId);
 			return true;
 		}
 		catch (InvalidArgumentException $ex) {
 			return false;
 		}
 	}
-
-
 }

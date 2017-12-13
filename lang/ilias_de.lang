@@ -53,6 +53,9 @@ rich_text_block_content#:#Inhalt
 
 ilias_link_block_select_target#:#ILIAS link
 
+accordion_block_title#:#Titel
+accordion_block_expand#:#Akkordeon ge&ouml;ffnet
+
 visibility_title#:#Verfügbare Sichtbarkeiten:
 visibility_always#:#Immer sichtbar
 visibility_after_visit_place#:#Nur sichtbar nach Lernort Besuch

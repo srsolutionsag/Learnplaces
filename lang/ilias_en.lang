@@ -53,6 +53,9 @@ rich_text_block_content#:#Content
 
 ilias_link_block_select_target#:#ILIAS link
 
+accordion_block_title#:#Title
+accordion_block_expand#:#Expand accordion
+
 visibility_title#:#Available visibilities:
 visibility_always#:#Always visible
 visibility_after_visit_place#:#Visible after visit

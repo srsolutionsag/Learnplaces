@@ -10,6 +10,7 @@ use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactoryImpl;
 use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\media\VideoService;
+use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\ILIASLinkBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
@@ -18,6 +19,7 @@ use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
+use xsrlAccordionBlockGUI;
 use xsrlContentGUI;
 use xsrlIliasLinkBlockGUI;
 use xsrlMapBlockGUI;
@@ -128,6 +130,19 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[VideoBlockService::class],
 			$c[VideoService::class],
+			$c[LearnplaceService::class],
+			$c[ConfigurationService::class]
+		);
+		};
+
+		$pimple[xsrlAccordionBlockGUI::class] = function ($c) {return new xsrlAccordionBlockGUI(
+			$c['ilTabs'],
+			$c['tpl'],
+			$c['ilCtrl'],
+			$c['ilAccess'],
+			$c['http'],
+			$c[ilLearnplacesPlugin::class],
+			$c[AccordionBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class]
 		);

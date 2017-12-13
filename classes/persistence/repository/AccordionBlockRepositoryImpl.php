@@ -30,10 +30,17 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 	 * AccordionBlockRepositoryImpl constructor.
 	 *
 	 * @param LearnplaceConstraintRepository $learnplaceConstraintRepository
-	 * @param BlockAccumulator               $blockAccumulator
 	 */
-	public function __construct(LearnplaceConstraintRepository $learnplaceConstraintRepository, BlockAccumulator $blockAccumulator) {
-		$this->learnplaceConstraintRepository = $learnplaceConstraintRepository;
+	public function __construct(LearnplaceConstraintRepository $learnplaceConstraintRepository) { $this->learnplaceConstraintRepository = $learnplaceConstraintRepository; }
+
+
+	/**
+	 * PostConstruct to break the circular dependency with the block accumulator
+	 * Will be automatically called by de DIC.
+	 *
+	 * @param BlockAccumulator $blockAccumulator
+	 */
+	public function postConstruct(BlockAccumulator $blockAccumulator) {
 		$this->blockAccumulator = $blockAccumulator;
 	}
 
@@ -133,7 +140,6 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 			->setExpand($accordionBlockEntity->getExpand() === 1)
 			->setId($block->getPkId())
 			->setSequence($block->getSequence())
-			->setConstraint($this->learnplaceConstraintRepository->findByBlockId($block->getPkId()))
 			->setVisibility($visibility->getName());
 
 		$members = AccordionBlockMember::where(['fk_accordion_block' => $accordionBlockEntity->getPkId()])->get();
