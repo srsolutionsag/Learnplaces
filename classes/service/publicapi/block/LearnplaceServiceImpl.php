@@ -6,6 +6,7 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 use function intval;
 use InvalidArgumentException;
 use LogicException;
+use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\LearnplaceRepository;
 use SRAG\Learnplaces\service\media\PictureService;
@@ -99,6 +100,7 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 			$dto = $this->learnplaceRepository->findByObjectId($objectId);
 			$model = $this->filterBlocksWhichBelongToAccordions($dto->toModel());
 			$model->setBlocks($this->sortBySequence($model->getBlocks()));
+			$this->sortAccordionBlocks($model);
 			return $model;
 		}
 		catch (EntityNotFoundException $ex) {
@@ -130,10 +132,20 @@ class LearnplaceServiceImpl  implements LearnplaceService {
 			$dto = $this->learnplaceRepository->find($id);
 			$model = $this->filterBlocksWhichBelongToAccordions($dto->toModel());
 			$model->setBlocks($this->sortBySequence($model->getBlocks()));
+			$this->sortAccordionBlocks($model);
 			return $model;
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("The leanplace could not been found, reason the given id \"$id\" was not found.", 0, $ex);
+		}
+	}
+
+	private function sortAccordionBlocks(LearnplaceModel $learnplace) {
+		foreach ($learnplace->getBlocks() as $block) {
+			if($block instanceof AccordionBlockModel) {
+				$blocks = $block->getBlocks();
+				$block->setBlocks($this->sortBySequence($blocks));
+			}
 		}
 	}
 

@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
+use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
@@ -23,6 +25,7 @@ use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
 final class xsrlRichTextBlockGUI {
 
 	use InsertPositionAware;
+	use AccordionAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -63,22 +66,27 @@ final class xsrlRichTextBlockGUI {
 	 * @var ConfigurationService $configService
 	 */
 	private $configService;
+	/**
+	 * @var AccordionBlockService $accordionService
+	 */
+	private $accordionService;
 
 
 	/**
 	 * xsrlRichTextBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI            $tabs
-	 * @param ilTemplate           $template
-	 * @param ilCtrl               $controlFlow
-	 * @param ilAccessHandler      $access
-	 * @param GlobalHttpState      $http
-	 * @param ilLearnplacesPlugin  $plugin
-	 * @param RichTextBlockService $richTextBlockService
-	 * @param LearnplaceService    $learnplaceService
-	 * @param ConfigurationService $configService
+	 * @param ilTabsGUI             $tabs
+	 * @param ilTemplate            $template
+	 * @param ilCtrl                $controlFlow
+	 * @param ilAccessHandler       $access
+	 * @param GlobalHttpState       $http
+	 * @param ilLearnplacesPlugin   $plugin
+	 * @param RichTextBlockService  $richTextBlockService
+	 * @param LearnplaceService     $learnplaceService
+	 * @param ConfigurationService  $configService
+	 * @param AccordionBlockService $accordionService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -88,6 +96,7 @@ final class xsrlRichTextBlockGUI {
 		$this->richTextBlockService = $richTextBlockService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
+		$this->accordionService = $accordionService;
 	}
 
 
@@ -134,6 +143,7 @@ final class xsrlRichTextBlockGUI {
 
 	private function add() {
 		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
+		$this->controlFlow->saveParameter($this, PlusView::ACCORDION_QUERY_PARAM);
 
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new RichTextBlockModel();
@@ -155,14 +165,24 @@ final class xsrlRichTextBlockGUI {
 			$block = $form->getBlockModel();
 			$block = $this->richTextBlockService->store($block);
 
-			//fetch learnplace
-			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+			$accordionId = $this->getCurrentAccordionId($this->http->request());
+			if($accordionId > 0) {
+				$accordion = $this->accordionService->find($accordionId);
+				$blocks = $accordion->getBlocks();
+				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				$accordion->setBlocks($blocks);
+				$this->accordionService->store($accordion);
+			}
+			else {
+				//fetch learnplace
+				$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 
-			//store relation learnplace <-> block
-			$blocks = $learnplace->getBlocks();
-			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
-			$learnplace->setBlocks($blocks);
-			$this->learnplaceService->store($learnplace);
+				//store relation learnplace <-> block
+				$blocks = $learnplace->getBlocks();
+				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				$learnplace->setBlocks($blocks);
+				$this->learnplaceService->store($learnplace);
+			}
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
 			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

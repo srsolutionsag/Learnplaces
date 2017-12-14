@@ -12,8 +12,10 @@ use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockPresentationView;
+use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockPresentationView;
 use SRAG\Learnplaces\gui\block\VideoBlock\VideoBlockPresentationView;
+use SRAG\Learnplaces\gui\ContentPresentationView;
 
 /**
  * Class ViewProvider
@@ -76,7 +78,16 @@ final class ViewProvider implements ServiceProviderInterface {
 		$pimple[AccordionBlockPresentationView::class] = $pimple->factory(function ($c) {
 			return new AccordionBlockPresentationView(
 				$c[ilLearnplacesPlugin::class],
-				$c[ilCtrl::class]
+				$c[ilCtrl::class],
+				$c[ContentPresentationView::class]
+			);
+		});
+
+		$pimple[ContentPresentationView::class] = $pimple->factory(function ($c) {
+			return new ContentPresentationView(
+				$c[ilCtrl::class],
+				$c[ilLearnplacesPlugin::class],
+				$c[RenderableBlockViewFactory::class]
 			);
 		});
 	}

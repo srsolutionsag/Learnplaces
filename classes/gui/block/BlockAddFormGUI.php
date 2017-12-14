@@ -45,6 +45,8 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 	private function initForm() {
 
 		$this->ctrl->saveParameterByClass(xsrlContentGUI::class, PlusView::POSITION_QUERY_PARAM);
+		$this->ctrl->saveParameterByClass(xsrlContentGUI::class, PlusView::ACCORDION_QUERY_PARAM);
+
 		$this->setFormAction($this->ctrl->getFormActionByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX));
 		$this->setPreventDoubleSubmission(true);
 

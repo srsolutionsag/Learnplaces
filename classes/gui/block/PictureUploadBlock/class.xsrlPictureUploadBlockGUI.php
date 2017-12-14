@@ -3,10 +3,12 @@ declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
@@ -22,6 +24,7 @@ use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 final class xsrlPictureUploadBlockGUI {
 
 	use InsertPositionAware;
+	use  AccordionAware;
 
 	const TAB_ID = 'edit-block';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -62,6 +65,10 @@ final class xsrlPictureUploadBlockGUI {
 	 * @var ConfigurationService $configService
 	 */
 	private $configService;
+	/**
+	 * @var AccordionBlockService $accordionService
+	 */
+	private $accordionService;
 
 
 	/**
@@ -76,8 +83,9 @@ final class xsrlPictureUploadBlockGUI {
 	 * @param PictureUploadBlockService $pictureUploadService
 	 * @param LearnplaceService         $learnplaceService
 	 * @param ConfigurationService      $configService
+	 * @param AccordionBlockService     $accordionService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureUploadBlockService $pictureUploadService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureUploadBlockService $pictureUploadService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -87,6 +95,7 @@ final class xsrlPictureUploadBlockGUI {
 		$this->pictureUploadService = $pictureUploadService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
+		$this->accordionService = $accordionService;
 	}
 
 
@@ -133,6 +142,7 @@ final class xsrlPictureUploadBlockGUI {
 
 	private function add() {
 		$this->controlFlow->saveParameter($this, PlusView::POSITION_QUERY_PARAM);
+		$this->controlFlow->saveParameter($this, PlusView::ACCORDION_QUERY_PARAM);
 
 		$config = $this->configService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$block = new PictureUploadBlockModel();
@@ -148,16 +158,26 @@ final class xsrlPictureUploadBlockGUI {
 		try {
 			//store block
 			$block = $form->getBlockModel();
-			$uploadBlock = $this->pictureUploadService->store($block);
+			$block = $this->pictureUploadService->store($block);
 
-			//fetch learnplace
-			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+			$accordionId = $this->getCurrentAccordionId($this->http->request());
+			if($accordionId > 0) {
+				$accordion = $this->accordionService->find($accordionId);
+				$blocks = $accordion->getBlocks();
+				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				$accordion->setBlocks($blocks);
+				$this->accordionService->store($accordion);
+			}
+			else {
+				//fetch learnplace
+				$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 
-			//store relation learnplace <-> block
-			$blocks = $learnplace->getBlocks();
-			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$uploadBlock]);
-			$learnplace->setBlocks($blocks);
-			$this->learnplaceService->store($learnplace);
+				//store relation learnplace <-> block
+				$blocks = $learnplace->getBlocks();
+				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				$learnplace->setBlocks($blocks);
+				$this->learnplaceService->store($learnplace);
+			}
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
 			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

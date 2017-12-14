@@ -64,7 +64,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[PictureUploadBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[AccordionBlockService::class]
 		);
 		};
 
@@ -78,7 +79,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[PictureService::class],
 			$c[PictureBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[AccordionBlockService::class]
 		);
 		};
 
@@ -91,7 +93,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[RichTextBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[AccordionBlockService::class]
 		);
 		};
 
@@ -104,7 +107,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[ILIASLinkBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[AccordionBlockService::class]
 		);
 		};
 
@@ -131,7 +135,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[VideoBlockService::class],
 			$c[VideoService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[AccordionBlockService::class]
 		);
 		};
 

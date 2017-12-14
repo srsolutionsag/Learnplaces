@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/bootstrap.php';
 
-use SRAG\Learnplaces\gui\helper\ICtrlAware;
+use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 
 /**
  * Class ilObjLearnplacesListGUI
@@ -57,7 +57,7 @@ class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 		$commands = array(
 			array(
 				'permission' => 'read',
-				'cmd'        => ICtrlAware::CMD_INDEX,
+				'cmd'        => CommonControllerAction::CMD_INDEX,
 				'default'    => true,
 			),
 		);

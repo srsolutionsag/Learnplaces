@@ -2,10 +2,12 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
+use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\component\PlusView;
+use SRAG\Learnplaces\gui\ContentPresentationView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 
@@ -19,7 +21,7 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class xsrlContentGUI {
+final class xsrlContentGUI {
 
 	const TAB_ID = 'content';
 
@@ -134,32 +136,29 @@ class xsrlContentGUI {
 
 	//actions
 	private function index() {
+
 		$toolbar = new ilToolbarGUI();
 		$buttonAdd = ilLinkButton::getInstance();
-		$buttonAdd->setUrl($this->controlFlow->getLinkTarget($this, CommonControllerAction::CMD_ADD));
+		$buttonAdd->setUrl($this->controlFlow->getLinkTargetByClass(xsrlContentGUI::class, CommonControllerAction::CMD_ADD));
 		$buttonAdd->setCaption($this->plugin->txt('common_add'), false);
 		$toolbar->addStickyItem($buttonAdd);
 
 		$template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/tpl.block_list.html', true, true);
-		if($this->access->checkAccess('write', '', $this->getCurrentRefId()) === true)
-			$template->setVariable('TOOLBAR', $toolbar->getHTML());
 
 		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
-		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId());
+		/**
+		 * @var ContentPresentationView $view
+		 */
+		$view = PluginContainer::resolve(ContentPresentationView::class);
+		$view->setBlocks($learnplace->getBlocks());
+		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId()) === true;
+		$view->setReadonly(!$writePermission);
 
-		$blockHtml = $this->getPlusView(0)->getHTML();
-		foreach ($learnplace->getBlocks() as $position => $block) {
-			try {
-				$view = $this->renderableFactory->getInstance($block);
-				$view->setReadonly(!$writePermission);
-				$blockHtml .= $view->getHtml();
-				$blockHtml .= $this->getPlusView(intval($position) + 1)->getHTML();
-			}
-			catch (InvalidArgumentException $exception) {
-				//ignore the models without view
-			}
-		}
-		$template->setVariable('CONTENT', $blockHtml);
+		if($writePermission)
+			$template->setVariable('TOOLBAR', $toolbar->getHTML());
+
+		$template->setVariable('CONTENT', $view->getHTML());
+
 		$this->template->setContent($template->get());
 	}
 
@@ -174,6 +173,7 @@ class xsrlContentGUI {
 			$input = intval($blockAdd->getInput(BlockAddFormGUI::POST_BLOCK_TYPES, true));
 			$controller = static::$blockTypeViewMapping[$input];
 			$this->controlFlow->saveParameterByClass($controller, PlusView::POSITION_QUERY_PARAM);
+			$this->controlFlow->saveParameterByClass($controller, PlusView::ACCORDION_QUERY_PARAM);
 
 			//dispatch to controller which knows how to handle that block
 			$this->controlFlow->redirectByClass($controller, CommonControllerAction::CMD_ADD);

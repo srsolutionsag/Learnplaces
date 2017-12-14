@@ -223,7 +223,6 @@ class LearnplaceRepositoryImpl implements LearnplaceRepository {
 		catch (arException $ex) {
 			throw new InvalidArgumentException('Could not store relation to learnplace for non persistent block.', 0, $ex);
 		}
-
 	}
 
 	private function storeAllVisitJournals(int $learnplaceId, array $visitJournals) {

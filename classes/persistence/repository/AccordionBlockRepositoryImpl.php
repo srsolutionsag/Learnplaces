@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\repository;
 
 use arException;
+use InvalidArgumentException;
 use SRAG\Learnplaces\persistence\dto\AccordionBlock;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\entity\AccordionBlockMember;
@@ -11,6 +12,7 @@ use SRAG\Learnplaces\persistence\entity\Block;
 use SRAG\Learnplaces\persistence\entity\Visibility;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\util\BlockAccumulator;
+use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 
 class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 
@@ -63,7 +65,9 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 		$accordionBlockEntity = $this->mapToEntity($accordionBlock);
 		$accordionBlockEntity->setFkBlockId($block->getPkId());
 		$accordionBlockEntity->create();
-		return $this->mapToDTO($block, $accordionBlockEntity);
+		$this->storeBlockRelationsAndSequence($accordionBlockEntity->getPkId(), $accordionBlock->getBlocks());
+		$dto = $this->mapToDTO($block, $accordionBlockEntity);
+		return $dto;
 	}
 
 	private function update(AccordionBlock $accordionBlock) : AccordionBlock {
@@ -71,7 +75,9 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 		$blockEntity->update();
 		$accordionBlockEntity = $this->mapToEntity($accordionBlock);
 		$accordionBlockEntity->update();
-		return $this->mapToDTO($blockEntity, $accordionBlockEntity);
+		$this->storeBlockRelationsAndSequence($accordionBlockEntity->getPkId(), $accordionBlock->getBlocks());
+		$dto = $this->mapToDTO($blockEntity, $accordionBlockEntity);
+		return $dto;
 	}
 
 	/**
@@ -93,9 +99,22 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 	 */
 	public function delete(int $id) {
 		try {
+			/**
+			 * @var \SRAG\Learnplaces\persistence\entity\AccordionBlock $accordionBlock
+			 */
 			$accordionBlock = \SRAG\Learnplaces\persistence\entity\AccordionBlock::where(['fk_block_id' => $id])->first();
-			if(!is_null($accordionBlock)){
-				$accordionBlock->delete();
+			if(is_null($accordionBlock)){
+				throw new EntityNotFoundException("Accordion block with id \"$id\" not found");
+			}
+
+			$accordionBlock->delete();
+
+			/**
+			 * @var AccordionBlockMember[] $relations
+			 */
+			$relations = AccordionBlockMember::where(['fk_accordion_block' => $accordionBlock->getPkId()])->get();
+			foreach ($relations as $relation) {
+				$relation->delete();
 			}
 
 			Block::findOrFail($id)->delete();
@@ -142,15 +161,22 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 			->setSequence($block->getSequence())
 			->setVisibility($visibility->getName());
 
+		/**
+		 * @var AccordionBlockMember[] $members
+		 */
 		$members = AccordionBlockMember::where(['fk_accordion_block' => $accordionBlockEntity->getPkId()])->get();
-		$blocks = array_map(
-			function (AccordionBlockMember $member) {
-				return $this->blockAccumulator->fetchSpecificBlocksById($member->getFkBlockId());
-			},
-			$members
-		);
+		$blocks = [];
+		foreach ($members as $member) {
+			try {
+				$blocks[] = $this->blockAccumulator->fetchSpecificBlocksById($member->getFkBlockId());
+			}
+			catch (EntityNotFoundException $exception) {
+				//delete broken block relation
+				$member->delete();
+			}
+		}
 
-		$accordionBlock->setBlocks($blocks);
+		$accordionBlock->setBlocks($this->fixArrayKeys($blocks));
 
 		return $accordionBlock;
 
@@ -172,5 +198,47 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 		$activeRecord->setTitle($accordionBlock->getTitle());
 
 		return $activeRecord;
+	}
+
+	private function fixArrayKeys(array $array): array {
+		$fixed = [];
+		foreach ($array as $item) {
+			$fixed[] = $item;
+		}
+		return $fixed;
+	}
+
+	private function storeBlockRelationsAndSequence(int $accordionId, array $blocks) {
+		try{
+
+			/**
+			 * @var \SRAG\Learnplaces\persistence\entity\Learnplace $learnplace
+			 */
+			$learnplace = \SRAG\Learnplaces\persistence\entity\Learnplace::innerjoinAR(new Block(), 'pk_id', 'fk_learnplace_id', ['fk_learnplace_id'])
+				->innerjoinAR(new \SRAG\Learnplaces\persistence\entity\AccordionBlock(), Block::returnDbTableName() . '.pk_id', 'fk_block_id', ['fk_block_id'], '=', true)
+				->where([\SRAG\Learnplaces\persistence\entity\AccordionBlock::returnDbTableName() . '.pk_id' => $accordionId])->first();
+
+			/**
+			 * @var \SRAG\Learnplaces\persistence\dto\Block $block
+			 */
+			foreach($blocks as $block) {
+				$blockEntity = Block::findOrFail($block->getId());
+				/**
+				 * @var Block $blockEntity
+				 */
+				$blockEntity->setFkLearnplaceId($learnplace->getPkId());
+				$blockEntity->setSequence($block->getSequence());
+				$blockEntity->update();
+
+				$entry = AccordionBlockMember::where(['fk_block_id' => $block->getId()])->first() ?? new AccordionBlockMember();
+				$entry
+					->setFkAccordionBlock($accordionId)
+					->setFkBlockId($block->getId())
+					->store();
+			}
+		}
+		catch (arException $ex) {
+			throw new InvalidArgumentException('Could not store relation to learnplace for non persistent block.', 0, $ex);
+		}
 	}
 }

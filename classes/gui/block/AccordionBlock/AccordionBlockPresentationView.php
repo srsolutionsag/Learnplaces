@@ -12,8 +12,10 @@ use ilSplitButtonGUI;
 use ilTemplate;
 use ilTextInputGUI;
 use LogicException;
+use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\Renderable;
 use SRAG\Learnplaces\gui\block\util\ReadOnlyViewAware;
+use SRAG\Learnplaces\gui\ContentPresentationView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use xsrlAccordionBlockGUI;
@@ -47,30 +49,39 @@ final class AccordionBlockPresentationView implements Renderable {
 	 * @var AccordionBlockModel $model
 	 */
 	private $model;
+	/**
+	 * @var ContentPresentationView $contentView
+	 */
+	private $contentView;
 
 
 	/**
 	 * PictureUploadBlockPresentationView constructor.
 	 *
-	 * @param ilLearnplacesPlugin $plugin
-	 * @param ilCtrl              $controlFlow
+	 * @param ilLearnplacesPlugin     $plugin
+	 * @param ilCtrl                  $controlFlow
+	 * @param ContentPresentationView $contentView
 	 */
-	public function __construct(ilLearnplacesPlugin $plugin, ilCtrl $controlFlow) {
+	public function __construct(ilLearnplacesPlugin $plugin, ilCtrl $controlFlow, ContentPresentationView $contentView) {
 		$this->plugin = $plugin;
 		$this->controlFlow = $controlFlow;
+		$this->contentView = $contentView;
 		$this->template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/block/tpl.accordion.html', true, true);
 	}
 
 	private function initView() {
+		$this->contentView->setBlocks($this->model->getBlocks());
+		$this->contentView->setAccordionId($this->model->getId());
+		$this->contentView->setReadonly($this->isReadonly());
+
 		$this->template->setVariable('ACCORDION_ID', $this->model->getId());
 		$this->template->setVariable('TITLE', $this->model->getTitle());
-		$this->template->setVariable('CONTENT', 'Content placeholder');
+		$this->template->setVariable('CONTENT', $this->contentView->getHTML());
 		$this->template->setVariable('EXPANDED', $this->model->isExpand() ? 'true' : 'false');
 	}
 
 	public function setModel(AccordionBlockModel $model) {
 		$this->model = $model;
-		$this->initView();
 	}
 
 	/**
@@ -80,6 +91,7 @@ final class AccordionBlockPresentationView implements Renderable {
 		if(is_null($this->model))
 			throw new LogicException('The accordion block view requires a model to render its content.');
 
+		$this->initView();
 		return $this->wrapWithBlockTemplate($this->template)->get();
 	}
 

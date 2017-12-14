@@ -18,6 +18,7 @@ use ilTemplate;
 final class PlusView {
 
 	const POSITION_QUERY_PARAM = 'position';
+	const ACCORDION_QUERY_PARAM = 'accordion';
 
 	/**
 	 * @var string $link
@@ -29,10 +30,11 @@ final class PlusView {
 	 * PlusView constructor.
 	 *
 	 * @param int    $sequence
+	 * @param int    $accordionId
 	 * @param string $link
 	 */
-	public function __construct(int $sequence, string $link) {
-		$this->link = "$link&" . self::POSITION_QUERY_PARAM . "=$sequence";
+	public function __construct(int $sequence, string $link, int $accordionId = 0) {
+		$this->link = "$link&" . self::POSITION_QUERY_PARAM . "=$sequence&" . self::ACCORDION_QUERY_PARAM . "=$accordionId";
 	}
 
 

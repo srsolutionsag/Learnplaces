@@ -80,7 +80,7 @@ final class BlockServiceProvider implements ServiceProviderInterface {
 		$pimple[CommentService::class]                  = function ($c) {return new CommentServiceImpl($c[ConfigurationRepository::class]); };
 		$pimple[AnswerService::class]                   = function ($c) {return new AnswerRepositoryImpl($c[AnswerRepository::class]); };
 		$pimple[AccordionBlockService::class]           = function ($c) {return new AccordionBlockServiceImpl($c[AccordionBlockRepository::class]); };
-		$pimple[BlockOperationDispatcher::class]        = function ($c) {return new DefaultBlockOperationDispatcher(
+		$pimple[BlockOperationDispatcher::class]        = function ($c) {$dispatcher =  new DefaultBlockOperationDispatcher(
 																					$c[AccordionBlockService::class],
 																					$c[ILIASLinkBlockService::class],
 																					$c[PictureBlockService::class],
@@ -88,6 +88,9 @@ final class BlockServiceProvider implements ServiceProviderInterface {
 																					$c[MapBlockService::class],
 																					$c[RichTextBlockService::class]
 																					);
+																				$accordion = $c[AccordionBlockService::class];
+																				$accordion->postConstruct($dispatcher);
+																				return $dispatcher;
 																				};
 		$pimple[LearnplaceService::class]               = function ($c) {return new LearnplaceServiceImpl(
 																					$c[ConfigurationService::class],
