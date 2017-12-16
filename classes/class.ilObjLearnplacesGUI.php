@@ -25,6 +25,7 @@ use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlMapBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlVideoBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlAccordionBlockGUI
+ * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlSettingGUI
  */
 class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
@@ -103,6 +104,9 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 			case strtolower(xsrlAccordionBlockGUI::class):
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlAccordionBlockGUI::class));
 				break;
+			case strtolower(xsrlSettingGUI::class):
+				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlSettingGUI::class));
+				break;
 			case strtolower(ilPermissionGUI::class):
 				$this->tabs->activateTab(self::TAB_ID_PERMISSION);
 				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
@@ -153,7 +157,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		if($this->hasMap())
 			$this->tabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
 		if($this->access->checkAccess('write', '', $this->ref_id) === true) {
-			$this->tabs->addTab(xsrlContentGUI::class, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
+			$this->tabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}
 		parent::setTabs();
 	}

@@ -51,11 +51,11 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 	/**
 	 * AbstractBlockFormView constructor.
 	 *
-	 * @param BlockModel $block
+	 * @param BlockModel $setting
 	 */
-	public function __construct(BlockModel $block) {
+	public function __construct(BlockModel $setting) {
 		parent::__construct();
-		$this->block = $block;
+		$this->block = $setting;
 		$this->plugin = ilLearnplacesPlugin::getInstance();
 		$this->initForm();
 	}
