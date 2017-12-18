@@ -53,7 +53,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[RenderableBlockViewFactory::class],
-			$c[LearnplaceService::class]
+			$c[LearnplaceService::class],
+			$c[AccordionBlockService::class]
 			);
 		};
 

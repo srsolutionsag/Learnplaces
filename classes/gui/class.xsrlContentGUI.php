@@ -9,7 +9,10 @@ use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\ContentPresentationView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
+use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 
 /**
  *
@@ -24,6 +27,10 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 final class xsrlContentGUI {
 
 	const TAB_ID = 'content';
+	/**
+	 * Command to store the sequence numbers
+	 */
+	const CMD_SEQUENCE = 'sequence';
 
 	private static $blockTypeViewMapping = [
 		BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
@@ -67,6 +74,10 @@ final class xsrlContentGUI {
 	 * @var LearnplaceService $learnplaceService
 	 */
 	private $learnplaceService;
+	/**
+	 * @var AccordionBlockService $accordionService
+	 */
+	private $accordionService;
 
 
 	/**
@@ -80,8 +91,9 @@ final class xsrlContentGUI {
 	 * @param ilLearnplacesPlugin        $plugin
 	 * @param RenderableBlockViewFactory $renderableFactory
 	 * @param LearnplaceService          $learnplaceService
+	 * @param AccordionBlockService      $accordionService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -90,6 +102,7 @@ final class xsrlContentGUI {
 		$this->plugin = $plugin;
 		$this->renderableFactory = $renderableFactory;
 		$this->learnplaceService = $learnplaceService;
+		$this->accordionService = $accordionService;
 	}
 
 
@@ -108,6 +121,7 @@ final class xsrlContentGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
+			case self::CMD_SEQUENCE:
 				if ($this->checkRequestReferenceId()) {
 					$this->{$cmd}();
 				}
@@ -138,10 +152,10 @@ final class xsrlContentGUI {
 	private function index() {
 
 		$toolbar = new ilToolbarGUI();
-		$buttonAdd = ilLinkButton::getInstance();
-		$buttonAdd->setUrl($this->controlFlow->getLinkTargetByClass(xsrlContentGUI::class, CommonControllerAction::CMD_ADD));
-		$buttonAdd->setCaption($this->plugin->txt('common_add'), false);
-		$toolbar->addStickyItem($buttonAdd);
+		$saveSequenceButton = ilSubmitButton::getInstance();
+		$saveSequenceButton->setCommand(self::CMD_SEQUENCE);
+		$saveSequenceButton->setCaption($this->plugin->txt('content_save_sequence'), false);
+		$toolbar->addStickyItem($saveSequenceButton);
 
 		$template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/tpl.block_list.html', true, true);
 
@@ -154,8 +168,10 @@ final class xsrlContentGUI {
 		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId()) === true;
 		$view->setReadonly(!$writePermission);
 
-		if($writePermission)
+		if($writePermission) {
+			$template->setVariable('FORM_ACTION', $this->controlFlow->getFormAction($this, self::CMD_SEQUENCE));
 			$template->setVariable('TOOLBAR', $toolbar->getHTML());
+		}
 
 		$template->setVariable('CONTENT', $view->getHTML());
 
@@ -188,8 +204,64 @@ final class xsrlContentGUI {
 		$this->controlFlow->redirect($this, CommonControllerAction::CMD_INDEX);
 	}
 
-	private function getPlusView(int $position): PlusView {
-		return new PlusView($position, $this->controlFlow->getLinkTarget($this, CommonControllerAction::CMD_ADD));
+	private function sequence() {
+		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		$blockIterator = new AppendIterator();
+
+		foreach ($learnplace->getBlocks() as $block) {
+			if($block instanceof AccordionBlockModel)
+				$blockIterator->append(new ArrayIterator($block->getBlocks()));
+		}
+
+		$blockIterator->append(new ArrayIterator($learnplace->getBlocks()));
+
+		$post = $this->http->request()->getParsedBody();
+
+		//yield ['block_12' => '5']
+		$iterator = new RegexIterator(new ArrayIterator($post),  '/^(?:block\_\d+)$/',RegexIterator::MATCH, RegexIterator::USE_KEY);
+
+		//yield [12 => 5]
+		$mappedBlockGenerator = function (Iterator $iterator) {
+			foreach ($iterator as $key => $entry) {
+				$id = intval(str_replace('block_', '', $key));
+				yield $id => intval($entry);
+			}
+			return;
+		};
+
+
+		$mappedBlocks = $mappedBlockGenerator($iterator);
+
+
+		//set the new sequence numbers
+		foreach ($mappedBlocks as $id => $sequence) {
+			foreach ($blockIterator as $block) {
+				if($block->getId() === $id) {
+					$block->setSequence($sequence);
+
+					//sort accordion blocks
+					if($block instanceof AccordionBlockModel) {
+						$block->setBlocks($this->sortBlocksBySequence($block->getBlocks()));
+						$this->accordionService->store($block);
+					}
+
+					break;
+				}
+			}
+		}
+
+		$blocks = $learnplace->getBlocks();
+		$learnplace->setBlocks($this->sortBlocksBySequence($blocks));
+
+		//store new sequence
+		$this->learnplaceService->store($learnplace);
+
+		$this->controlFlow->redirect($this, CommonControllerAction::CMD_INDEX);
+	}
+
+	private function sortBlocksBySequence(array $blocks): array {
+		usort($blocks, function(BlockModel $a, BlockModel $b) { return $a->getSequence() >= $b->getSequence() ? 1 : -1;});
+		return $blocks;
 	}
 
 

@@ -29,7 +29,7 @@ final class VideoBlockPresentationView implements Renderable {
 
 	use ReadOnlyViewAware;
 
-	const SEQUENCE_ID_PREFIX = 'video_';
+	const SEQUENCE_ID_PREFIX = 'block_';
 
 	/**
 	 * @var ilLearnplacesPlugin $plugin

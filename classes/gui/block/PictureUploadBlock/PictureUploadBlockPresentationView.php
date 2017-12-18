@@ -29,7 +29,7 @@ final class PictureUploadBlockPresentationView implements Renderable {
 
 	use ReadOnlyViewAware;
 
-	const SEQUENCE_ID_PREFIX = 'picture_upload_';
+	const SEQUENCE_ID_PREFIX = 'block_';
 
 	/**
 	 * @var ilLearnplacesPlugin $plugin

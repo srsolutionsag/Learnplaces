@@ -30,7 +30,7 @@ final class PictureBlockPresentationView implements Renderable {
 
 	use ReadOnlyViewAware;
 
-	const SEQUENCE_ID_PREFIX = 'picture_';
+	const SEQUENCE_ID_PREFIX = 'block_';
 
 	/**
 	 * @var ilLearnplacesPlugin $plugin

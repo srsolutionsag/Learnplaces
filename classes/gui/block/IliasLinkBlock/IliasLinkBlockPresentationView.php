@@ -32,7 +32,7 @@ final class IliasLinkBlockPresentationView implements Renderable {
 
 	use ReadOnlyViewAware;
 
-	const SEQUENCE_ID_PREFIX = 'ilias_link_';
+	const SEQUENCE_ID_PREFIX = 'block_';
 
 	/**
 	 * @var ilLearnplacesPlugin $plugin
