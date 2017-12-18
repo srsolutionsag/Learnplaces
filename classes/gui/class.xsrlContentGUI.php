@@ -263,7 +263,4 @@ final class xsrlContentGUI {
 		usort($blocks, function(BlockModel $a, BlockModel $b) { return $a->getSequence() >= $b->getSequence() ? 1 : -1;});
 		return $blocks;
 	}
-
-
-
 }

@@ -27,14 +27,14 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	 *
 	 * @return    boolean        true, if everything is ok
 	 */
-	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = "") {
-		if ($a_user_id == "") {
+	public function _checkAccess($a_cmd, $a_permission, $a_ref_id, $a_obj_id, $a_user_id = NULL) {
+		if (is_null($a_user_id)) {
 			$a_user_id = $this->user->getId();
 		}
 		switch ($a_permission) {
 			case "read":
-				if (!self::checkOnline($a_obj_id)
-				    && !$this->access->checkAccessOfUser($a_user_id, "write", "", $a_ref_id)) {
+				if (!self::checkOnline(intval($a_obj_id))
+				    && !$this->access->checkAccessOfUser(intval($a_user_id), "write", "", intval($a_ref_id))) {
 					return false;
 				}
 				break;
@@ -45,18 +45,18 @@ class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 
 
 	/**
-	 * @param int $object_id
+	 * @param int $objectId
 	 *
 	 * @return bool
 	 */
-	public static function checkOnline(int $object_id) {
+	public static function checkOnline(int $objectId) {
 		global $DIC;
 
 		/**
 		 * @var ConfigurationService $configurationService
 		 */
 		$configurationService = $DIC[ConfigurationService::class];
-		$config = $configurationService->findByObjectId($object_id);
+		$config = $configurationService->findByObjectId($objectId);
 		return $config->isOnline();
 	}
 }
