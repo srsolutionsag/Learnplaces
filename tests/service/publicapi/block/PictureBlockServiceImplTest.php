@@ -11,6 +11,7 @@ use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\PictureBlockRepository;
 use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\PictureModel;
 
 /**
  * Class PictureBlockServiceImplTest
@@ -71,6 +72,41 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
+		$picture = new PictureModel();
+		$picture->setId(56);
+
+		$model = new PictureBlockModel();
+		$model
+			->setPicture($picture)
+			->setId(6)
+			->setSequence(15)
+			->setVisibility("ALWAYS");
+
+		$this->pictureBlockRepositoryMock
+			->shouldReceive('delete')
+			->once()
+			->with($model->getId())
+			->andReturn($model->toDto());
+
+		$this->pictureBlockRepositoryMock
+			->shouldReceive('findByBlockId')
+			->once()
+			->with($model->getId())
+			->andReturn($model->toDto());
+
+		$this->pictureService
+			->shouldReceive('delete')
+			->once()
+			->with($picture->getId());
+
+		$this->subject->delete($model->getId());
+	}
+
+	/**
+	 * @Test
+	 * @small
+	 */
+	public function testDeleteWithoutPictureWhichShouldSucceed() {
 		$model = new PictureBlockModel();
 		$model
 			->setId(6)
@@ -79,6 +115,11 @@ class PictureBlockServiceImplTest extends TestCase {
 
 		$this->pictureBlockRepositoryMock
 			->shouldReceive('delete')
+			->once()
+			->with($model->getId());
+
+		$this->pictureBlockRepositoryMock
+			->shouldReceive('findByBlockId')
 			->once()
 			->with($model->getId())
 			->andReturn($model->toDto());
@@ -94,7 +135,7 @@ class PictureBlockServiceImplTest extends TestCase {
 		$blockId = 6;
 
 		$this->pictureBlockRepositoryMock
-			->shouldReceive('delete')
+			->shouldReceive('findByBlockId')
 			->once()
 			->with($blockId)
 			->andThrow(new EntityNotFoundException('Entity not found'));

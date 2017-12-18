@@ -11,7 +11,9 @@ use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\VideoBlockRepository;
+use SRAG\Learnplaces\service\media\VideoService;
 use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\VideoModel;
 
 /**
  * Class VideoBlockServiceImplTest
@@ -29,9 +31,9 @@ class VideoBlockServiceImplTest extends TestCase {
 	 */
 	private $videoBlockRepositoryMock;
 	/**
-	 * @var FilesystemInterface|MockInterface $filesystemMock
+	 * @var VideoService|MockInterface $videoServiceMock
 	 */
-	private $filesystemMock;
+	private $videoServiceMock;
 	/**
 	 * @var VideoBlockServiceImpl $subject
 	 */
@@ -43,9 +45,9 @@ class VideoBlockServiceImplTest extends TestCase {
 	protected function setUp() {
 		parent::setUp();
 
-		$this->filesystemMock = Mockery::mock(FilesystemInterface::class);
+		$this->videoServiceMock = Mockery::mock(VideoService::class);
 		$this->videoBlockRepositoryMock = Mockery::mock(VideoBlockRepository::class);
-		$this->subject = new VideoBlockServiceImpl($this->videoBlockRepositoryMock, $this->filesystemMock);
+		$this->subject = new VideoBlockServiceImpl($this->videoBlockRepositoryMock, $this->videoServiceMock);
 	}
 
 	/**
@@ -90,18 +92,10 @@ class VideoBlockServiceImplTest extends TestCase {
 			->once()
 			->with($model->getId());
 
-		$this->filesystemMock
-			->shouldReceive('has')
-			->once()
-			->andReturn(true)
-			->getMock()
+		$this->videoServiceMock
 			->shouldReceive('delete')
 			->once()
-			->with($model->getCoverPath())
-			->getMock()
-			->shouldReceive('delete')
-			->once()
-			->with($model->getPath());
+			->with(Mockery::type(VideoModel::class));
 
 		$this->subject->delete($model->getId());
 	}

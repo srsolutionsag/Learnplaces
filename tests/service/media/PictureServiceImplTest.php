@@ -5,6 +5,7 @@ namespace SRAG\Learnplaces\service\media;
 
 use Intervention\Image\Image;
 use Intervention\Image\ImageManager;
+use League\Flysystem\FilesystemInterface;
 use LogicException;
 use Mockery;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -49,6 +50,10 @@ class PictureServiceImplTest extends TestCase {
 	 * @var FileTypeDetector|MockInterface $fileTypeDetectorMock
 	 */
 	private $fileTypeDetectorMock;
+	/**
+	 * @var FilesystemInterface|MockInterface $filesystemMock
+	 */
+	private $filesystemMock;
 
 	/**
 	 * @var PictureServiceImpl $subject
@@ -62,7 +67,8 @@ class PictureServiceImplTest extends TestCase {
 		$this->requestMock = Mockery::mock(ServerRequestInterface::class);
 		$this->imageManagerMock = Mockery::mock(ImageManager::class);
 		$this->fileTypeDetectorMock = Mockery::mock(FileTypeDetector::class);
-		$this->subject = new PictureServiceImpl($this->requestMock, $this->pictureRepositoryMock, $this->imageManagerMock, $this->fileTypeDetectorMock);
+		$this->filesystemMock = Mockery::mock(FilesystemInterface::class);
+		$this->subject = new PictureServiceImpl($this->requestMock, $this->pictureRepositoryMock, $this->imageManagerMock, $this->fileTypeDetectorMock, $this->filesystemMock);
 	}
 
 

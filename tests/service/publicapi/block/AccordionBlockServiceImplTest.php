@@ -9,6 +9,7 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\AccordionBlockRepository;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
+use SRAG\Learnplaces\service\publicapi\block\util\BlockOperationDispatcher;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
@@ -30,6 +31,10 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @var AccordionBlockRepository|Mockery\MockInterface $accordionBlockRepositoryMock
 	 */
 	private $accordionBlockRepositoryMock;
+	/**
+	 * @var BlockOperationDispatcher|Mockery\MockInterface $blockOperationDispatcherMock
+	 */
+	private $blockOperationDispatcherMock;
 
 	/**
 	 * @var AccordionBlockServiceImpl $subject
@@ -41,7 +46,9 @@ class AccordionBlockServiceImplTest extends TestCase {
 		parent::setUp();
 
 		$this->accordionBlockRepositoryMock = Mockery::mock(AccordionBlockRepository::class);
+		$this->blockOperationDispatcherMock = Mockery::mock(BlockOperationDispatcher::class);
 		$this->subject = new AccordionBlockServiceImpl($this->accordionBlockRepositoryMock);
+		$this->subject->postConstruct($this->blockOperationDispatcherMock);
 	}
 
 	/**
@@ -117,14 +124,26 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @small
 	 */
 	public function testDeleteWhichShouldSucceed() {
-		$commentId = 6;
+		$blockId = 6;
+		$accordion = new AccordionBlockModel();
+		$accordion->setId($blockId);
 
 		$this->accordionBlockRepositoryMock
+			->shouldReceive('findByBlockId')
+			->once()
+			->with($blockId)
+			->andReturn($accordion->toDto())
+			->getMock()
 			->shouldReceive('delete')
 			->once()
-			->with($commentId);
+			->with($blockId);
 
-		$this->subject->delete($commentId);
+		$this->blockOperationDispatcherMock
+			->shouldReceive('deleteAll')
+			->once()
+			->with($accordion->getBlocks());
+
+		$this->subject->delete($blockId);
 	}
 
 	/**
@@ -132,17 +151,24 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @small
 	 */
 	public function testDeleteWithMissingCommentWhichShouldFail() {
-		$commentId = 6;
+		$blockId = 6;
+		$accordion = new AccordionBlockModel();
+		$accordion->setId($blockId);
 
 		$this->accordionBlockRepositoryMock
+			->shouldReceive('findByBlockId')
+			->once()
+			->with($blockId)
+			->andReturn($accordion->toDto())
+			->getMock()
 			->shouldReceive('delete')
 			->once()
-			->with($commentId)
+			->with($blockId)
 			->andThrow(new EntityNotFoundException('Entity not found'));
 
 		$this->expectException(InvalidArgumentException::class);
 		$this->expectExceptionMessage("The accordion block with the given id could not be deleted, because the block was not found.");
 
-		$this->subject->delete($commentId);
+		$this->subject->delete($blockId);
 	}
 }
