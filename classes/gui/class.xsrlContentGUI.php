@@ -13,6 +13,7 @@ use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
+use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 
 /**
  *
@@ -78,22 +79,27 @@ final class xsrlContentGUI {
 	 * @var AccordionBlockService $accordionService
 	 */
 	private $accordionService;
+	/**
+	 * @var LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
+	 */
+	private $learnplaceServiceDecorationFactory;
 
 
 	/**
 	 * xsrlContentGUI constructor.
 	 *
-	 * @param ilTabsGUI                  $tabs
-	 * @param ilTemplate                 $template
-	 * @param ilCtrl                     $controlFlow
-	 * @param ilAccessHandler            $access
-	 * @param GlobalHttpState            $http
-	 * @param ilLearnplacesPlugin        $plugin
-	 * @param RenderableBlockViewFactory $renderableFactory
-	 * @param LearnplaceService          $learnplaceService
-	 * @param AccordionBlockService      $accordionService
+	 * @param ilTabsGUI                         $tabs
+	 * @param ilTemplate                        $template
+	 * @param ilCtrl                            $controlFlow
+	 * @param ilAccessHandler                   $access
+	 * @param GlobalHttpState                   $http
+	 * @param ilLearnplacesPlugin               $plugin
+	 * @param RenderableBlockViewFactory        $renderableFactory
+	 * @param LearnplaceService                 $learnplaceService
+	 * @param AccordionBlockService             $accordionService
+	 * @param LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService, LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -103,6 +109,7 @@ final class xsrlContentGUI {
 		$this->renderableFactory = $renderableFactory;
 		$this->learnplaceService = $learnplaceService;
 		$this->accordionService = $accordionService;
+		$this->learnplaceServiceDecorationFactory = $learnplaceServiceDecorationFactory;
 	}
 
 
@@ -157,15 +164,18 @@ final class xsrlContentGUI {
 		$saveSequenceButton->setCaption($this->plugin->txt('content_save_sequence'), false);
 		$toolbar->addStickyItem($saveSequenceButton);
 
+		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId()) === true;
 		$template = new ilTemplate('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/templates/default/tpl.block_list.html', true, true);
 
-		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		//decorate the learnplace only if the user has no write rights
+		$learnplaceService = ($writePermission) ? $this->learnplaceService : $this->learnplaceServiceDecorationFactory->decorate($this->learnplaceService);
+
+		$learnplace = $learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		/**
 		 * @var ContentPresentationView $view
 		 */
 		$view = PluginContainer::resolve(ContentPresentationView::class);
 		$view->setBlocks($learnplace->getBlocks());
-		$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId()) === true;
 		$view->setReadonly(!$writePermission);
 
 		if($writePermission) {

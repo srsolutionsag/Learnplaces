@@ -20,6 +20,7 @@ use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
+use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 use xsrlAccordionBlockGUI;
 use xsrlContentGUI;
 use xsrlIliasLinkBlockGUI;
@@ -54,7 +55,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[RenderableBlockViewFactory::class],
 			$c[LearnplaceService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[LearnplaceServiceDecoratorFactory::class]
 			);
 		};
 
