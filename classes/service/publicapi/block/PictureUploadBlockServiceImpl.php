@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureUploadBlockServiceImpl implements PictureUploadBlockService {
+final class PictureUploadBlockServiceImpl implements PictureUploadBlockService {
 
 	/**
 	 * @var PictureUploadBlockRepository $pictureUploadBlockRepository

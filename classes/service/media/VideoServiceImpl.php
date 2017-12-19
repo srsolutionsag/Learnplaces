@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
-use function array_pop;
 use League\Flysystem\FilesystemInterface;
 use LogicException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -14,6 +13,7 @@ use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\VideoModel;
 use wapmorgan\FileTypeDetector\Detector;
+use function array_pop;
 
 /**
  * Class VideoServiceImpl
@@ -22,7 +22,7 @@ use wapmorgan\FileTypeDetector\Detector;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VideoServiceImpl implements VideoService {
+final class VideoServiceImpl implements VideoService {
 
 	/**
 	 * The video service will only accept uploads with the whitelisted extensions.

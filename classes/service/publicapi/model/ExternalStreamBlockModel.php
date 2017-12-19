@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\ExternalStreamBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ExternalStreamBlockModel extends BlockModel {
+final class ExternalStreamBlockModel extends BlockModel {
 
 	use ExternalStreamBlockDtoMappingAware;
 

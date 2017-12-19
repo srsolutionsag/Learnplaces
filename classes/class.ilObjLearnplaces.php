@@ -14,7 +14,7 @@ use SRAG\Learnplaces\service\publicapi\model\LocationModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnplaces extends ilObjectPlugin {
+final class ilObjLearnplaces extends ilObjectPlugin {
 
 	protected function initType() {
 		$this->setType(ilLearnplacesPlugin::PLUGIN_ID);

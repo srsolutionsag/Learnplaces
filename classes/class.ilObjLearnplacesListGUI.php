@@ -10,7 +10,7 @@ use SRAG\Learnplaces\gui\helper\CommonControllerAction;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
+final class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 
 	/**
 	 * ilObjLearnplacesListGUI constructor.

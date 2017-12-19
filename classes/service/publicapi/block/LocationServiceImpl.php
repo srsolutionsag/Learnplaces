@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\LocationModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class LocationServiceImpl implements LocationService {
+final class LocationServiceImpl implements LocationService {
 
 	/**
 	 * @var LocationRepository $locationRepository

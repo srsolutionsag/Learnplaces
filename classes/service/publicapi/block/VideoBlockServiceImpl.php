@@ -19,7 +19,7 @@ use SRAG\Learnplaces\service\publicapi\model\VideoModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VideoBlockServiceImpl implements VideoBlockService {
+final class VideoBlockServiceImpl implements VideoBlockService {
 
 	/**
 	 * @var VideoBlockRepository $videoBlockRepository

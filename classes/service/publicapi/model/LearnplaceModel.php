@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\LearnplaceDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class LearnplaceModel {
+final class LearnplaceModel {
 
 	use LearnplaceDtoMappingAware;
 

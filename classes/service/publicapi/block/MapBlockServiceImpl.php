@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class MapBlockServiceImpl implements MapBlockService {
+final class MapBlockServiceImpl implements MapBlockService {
 
 	/**
 	 * @var MapBlockRepository $mapBlockRepository

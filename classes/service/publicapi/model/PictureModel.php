@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\PictureDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureModel {
+final class PictureModel {
 
 	use PictureDtoMappingAware;
 

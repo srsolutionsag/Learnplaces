@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\FeedbackBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class FeedbackBlockModel extends BlockModel {
+final class FeedbackBlockModel extends BlockModel {
 
 	use FeedbackBlockDtoMappingAware;
 

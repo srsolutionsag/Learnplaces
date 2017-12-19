@@ -16,7 +16,7 @@ use SRAG\Learnplaces\service\publicapi\model\AnswerModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  * @deprecated Not needed for current version
  */
-class AnswerServiceImpl implements AnswerService {
+final class AnswerServiceImpl implements AnswerService {
 
 	/**
 	 * @var AnswerRepository $answerRepository

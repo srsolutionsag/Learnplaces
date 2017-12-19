@@ -12,6 +12,6 @@ use SRAG\Lernplaces\persistence\mapping\MapBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class MapBlockModel extends BlockModel{
+final class MapBlockModel extends BlockModel{
 	use MapBlockDtoMappingAware;
 }

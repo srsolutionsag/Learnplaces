@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\ConfigurationDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ConfigurationModel {
+final class ConfigurationModel {
 
 	use ConfigurationDtoMappingAware;
 

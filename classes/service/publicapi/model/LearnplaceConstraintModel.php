@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\LearnplaceConstraintDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class LearnplaceConstraintModel implements BlockConstraint {
+final class LearnplaceConstraintModel implements BlockConstraint {
 
 	use LearnplaceConstraintDtoMappingAware;
 

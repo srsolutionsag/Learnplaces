@@ -10,7 +10,7 @@ namespace SRAG\Learnplaces\service\publicapi\model;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VideoModel {
+final class VideoModel {
 
 	/**
 	 * @var string $videoPath

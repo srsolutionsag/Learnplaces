@@ -23,7 +23,7 @@ use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class LearnplaceServiceImpl  implements LearnplaceService {
+final class LearnplaceServiceImpl  implements LearnplaceService {
 
 	/**
 	 * @var ConfigurationService $configService

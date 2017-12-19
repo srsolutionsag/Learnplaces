@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\VideoBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VideoBlockModel extends BlockModel {
+final class VideoBlockModel extends BlockModel {
 
 	use VideoBlockDtoMappingAware;
 

@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class RichTextBlockServiceImpl implements RichTextBlockService {
+final class RichTextBlockServiceImpl implements RichTextBlockService {
 
 	/**
 	 * @var RichTextBlockRepository $richTextBlockRepository

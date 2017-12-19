@@ -16,7 +16,7 @@ use SRAG\Learnplaces\service\publicapi\model\ExternalStreamBlockModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  * @deprecated Not needed for current version
  */
-class ExternalStreamBlockServiceImpl implements ExternalStreamBlockService {
+final class ExternalStreamBlockServiceImpl implements ExternalStreamBlockService {
 
 	/**
 	 * @var ExternalStreamBlockRepository $externalStreamBlockRepository

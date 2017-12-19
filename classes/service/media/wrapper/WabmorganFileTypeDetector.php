@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media\wrapper;
 
@@ -12,7 +13,7 @@ use wapmorgan\FileTypeDetector\Detector;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class WabmorganFileTypeDetector implements FileTypeDetector {
+final class WabmorganFileTypeDetector implements FileTypeDetector {
 
 	/**
 	 * @inheritDoc

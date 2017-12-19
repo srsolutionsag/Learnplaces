@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\ConfigurationModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ConfigurationServiceImpl implements ConfigurationService {
+final class ConfigurationServiceImpl implements ConfigurationService {
 
 	/**
 	 * @var ConfigurationRepository $configurationRepository

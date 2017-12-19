@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\LocationDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class LocationModel {
+final class LocationModel {
 
 	use LocationDtoMappingAware;
 

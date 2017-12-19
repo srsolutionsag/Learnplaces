@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\RichTextBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class RichTextBlockModel extends BlockModel {
+final class RichTextBlockModel extends BlockModel {
 
 	use RichTextBlockDtoMappingAware;
 

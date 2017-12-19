@@ -26,7 +26,7 @@ use function array_pop;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureServiceImpl implements PictureService {
+final class PictureServiceImpl implements PictureService {
 
 	/**
 	 * The picture service will only accept uploads with the whitelisted extensions.

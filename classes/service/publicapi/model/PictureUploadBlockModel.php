@@ -12,6 +12,6 @@ use SRAG\Lernplaces\persistence\mapping\PictureUploadBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureUploadBlockModel extends BlockModel {
+final class PictureUploadBlockModel extends BlockModel {
 	use PictureUploadBlockDtoMappingAware;
 }

@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\AudioBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class AudioBlockModel extends BlockModel {
+final class AudioBlockModel extends BlockModel {
 
 	use AudioBlockDtoMappingAware;
 

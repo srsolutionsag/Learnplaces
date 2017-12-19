@@ -13,7 +13,7 @@ use SRAG\Lernplaces\persistence\mapping\VisitJournalDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VisitJournalModel {
+final class VisitJournalModel {
 
 	use VisitJournalDtoMappingAware;
 

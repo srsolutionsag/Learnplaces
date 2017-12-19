@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\HorizontalLineBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class HorizontalLineBlockModel extends BlockModel {
+final class HorizontalLineBlockModel extends BlockModel {
 
 	use HorizontalLineBlockDtoMappingAware;
 }

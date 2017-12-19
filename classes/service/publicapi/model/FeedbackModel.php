@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\FeedbackDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class FeedbackModel {
+final class FeedbackModel {
 
 	use FeedbackDtoMappingAware;
 

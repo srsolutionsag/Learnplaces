@@ -13,7 +13,7 @@ use SRAG\Lernplaces\persistence\mapping\CommentDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class CommentModel {
+final class CommentModel {
 
 	use CommentDtoMappingAware;
 

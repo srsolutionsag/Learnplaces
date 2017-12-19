@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ILIASLinkBlockServiceImpl implements ILIASLinkBlockService {
+final class ILIASLinkBlockServiceImpl implements ILIASLinkBlockService {
 
 	/**
 	 * @var ILIASLinkBlockRepository $iliasLinkBlockRepository

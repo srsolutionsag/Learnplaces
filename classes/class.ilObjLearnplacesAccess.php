@@ -11,7 +11,7 @@ require_once __DIR__ . '/bootstrap.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilObjLearnplacesAccess extends ilObjectPluginAccess {
+final class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 
 	/**
 	 * @var ilObjUser $currentUser

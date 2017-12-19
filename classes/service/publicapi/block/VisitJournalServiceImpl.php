@@ -16,7 +16,7 @@ use SRAG\Learnplaces\service\publicapi\model\VisitJournalModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class VisitJournalServiceImpl implements VisitJournalService {
+final class VisitJournalServiceImpl implements VisitJournalService {
 
 	/**
 	 * @var VisitJournalRepository $visitJournalRepository

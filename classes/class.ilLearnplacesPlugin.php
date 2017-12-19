@@ -6,7 +6,7 @@ require_once __DIR__ . '/bootstrap.php';
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
+final class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 
 	const PLUGIN_NAME = "Learnplaces";
 	const PLUGIN_ID = "xsrl";

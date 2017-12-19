@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\ILIASLinkBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class ILIASLinkBlockModel extends BlockModel {
+final class ILIASLinkBlockModel extends BlockModel {
 
 	use ILIASLinkBlockDtoMappingAware;
 

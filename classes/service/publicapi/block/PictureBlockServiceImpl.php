@@ -17,7 +17,7 @@ use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureBlockServiceImpl implements PictureBlockService {
+final class PictureBlockServiceImpl implements PictureBlockService {
 
 	/**
 	 * @var PictureBlockRepository $pictureBlockRepository

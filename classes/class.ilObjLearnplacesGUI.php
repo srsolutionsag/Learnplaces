@@ -30,7 +30,7 @@ use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlAccordionBlockGUI
  * @ilCtrl_Calls      ilObjLearnplacesGUI: xsrlSettingGUI
  */
-class ilObjLearnplacesGUI extends ilObjectPluginGUI {
+final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	const DEFAULT_CMD = CommonControllerAction::CMD_INDEX;
 	const TAB_ID_PERMISSION = 'id_permissions';
@@ -189,7 +189,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 			$this->learnplaceTabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}
 		parent::setTabs();
-		
+
 		//add an empty tab to prevent ilias from hiding the entire tab bar if only one tab exists.
 		$this->learnplaceTabs->addTab('', '', '#');
 	}

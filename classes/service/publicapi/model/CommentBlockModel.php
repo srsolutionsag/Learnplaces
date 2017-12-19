@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\CommentBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class CommentBlockModel extends BlockModel {
+final class CommentBlockModel extends BlockModel {
 
 	use CommentBlockDtoMappingAware;
 

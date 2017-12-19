@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\AccordionBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class AccordionBlockModel extends BlockModel {
+final class AccordionBlockModel extends BlockModel {
 
 	use AccordionBlockDtoMappingAware;
 

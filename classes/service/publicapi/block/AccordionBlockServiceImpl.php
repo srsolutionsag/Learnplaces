@@ -17,7 +17,7 @@ use SRAG\Learnplaces\service\publicapi\model\BlockModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class AccordionBlockServiceImpl implements AccordionBlockService {
+final class AccordionBlockServiceImpl implements AccordionBlockService {
 
 	/**
 	 * @var AccordionBlockRepository $accordionBlockRepository

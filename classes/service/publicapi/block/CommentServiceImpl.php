@@ -16,7 +16,7 @@ use SRAG\Learnplaces\service\publicapi\model\CommentModel;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  * @deprecated Not needed for current version
  */
-class CommentServiceImpl implements CommentService {
+final class CommentServiceImpl implements CommentService {
 
 	/**
 	 * @var CommentRepository $commentRepository

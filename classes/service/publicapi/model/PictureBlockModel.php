@@ -12,7 +12,7 @@ use SRAG\Lernplaces\persistence\mapping\PictureBlockDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class PictureBlockModel extends BlockModel {
+final class PictureBlockModel extends BlockModel {
 
 	use PictureBlockDtoMappingAware;
 

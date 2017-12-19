@@ -13,7 +13,7 @@ use SRAG\Lernplaces\persistence\mapping\AnswerDtoMappingAware;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class AnswerModel {
+final class AnswerModel {
 
 	use AnswerDtoMappingAware;
 
