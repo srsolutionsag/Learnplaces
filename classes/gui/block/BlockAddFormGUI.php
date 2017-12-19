@@ -72,6 +72,7 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_map'), BlockType::MAP));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_rich_text'), BlockType::RICH_TEXT));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_video'), BlockType::VIDEO));
+		$radioGroup->setValue(BlockType::PICTURE);
 		$this->addItem($radioGroup);
 
 		$this->initButtons();
