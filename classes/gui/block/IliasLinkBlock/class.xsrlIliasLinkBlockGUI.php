@@ -120,12 +120,16 @@ $next_class = $this->controlFlow->getNextClass();
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->checkRequestReferenceId()) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
 
-		return true;
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
+
+		return false;
 	}
 
 	private function checkRequestReferenceId() {
@@ -134,7 +138,7 @@ $next_class = $this->controlFlow->getNextClass();
 		 */
 		$ref_id = $this->getCurrentRefId();
 		if ($ref_id) {
-			return $this->access->checkAccess("read", "", $ref_id);
+			return $this->access->checkAccess("write", "", $ref_id);
 		}
 
 		return true;

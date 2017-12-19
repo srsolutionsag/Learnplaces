@@ -106,12 +106,15 @@ final class xsrlAccordionBlockGUI {
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->checkRequestReferenceId()) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
-		return true;
+		return false;
 	}
 
 	private function checkRequestReferenceId() {

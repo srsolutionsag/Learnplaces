@@ -106,7 +106,6 @@ final class xsrlRichTextBlockGUI {
 		$this->tabs->activateTab(self::TAB_ID);
 
 		switch ($cmd) {
-			case CommonControllerAction::CMD_INDEX:
 			case CommonControllerAction::CMD_ADD:
 			case CommonControllerAction::CMD_CANCEL:
 			case CommonControllerAction::CMD_CONFIRM:
@@ -116,12 +115,15 @@ final class xsrlRichTextBlockGUI {
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->checkRequestReferenceId()) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
-		return true;
+		return false;
 	}
 
 	private function checkRequestReferenceId() {

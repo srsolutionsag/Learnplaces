@@ -112,7 +112,6 @@ final class xsrlPictureBlockGUI {
 		$this->tabs->activateTab(self::TAB_ID);
 
 		switch ($cmd) {
-			case CommonControllerAction::CMD_INDEX:
 			case CommonControllerAction::CMD_ADD:
 			case CommonControllerAction::CMD_CANCEL:
 			case CommonControllerAction::CMD_CONFIRM:
@@ -122,12 +121,15 @@ final class xsrlPictureBlockGUI {
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->checkRequestReferenceId()) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
-		return true;
+		return false;
 	}
 
 	private function checkRequestReferenceId() {
@@ -136,7 +138,7 @@ final class xsrlPictureBlockGUI {
 		 */
 		$ref_id = $this->getCurrentRefId();
 		if ($ref_id) {
-			return $this->access->checkAccess("read", "", $ref_id);
+			return $this->access->checkAccess("write", "", $ref_id);
 		}
 
 		return true;

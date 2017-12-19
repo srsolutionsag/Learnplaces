@@ -128,6 +128,12 @@ final class xsrlContentGUI {
 
 		switch ($cmd) {
 			case CommonControllerAction::CMD_INDEX:
+				if ($this->checkRequestReferenceId('read')) {
+					$this->index();
+					$this->template->show();
+					return true;
+				}
+				break;
 			case CommonControllerAction::CMD_ADD:
 			case CommonControllerAction::CMD_CANCEL:
 			case CommonControllerAction::CMD_CONFIRM:
@@ -136,23 +142,25 @@ final class xsrlContentGUI {
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
 			case self::CMD_SEQUENCE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return true;
 	}
 
-	private function checkRequestReferenceId() {
+	private function checkRequestReferenceId(string $permission) {
 		/**
 		 * @var $ilAccess \ilAccessHandler
 		 */
 		$ref_id = $this->getCurrentRefId();
 		if ($ref_id) {
-			return $this->access->checkAccess("read", "", $ref_id);
+			return $this->access->checkAccess($permission, "", $ref_id);
 		}
 
 		return true;
