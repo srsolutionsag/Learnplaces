@@ -4,7 +4,9 @@ declare(strict_types=1);
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -15,6 +17,7 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlPictureBlockGUI
@@ -25,6 +28,8 @@ final class xsrlPictureBlockGUI {
 
 	use InsertPositionAware;
 	use AccordionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -89,8 +94,9 @@ final class xsrlPictureBlockGUI {
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accordionService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -102,6 +108,7 @@ final class xsrlPictureBlockGUI {
 		$this->configService = $configService;
 		$this->accordionService = $accordionService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -119,7 +126,7 @@ final class xsrlPictureBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -130,23 +137,6 @@ final class xsrlPictureBlockGUI {
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess("write", "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -172,11 +162,15 @@ final class xsrlPictureBlockGUI {
 			 * @var PictureBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate block id injection
+			$accordionId = $this->getCurrentAccordionId($queries);
+			if($accordionId > 0)
+				$this->redirectInvalidRequests($accordionId);
+
 			$picture = $this->pictureService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$block->setPicture($picture);
 			$block = $this->pictureBlockService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
@@ -231,6 +225,8 @@ final class xsrlPictureBlockGUI {
 			 * @var PictureBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$this->redirectInvalidRequests($block->getId());
+
 			$oldPictureBlock = $this->pictureBlockService->find($block->getId());
 			$oldPicture = $oldPictureBlock->getPicture();
 			$block->setPicture($oldPicture);
@@ -267,6 +263,7 @@ final class xsrlPictureBlockGUI {
 
 	private function delete() {
 		$blockId = $this->getBlockId();
+		$this->redirectInvalidRequests($blockId);
 		$this->pictureBlockService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

@@ -4,7 +4,9 @@ declare(strict_types=1);
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\RichTextBlock\RichTextBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -13,6 +15,7 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlRichTextBlock
@@ -25,6 +28,8 @@ final class xsrlRichTextBlockGUI {
 
 	use InsertPositionAware;
 	use AccordionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -84,8 +89,9 @@ final class xsrlRichTextBlockGUI {
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accordionService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -96,6 +102,7 @@ final class xsrlRichTextBlockGUI {
 		$this->configService = $configService;
 		$this->accordionService = $accordionService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -113,7 +120,7 @@ final class xsrlRichTextBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -124,23 +131,6 @@ final class xsrlRichTextBlockGUI {
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess("read", "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -167,9 +157,13 @@ final class xsrlRichTextBlockGUI {
 			 * @var RichTextBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate block id injection
+			$accordionId = $this->getCurrentAccordionId($queries);
+			if($accordionId > 0)
+				$this->redirectInvalidRequests($accordionId);
+
 			$block = $this->richTextBlockService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
@@ -217,7 +211,7 @@ final class xsrlRichTextBlockGUI {
 			 * @var RichTextBlockModel $block
 			 */
 			$block = $form->getBlockModel();
-
+			$this->redirectInvalidRequests($block->getId());
 			$this->richTextBlockService->store($block);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
@@ -233,6 +227,7 @@ final class xsrlRichTextBlockGUI {
 	private function delete() {
 		$queries = $this->request->getQueryParams();
 		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
+		$this->redirectInvalidRequests($blockId);
 		$this->richTextBlockService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

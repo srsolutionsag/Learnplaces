@@ -13,6 +13,7 @@ use SRAG\Learnplaces\container\provider\HttpServiceProvider;
 use SRAG\Learnplaces\container\provider\MediaServiceProvider;
 use SRAG\Learnplaces\container\provider\PluginProvider;
 use SRAG\Learnplaces\container\provider\RepositoryProvider;
+use SRAG\Learnplaces\container\provider\SecurityServiceProvider;
 use SRAG\Learnplaces\container\provider\ViewProvider;
 use SRAG\Learnplaces\container\provider\VisibilityServiceProvider;
 
@@ -40,6 +41,7 @@ final class PluginContainer {
 		ViewProvider::class,
 		VisibilityServiceProvider::class,
 		HttpServiceProvider::class,
+		SecurityServiceProvider::class,
 
 		//Add new service provider here
 	];

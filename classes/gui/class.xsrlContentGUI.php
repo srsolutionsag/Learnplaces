@@ -7,6 +7,7 @@ use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\ContentPresentationView;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -27,6 +28,8 @@ use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlContentGUI {
+
+	use ReferenceIdAware;
 
 	const TAB_ID = 'content';
 	/**
@@ -149,26 +152,11 @@ final class xsrlContentGUI {
 				}
 				break;
 		}
+
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
-		return true;
-	}
-
-	private function checkRequestReferenceId(string $permission) {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess($permission, "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
+		return false;
 	}
 
 	//actions

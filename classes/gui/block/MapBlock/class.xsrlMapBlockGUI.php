@@ -5,7 +5,9 @@ use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\MapBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -14,6 +16,7 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
 use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlMapBlockGUI
@@ -25,6 +28,8 @@ use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 final class xsrlMapBlockGUI {
 
 	use InsertPositionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Map';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -79,8 +84,9 @@ final class xsrlMapBlockGUI {
 	 * @param LearnplaceService      $learnplaceService
 	 * @param ConfigurationService   $configService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -90,6 +96,7 @@ final class xsrlMapBlockGUI {
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -125,23 +132,6 @@ final class xsrlMapBlockGUI {
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId(string $permission) {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess($permission, "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function index() {
@@ -182,6 +172,7 @@ final class xsrlMapBlockGUI {
 
 			//store block
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate block id injection
 			$block = $this->mapBlockService->store($block);
 
 			//fetch learnplace
@@ -223,6 +214,7 @@ final class xsrlMapBlockGUI {
 			 * @var MapBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$this->redirectInvalidRequests($block->getId());
 			$this->mapBlockService->store($block);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
@@ -236,6 +228,7 @@ final class xsrlMapBlockGUI {
 
 	private function delete() {
 		$blockId = $this->getBlockId();
+		$this->redirectInvalidRequests($blockId);
 		$this->mapBlockService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

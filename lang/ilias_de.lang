@@ -15,6 +15,7 @@ common_edit#:#Bearbeiten
 common_save#:#Speichern
 common_delete#:#L&ouml;schen
 common_visibility#:#Sichtbarkeit
+common_access_denied#:#Sie verfügen nicht über die erforderlichen Berechtigungen.
 
 message_changes_save_success#:#&Auml;nderungen erfolgreich gespeichert.
 message_delete_success#:#Block erfolgreich gel&ouml;scht.

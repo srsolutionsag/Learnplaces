@@ -4,11 +4,13 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\gui\block\PictureBlock;
 
 use ilFileInputGUI;
+use const ILIAS_VERSION_NUMERIC;
 use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use SRAG\Learnplaces\gui\block\AbstractBlockEditFormView;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
+use function version_compare;
 use xsrlPictureBlockGUI;
 
 /**
@@ -55,7 +57,8 @@ final class PictureBlockEditFormView extends AbstractBlockEditFormView {
 		$title = new ilTextInputGUI($this->plugin->txt('picture_block_enter_title'), self::POST_TITLE);
 		$title->setMaxLength(256);
 		$description = new ilTextAreaInputGUI($this->plugin->txt('picture_block_enter_description'), self::POST_DESCRIPTION);
-		$description->setMaxNumOfChars(2000);
+		if(version_compare(ILIAS_VERSION_NUMERIC, '5.3') >= 0)
+			$description->setMaxNumOfChars(2000);
 
 		$fileUpload = new ilFileInputGUI($this->plugin->txt('picture_block_select_picture'), self::POST_IMAGE);
 		$fileUpload->setSuffixes(['jpg', 'png']);

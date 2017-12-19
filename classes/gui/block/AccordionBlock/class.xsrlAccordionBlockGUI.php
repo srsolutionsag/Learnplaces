@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -11,6 +13,7 @@ use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlAccordionBlock
@@ -22,6 +25,8 @@ use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 final class xsrlAccordionBlockGUI {
 
 	use InsertPositionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -76,8 +81,9 @@ final class xsrlAccordionBlockGUI {
 	 * @param LearnplaceService      $learnplaceService
 	 * @param ConfigurationService   $configService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -87,6 +93,7 @@ final class xsrlAccordionBlockGUI {
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -104,7 +111,7 @@ final class xsrlAccordionBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -115,23 +122,6 @@ final class xsrlAccordionBlockGUI {
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess("read", "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -156,6 +146,7 @@ final class xsrlAccordionBlockGUI {
 			 * @var AccordionBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate injection of block id
 			$block = $this->accordionService->store($block);
 
 			//fetch learnplace
@@ -195,6 +186,7 @@ final class xsrlAccordionBlockGUI {
 			 * @var AccordionBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$this->redirectInvalidRequests($block->getId());
 			$accordion = $this->accordionService->find($block->getId());
 			$block->setBlocks($accordion->getBlocks());
 			$this->accordionService->store($block);
@@ -211,6 +203,7 @@ final class xsrlAccordionBlockGUI {
 	private function delete() {
 		$queries = $this->request->getQueryParams();
 		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
+		$this->redirectInvalidRequests($blockId);
 		$this->accordionService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
@@ -231,6 +224,10 @@ final class xsrlAccordionBlockGUI {
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);
 		$this->template->setContent($confirm->getHTML());
+	}
+
+	private function cancel() {
+		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
 
 	private function getBlockId(): int {

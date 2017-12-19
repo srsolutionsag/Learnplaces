@@ -22,6 +22,7 @@ use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 use xsrlAccordionBlockGUI;
 use xsrlContentGUI;
@@ -73,7 +74,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
 			$c[AccordionBlockService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -88,7 +90,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
 			$c[AccordionBlockService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -102,7 +105,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
 			$c[AccordionBlockService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -116,7 +120,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
 			$c[AccordionBlockService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -129,7 +134,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[MapBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -144,7 +150,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
 			$c[AccordionBlockService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 
@@ -157,7 +164,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[AccordionBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[ServerRequestInterface::class]
+			$c[ServerRequestInterface::class],
+			$c[BlockAccessGuard::class]
 		);
 		};
 

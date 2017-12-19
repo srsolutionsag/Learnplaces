@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -12,6 +14,7 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\ILIASLinkBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlIliasLinkBlock
@@ -27,6 +30,8 @@ final class xsrlIliasLinkBlockGUI {
 
 	use InsertPositionAware;
 	use AccordionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -86,8 +91,9 @@ final class xsrlIliasLinkBlockGUI {
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accprdionService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ILIASLinkBlockService $iliasLinkService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accprdionService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ILIASLinkBlockService $iliasLinkService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accprdionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -98,6 +104,7 @@ final class xsrlIliasLinkBlockGUI {
 		$this->configService = $configService;
 		$this->accprdionService = $accprdionService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -118,7 +125,7 @@ $next_class = $this->controlFlow->getNextClass();
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -130,23 +137,6 @@ $next_class = $this->controlFlow->getNextClass();
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess("write", "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -173,9 +163,14 @@ $next_class = $this->controlFlow->getNextClass();
 			 * @var ILIASLinkBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate block id injection
+			$accordionId = $this->getCurrentAccordionId($queries);
+			if($accordionId > 0)
+				$this->redirectInvalidRequests($accordionId);
+
 			$block = $this->iliasLinkService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($queries);
+
 			if($accordionId > 0) {
 				$accordion = $this->accprdionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
@@ -219,6 +214,8 @@ $next_class = $this->controlFlow->getNextClass();
 			 * @var ILIASLinkBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$this->redirectInvalidRequests($block->getId());
+
 			$this->iliasLinkService->store($block);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
@@ -233,6 +230,8 @@ $next_class = $this->controlFlow->getNextClass();
 	private function delete() {
 		$queries = $this->request->getQueryParams();
 		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
+		$this->redirectInvalidRequests($blockId);
+
 		$this->iliasLinkService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

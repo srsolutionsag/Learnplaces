@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\gui\settings\SettingEditFormView;
@@ -17,6 +18,8 @@ use SRAG\Learnplaces\service\publicapi\block\LocationService;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlSettingGUI {
+
+	use ReferenceIdAware;
 
 	const TAB_ID = 'Settings';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -88,31 +91,17 @@ final class xsrlSettingGUI {
 		switch ($cmd) {
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
+					$this->template->show();
+					return true;
 				}
 				break;
 		}
-		$this->template->show();
 
-		return true;
-	}
+		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
 
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess("write", "", $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->controlFlow->getParameterArray($this);
-		return intval($queries["ref_id"]);
+		return false;
 	}
 
 	private function edit() {

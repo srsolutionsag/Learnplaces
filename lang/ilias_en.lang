@@ -15,6 +15,7 @@ common_edit#:#Edit
 common_save#:#Save
 common_delete#:#Delete
 common_visibility#:#Visibility
+common_access_denied#:#Access denied.
 
 message_changes_save_success#:#Changes successfully saved.
 message_delete_success#:#Block successfully deleted.

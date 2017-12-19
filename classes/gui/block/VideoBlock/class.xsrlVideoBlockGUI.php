@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
+use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
+use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\block\VideoBlock\VideoBlockEditFormView;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
@@ -16,6 +18,7 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
 use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\VideoModel;
+use SRAG\Learnplaces\service\security\BlockAccessGuard;
 
 /**
  * Class xsrlVideoBlockGUI
@@ -28,6 +31,8 @@ final class xsrlVideoBlockGUI {
 
 	use InsertPositionAware;
 	use AccordionAware;
+	use BlockIdReferenceValidationAware;
+	use ReferenceIdAware;
 
 	const TAB_ID = 'edit-block';
 	const BLOCK_ID_QUERY_KEY = 'block';
@@ -92,8 +97,9 @@ final class xsrlVideoBlockGUI {
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accordionService
 	 * @param ServerRequestInterface $request
+	 * @param BlockAccessGuard       $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, VideoBlockService $videoBlockService, VideoService $videoService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, VideoBlockService $videoBlockService, VideoService $videoService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -105,6 +111,7 @@ final class xsrlVideoBlockGUI {
 		$this->configService = $configService;
 		$this->accordionService = $accordionService;
 		$this->request = $request;
+		$this->blockAccessGuard = $blockAccessGuard;
 	}
 
 
@@ -122,7 +129,7 @@ final class xsrlVideoBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId()) {
+				if ($this->checkRequestReferenceId('write')) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -133,23 +140,6 @@ final class xsrlVideoBlockGUI {
 		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
-	}
-
-	private function checkRequestReferenceId() {
-		/**
-		 * @var $ilAccess \ilAccessHandler
-		 */
-		$ref_id = $this->getCurrentRefId();
-		if ($ref_id) {
-			return $this->access->checkAccess('write', '', $ref_id);
-		}
-
-		return true;
-	}
-
-	private function getCurrentRefId(): int {
-		$queries = $this->request->getQueryParams();
-		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -175,6 +165,11 @@ final class xsrlVideoBlockGUI {
 			 * @var VideoBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$block->setId(0); //mitigate block id injection
+			$accordionId = $this->getCurrentAccordionId($queries);
+			if($accordionId > 0)
+				$this->redirectInvalidRequests($block->getId());
+
 			$video = $this->videoService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$block
 				->setPath($video->getCoverPath())
@@ -182,7 +177,6 @@ final class xsrlVideoBlockGUI {
 
 			$videoBlock = $this->videoBlockService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
@@ -237,6 +231,7 @@ final class xsrlVideoBlockGUI {
 			 * @var VideoBlockModel $block
 			 */
 			$block = $form->getBlockModel();
+			$this->redirectInvalidRequests($block->getId());
 			$oldVideoBlock = $this->videoBlockService->find($block->getId());
 			$block
 				->setPath($oldVideoBlock->getPath())
@@ -282,6 +277,7 @@ final class xsrlVideoBlockGUI {
 	private function delete() {
 		$queries = $this->request->getQueryParams();
 		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
+		$this->redirectInvalidRequests($blockId);
 		$this->videoBlockService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
