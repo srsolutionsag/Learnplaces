@@ -5,8 +5,11 @@ require_once __DIR__ . '/bootstrap.php';
 
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
+use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 
 /**
  * Class ilObjLearnplacesGUI
@@ -39,21 +42,36 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 * @var int $objectId
 	 */
 	private $objectId;
+	/**
+	 * @var ilTabsGUI $learnplaceTabs
+	 */
+	private $learnplaceTabs;
+	/**
+	 * @var ilAccessHandler $accessControl
+	 */
+	private $accessControl;
+	/**
+	 * @var ilObjUser $currentUser
+	 */
+	private $currentUser;
 
 
 	/**
 	 * ilObjLearnplacesGUI constructor.
 	 *
-	 * @param int $a_ref_id
-	 * @param int $a_id_type
-	 * @param int $a_parent_node_id
+	 * @param int|null  $a_ref_id
+	 * @param int       $a_id_type
+	 * @param int       $a_parent_node_id
 	 *
 	 * @see ilObjectPluginGUI for possible id types.
 	 */
-	public function __construct(int $a_ref_id = 0, int $a_id_type = self::REPOSITORY_NODE_ID, int $a_parent_node_id = 0) {
+	public function __construct($a_ref_id = 0, int $a_id_type = self::REPOSITORY_NODE_ID, int $a_parent_node_id = 0) {
 		parent::__construct($a_ref_id, $a_id_type, $a_parent_node_id);
 		$this->mapBlockService = PluginContainer::resolve(MapBlockService::class);
 		$this->objectId = intval(ilObject::_lookupObjectId($this->ref_id));
+		$this->learnplaceTabs = PluginContainer::resolve('ilTabs');
+		$this->accessControl = PluginContainer::resolve('ilAccess');
+		$this->currentUser = PluginContainer::resolve('ilUser');
 	}
 
 
@@ -70,6 +88,15 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 */
 	public function executeCommand() {
 		$nextClass = $this->ctrl->getNextClass();
+
+		/**
+		 * @var ilTemplate $template
+		 */
+		$template = PluginContainer::resolve('tpl');
+		$template->setTitle(ilObject::_lookupTitle($this->objectId));
+		$template->setDescription(ilObject::_lookupDescription($this->objectId));
+		$template->setTitleIcon(ilObject::_getIcon($this->objectId));
+
 		$this->renderTabs();
 		switch ($nextClass) {
 			case "":
@@ -108,8 +135,10 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlSettingGUI::class));
 				break;
 			case strtolower(ilPermissionGUI::class):
-				$this->tabs->activateTab(self::TAB_ID_PERMISSION);
+				$this->learnplaceTabs->activateTab(self::TAB_ID_PERMISSION);
 				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
+				$template->getStandardTemplate();
+				$template->show();
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class);
@@ -122,7 +151,7 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 * @param $cmd string of command which should be
 	 */
 	public function performCommand($cmd) {
-		if (!$this->access->checkAccess('read', $cmd, $this->user->getId())) {
+		if (!$this->accessControl->checkAccess('read', $cmd, $this->currentUser->getId())) {
 			$this->{$cmd}();
 		}
 	}
@@ -153,22 +182,33 @@ class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	}
 
 	private function renderTabs() {
-		$this->tabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
+		$this->learnplaceTabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
 		if($this->hasMap())
-			$this->tabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
-		if($this->access->checkAccess('write', '', $this->ref_id) === true) {
-			$this->tabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
+			$this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
+		if($this->accessControl->checkAccess('write', '', $this->ref_id) === true) {
+			$this->learnplaceTabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}
 		parent::setTabs();
+		
+		//add an empty tab to prevent ilias from hiding the entire tab bar if only one tab exists.
+		$this->learnplaceTabs->addTab('', '', '#');
 	}
 
 	private function hasMap(): bool {
-		try {
-			$this->mapBlockService->findByObjectId($this->objectId);
-			return true;
+		/**
+		 * @var ilAccessHandler $access
+		 * @var LearnplaceServiceDecoratorFactory $decorators
+		 * @var LearnplaceService $learnplaceService
+		 */
+		$access = PluginContainer::resolve('ilAccess');
+		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
+		$decorators = PluginContainer::resolve(LearnplaceServiceDecoratorFactory::class);
+		$learnplaceService = ($access->checkAccess('write', '', $this->ref_id)) ? $learnplaceService : $decorators->decorate($learnplaceService);
+		$learnplace = $learnplaceService->findByObjectId($this->objectId);
+		foreach ($learnplace->getBlocks() as $block) {
+			if($block instanceof MapBlockModel)
+				return true;
 		}
-		catch (InvalidArgumentException $ex) {
-			return false;
-		}
+		return false;
 	}
 }

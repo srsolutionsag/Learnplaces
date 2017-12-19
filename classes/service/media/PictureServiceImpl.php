@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\media;
 
-use function array_pop;
 use Intervention\Image\ImageManager;
 use InvalidArgumentException;
 use League\Flysystem\FilesystemInterface;
@@ -17,9 +16,8 @@ use SRAG\Learnplaces\service\filesystem\PathHelper;
 use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\media\wrapper\FileTypeDetector;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
-use function str_replace;
-use function unlink;
 use wapmorgan\FileTypeDetector\Detector;
+use function array_pop;
 
 /**
  * Class PictureServiceImpl

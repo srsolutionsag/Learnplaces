@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\gui\block\util;
 
 use function array_key_exists;
+use ilCtrl;
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\component\PlusView;
 
@@ -19,18 +20,18 @@ trait InsertPositionAware {
 	/**
 	 * Fetch the requested insert position of the new block.
 	 *
-	 * @param ServerRequestInterface $request   The request which should be used to search after the query parameter.
+	 * @param string[] $queries Query parameters.
 	 *
 	 * @return int  The zero based insert index.
 	 *
 	 * @see PlusView::POSITION_QUERY_PARAM  The query param which is searched by this method.
 	 */
-	private function getInsertPosition(ServerRequestInterface $request): int {
+	private function getInsertPosition(array $queries): int {
 		$position = 0;
-		if(!array_key_exists(PlusView::POSITION_QUERY_PARAM, $request->getQueryParams()))
+		if(!array_key_exists(PlusView::POSITION_QUERY_PARAM, $queries))
 			return $position;
 
-		$position = intval($request->getQueryParams()[PlusView::POSITION_QUERY_PARAM]);
+		$position = intval($queries[PlusView::POSITION_QUERY_PARAM]);
 		$position = $position >= 0 ? $position : 0;
 		return $position;
 	}

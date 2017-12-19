@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\PictureUploadBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
@@ -46,10 +46,6 @@ final class xsrlPictureUploadBlockGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -69,6 +65,10 @@ final class xsrlPictureUploadBlockGUI {
 	 * @var AccordionBlockService $accordionService
 	 */
 	private $accordionService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
@@ -78,24 +78,24 @@ final class xsrlPictureUploadBlockGUI {
 	 * @param ilTemplate                $template
 	 * @param ilCtrl                    $controlFlow
 	 * @param ilAccessHandler           $access
-	 * @param GlobalHttpState           $http
 	 * @param ilLearnplacesPlugin       $plugin
 	 * @param PictureUploadBlockService $pictureUploadService
 	 * @param LearnplaceService         $learnplaceService
 	 * @param ConfigurationService      $configService
 	 * @param AccordionBlockService     $accordionService
+	 * @param ServerRequestInterface    $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureUploadBlockService $pictureUploadService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, PictureUploadBlockService $pictureUploadService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->pictureUploadService = $pictureUploadService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 		$this->accordionService = $accordionService;
+		$this->request = $request;
 	}
 
 
@@ -137,7 +137,8 @@ final class xsrlPictureUploadBlockGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -156,15 +157,17 @@ final class xsrlPictureUploadBlockGUI {
 	private function create() {
 		$form = new PictureUploadBlockEditFormView(new PictureUploadBlockModel());
 		try {
+			$queries = $this->request->getQueryParams();
+
 			//store block
 			$block = $form->getBlockModel();
 			$block = $this->pictureUploadService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($this->http->request());
+			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$accordion->setBlocks($blocks);
 				$this->accordionService->store($accordion);
 			}
@@ -174,7 +177,7 @@ final class xsrlPictureUploadBlockGUI {
 
 				//store relation learnplace <-> block
 				$blocks = $learnplace->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
 			}
@@ -193,13 +196,16 @@ final class xsrlPictureUploadBlockGUI {
 	}
 
 	private function delete() {
-		$blockId = intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
 		$this->pictureUploadService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
 
 	private function confirm() {
+		$queries = $this->request->getQueryParams();
+
 		$confirm = new ilConfirmationGUI();
 		$confirm->setHeaderText($this->plugin->txt('confirm_delete_header'));
 		$confirm->setFormAction(
@@ -207,7 +213,7 @@ final class xsrlPictureUploadBlockGUI {
 			'&' .
 			self::BLOCK_ID_QUERY_KEY .
 			'=' .
-			$this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]
+			$queries[self::BLOCK_ID_QUERY_KEY]
 		);
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);

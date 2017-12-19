@@ -80,7 +80,7 @@ final class ContentPresentationView {
 
 		$writePermission = !$this->isReadonly();
 
-		$blockHtml = $this->getPlusView(0)->getHTML();
+		$blockHtml = ($writePermission) ? $this->getPlusView(0)->getHTML() : '';
 		foreach ($this->blocks as $position => $block) {
 			try {
 				$view = $this->renderableFactory->getInstance($block);

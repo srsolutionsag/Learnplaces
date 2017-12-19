@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\gui\settings\SettingEditFormView;
@@ -39,10 +38,6 @@ final class xsrlSettingGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -67,18 +62,16 @@ final class xsrlSettingGUI {
 	 * @param ilTemplate           $template
 	 * @param ilCtrl               $controlFlow
 	 * @param ilAccessHandler      $access
-	 * @param GlobalHttpState      $http
 	 * @param ilLearnplacesPlugin  $plugin
 	 * @param ConfigurationService $configService
 	 * @param LocationService      $locationService
 	 * @param LearnplaceService    $learnplaceService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->configService = $configService;
 		$this->locationService = $locationService;
@@ -118,7 +111,8 @@ final class xsrlSettingGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->controlFlow->getParameterArray($this);
+		return intval($queries["ref_id"]);
 	}
 
 	private function edit() {
@@ -134,14 +128,14 @@ final class xsrlSettingGUI {
 			->setOnline($config->isOnline())
 			->setDefaultVisibility($config->getDefaultVisibility());
 
-		$view = new SettingEditFormView($model, $this->plugin);
+		$view = new SettingEditFormView($model, $this->plugin, $this->controlFlow);
 		$view->fillForm();
 		$this->template->setContent($view->getHTML());
 	}
 
 	private function update() {
 
-		$view = new SettingEditFormView(new SettingModel(), $this->plugin);
+		$view = new SettingEditFormView(new SettingModel(), $this->plugin, $this->controlFlow);
 
 		try {
 			$learnplce = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
@@ -46,10 +46,6 @@ final class xsrlPictureBlockGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -73,35 +69,39 @@ final class xsrlPictureBlockGUI {
 	 * @var AccordionBlockService $accordionService
 	 */
 	private $accordionService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
 	 * xsrlPictureBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI             $tabs
-	 * @param ilTemplate            $template
-	 * @param ilCtrl                $controlFlow
-	 * @param ilAccessHandler       $access
-	 * @param GlobalHttpState       $http
-	 * @param ilLearnplacesPlugin   $plugin
-	 * @param PictureService        $pictureService
-	 * @param PictureBlockService   $pictureBlockService
-	 * @param LearnplaceService     $learnplaceService
-	 * @param ConfigurationService  $configService
-	 * @param AccordionBlockService $accordionService
+	 * @param ilTabsGUI              $tabs
+	 * @param ilTemplate             $template
+	 * @param ilCtrl                 $controlFlow
+	 * @param ilAccessHandler        $access
+	 * @param ilLearnplacesPlugin    $plugin
+	 * @param PictureService         $pictureService
+	 * @param PictureBlockService    $pictureBlockService
+	 * @param LearnplaceService      $learnplaceService
+	 * @param ConfigurationService   $configService
+	 * @param AccordionBlockService  $accordionService
+	 * @param ServerRequestInterface $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->pictureService = $pictureService;
 		$this->pictureBlockService = $pictureBlockService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 		$this->accordionService = $accordionService;
+		$this->request = $request;
 	}
 
 
@@ -143,7 +143,8 @@ final class xsrlPictureBlockGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -162,6 +163,8 @@ final class xsrlPictureBlockGUI {
 	private function create() {
 		$form = new PictureBlockEditFormView(new PictureBlockModel());
 		try {
+			$queries = $this->request->getQueryParams();
+
 			//store block
 			/**
 			 * @var PictureBlockModel $block
@@ -171,11 +174,11 @@ final class xsrlPictureBlockGUI {
 			$block->setPicture($picture);
 			$block = $this->pictureBlockService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($this->http->request());
+			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$accordion->setBlocks($blocks);
 				$this->accordionService->store($accordion);
 			}
@@ -185,7 +188,7 @@ final class xsrlPictureBlockGUI {
 
 				//store relation learnplace <-> block
 				$blocks = $learnplace->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
 			}
@@ -230,7 +233,7 @@ final class xsrlPictureBlockGUI {
 			$oldPicture = $oldPictureBlock->getPicture();
 			$block->setPicture($oldPicture);
 
-			$uploadedFiles = $this->http->request()->getUploadedFiles();
+			$uploadedFiles = $this->request->getUploadedFiles();
 			if(count($uploadedFiles) === 1 && array_pop($uploadedFiles)->getError() === UPLOAD_ERR_OK) {
 				//store new picture
 				$picture = $this->pictureService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
@@ -268,6 +271,8 @@ final class xsrlPictureBlockGUI {
 	}
 
 	private function confirm() {
+		$queries = $this->request->getQueryParams();
+
 		$confirm = new ilConfirmationGUI();
 		$confirm->setHeaderText($this->plugin->txt('confirm_delete_header'));
 		$confirm->setFormAction(
@@ -275,7 +280,7 @@ final class xsrlPictureBlockGUI {
 			'&' .
 			self::BLOCK_ID_QUERY_KEY .
 			'=' .
-			$this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]
+			$queries[self::BLOCK_ID_QUERY_KEY]
 		);
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);
@@ -287,6 +292,7 @@ final class xsrlPictureBlockGUI {
 	}
 
 	private function getBlockId(): int {
-		return intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
 	}
 }

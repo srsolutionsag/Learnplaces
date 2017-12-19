@@ -1,13 +1,12 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
-use SRAG\Learnplaces\service\media\exception\FileUploadException;
 use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\ILIASLinkBlockService;
@@ -49,10 +48,6 @@ final class xsrlIliasLinkBlockGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -72,33 +67,37 @@ final class xsrlIliasLinkBlockGUI {
 	 * @var AccordionBlockService $accprdionService
 	 */
 	private $accprdionService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
 	 * xsrlIliasLinkBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI             $tabs
-	 * @param ilTemplate            $template
-	 * @param ilCtrl                $controlFlow
-	 * @param ilAccessHandler       $access
-	 * @param GlobalHttpState       $http
-	 * @param ilLearnplacesPlugin   $plugin
-	 * @param ILIASLinkBlockService $iliasLinkService
-	 * @param LearnplaceService     $learnplaceService
-	 * @param ConfigurationService  $configService
-	 * @param AccordionBlockService $accprdionService
+	 * @param ilTabsGUI              $tabs
+	 * @param ilTemplate             $template
+	 * @param ilCtrl                 $controlFlow
+	 * @param ilAccessHandler        $access
+	 * @param ilLearnplacesPlugin    $plugin
+	 * @param ILIASLinkBlockService  $iliasLinkService
+	 * @param LearnplaceService      $learnplaceService
+	 * @param ConfigurationService   $configService
+	 * @param AccordionBlockService  $accprdionService
+	 * @param ServerRequestInterface $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, ILIASLinkBlockService $iliasLinkService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accprdionService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ILIASLinkBlockService $iliasLinkService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accprdionService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->iliasLinkService = $iliasLinkService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
 		$this->accprdionService = $accprdionService;
+		$this->request = $request;
 	}
 
 
@@ -142,7 +141,8 @@ $next_class = $this->controlFlow->getNextClass();
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -162,6 +162,8 @@ $next_class = $this->controlFlow->getNextClass();
 	private function create() {
 		$form = new xsrlIliasLinkBlockEditFormViewGUI(new ILIASLinkBlockModel());
 		try {
+			$queries = $this->request->getQueryParams();
+
 			//store block
 			/**
 			 * @var ILIASLinkBlockModel $block
@@ -169,11 +171,11 @@ $next_class = $this->controlFlow->getNextClass();
 			$block = $form->getBlockModel();
 			$block = $this->iliasLinkService->store($block);
 
-			$accordionId = $this->getCurrentAccordionId($this->http->request());
+			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0) {
 				$accordion = $this->accprdionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$accordion->setBlocks($blocks);
 				$this->accprdionService->store($accordion);
 			}
@@ -183,7 +185,7 @@ $next_class = $this->controlFlow->getNextClass();
 
 				//store relation learnplace <-> block
 				$blocks = $learnplace->getBlocks();
-				array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
 			}
@@ -225,13 +227,15 @@ $next_class = $this->controlFlow->getNextClass();
 	}
 
 	private function delete() {
-		$blockId = intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
 		$this->iliasLinkService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
 
 	private function confirm() {
+		$queries = $this->request->getQueryParams();
 		$confirm = new ilConfirmationGUI();
 		$confirm->setHeaderText($this->plugin->txt('confirm_delete_header'));
 		$confirm->setFormAction(
@@ -239,7 +243,7 @@ $next_class = $this->controlFlow->getNextClass();
 			'&' .
 			self::BLOCK_ID_QUERY_KEY .
 			'=' .
-			$this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]
+			$queries[self::BLOCK_ID_QUERY_KEY]
 		);
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);
@@ -251,6 +255,7 @@ $next_class = $this->controlFlow->getNextClass();
 	}
 
 	private function getBlockId(): int {
-		return intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
 	}
 }

@@ -10,6 +10,7 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemInterface;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\persistence\repository\PictureRepository;
 use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\media\PictureServiceImpl;
@@ -38,7 +39,7 @@ final class MediaServiceProvider implements ServiceProviderInterface {
 		$pimple[ImageManager::class]        = function ($c) {return new ImageManager(); };
 		$pimple[PictureService::class]      = function ($c) {
 			return new PictureServiceImpl(
-				$c['http']->request(),
+				$c[ServerRequestInterface::class],
 				$c[PictureRepository::class],
 				$c[ImageManager::class],
 				$c[FileTypeDetector::class],
@@ -46,7 +47,7 @@ final class MediaServiceProvider implements ServiceProviderInterface {
 			);
 		};
 		$pimple[VideoService::class]        = function ($c) {return new VideoServiceImpl(
-				$c['http']->request(),
+				$c[ServerRequestInterface::class],
 				$c[FileTypeDetector::class],
 				$c[FilesystemInterface::class]
 			);

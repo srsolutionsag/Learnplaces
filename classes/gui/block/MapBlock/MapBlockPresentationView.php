@@ -100,7 +100,6 @@ final class MapBlockPresentationView {
 	public function setModels(MapBlockModel $model, LocationModel $location) {
 		$this->model = $model;
 		$this->location = $location;
-		$this->initView();
 	}
 
 
@@ -111,6 +110,7 @@ final class MapBlockPresentationView {
 		if(is_null($this->model))
 			throw new LogicException('The picture block view requires a model to render its content.');
 
+		$this->initView();
 		return $this->template->get();
 	}
 

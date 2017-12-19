@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\component\PlusView;
@@ -43,10 +43,6 @@ final class xsrlAccordionBlockGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -62,32 +58,37 @@ final class xsrlAccordionBlockGUI {
 	 * @var ConfigurationService $configService
 	 */
 	private $configService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
 	 * xsrlAccordionBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI             $tabs
-	 * @param ilTemplate            $template
-	 * @param ilCtrl                $controlFlow
-	 * @param ilAccessHandler       $access
-	 * @param GlobalHttpState       $http
-	 * @param ilLearnplacesPlugin   $plugin
-	 * @param AccordionBlockService $accordionService
-	 * @param LearnplaceService     $learnplaceService
-	 * @param ConfigurationService  $configService
+	 * @param ilTabsGUI              $tabs
+	 * @param ilTemplate             $template
+	 * @param ilCtrl                 $controlFlow
+	 * @param ilAccessHandler        $access
+	 * @param ilLearnplacesPlugin    $plugin
+	 * @param AccordionBlockService  $accordionService
+	 * @param LearnplaceService      $learnplaceService
+	 * @param ConfigurationService   $configService
+	 * @param ServerRequestInterface $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->accordionService = $accordionService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
+		$this->request = $request;
 	}
+
 
 	public function executeCommand() {
 
@@ -126,7 +127,8 @@ final class xsrlAccordionBlockGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	private function add() {
@@ -144,6 +146,8 @@ final class xsrlAccordionBlockGUI {
 	private function create() {
 		$form = new AccordionBlockEditFormView(new AccordionBlockModel());
 		try {
+			$queries = $this->request->getQueryParams();
+
 			//store block
 			/**
 			 * @var AccordionBlockModel $block
@@ -156,7 +160,7 @@ final class xsrlAccordionBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+			array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 
@@ -202,13 +206,16 @@ final class xsrlAccordionBlockGUI {
 	}
 
 	private function delete() {
-		$blockId = intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		$blockId = intval($queries[self::BLOCK_ID_QUERY_KEY]);
 		$this->accordionService->delete($blockId);
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
 
 	private function confirm() {
+		$queries = $this->request->getQueryParams();
+
 		$confirm = new ilConfirmationGUI();
 		$confirm->setHeaderText($this->plugin->txt('confirm_delete_header'));
 		$confirm->setFormAction(
@@ -216,7 +223,7 @@ final class xsrlAccordionBlockGUI {
 			'&' .
 			self::BLOCK_ID_QUERY_KEY .
 			'=' .
-			$this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]
+			$queries[self::BLOCK_ID_QUERY_KEY]
 		);
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);
@@ -224,6 +231,7 @@ final class xsrlAccordionBlockGUI {
 	}
 
 	private function getBlockId(): int {
-		return intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
 	}
 }

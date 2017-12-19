@@ -8,6 +8,7 @@ use ilLearnplacesPlugin;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockPresentationView;
+use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\IliasLinkBlock\IliasLinkBlockPresentationView;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureBlock\PictureBlockPresentationView;
@@ -88,6 +89,13 @@ final class ViewProvider implements ServiceProviderInterface {
 				$c[ilCtrl::class],
 				$c[ilLearnplacesPlugin::class],
 				$c[RenderableBlockViewFactory::class]
+			);
+		});
+
+		$pimple[BlockAddFormGUI::class] = $pimple->factory(function ($c) {
+			return new BlockAddFormGUI(
+				$c[ilLearnplacesPlugin::class],
+				$c[ilCtrl::class]
 			);
 		});
 	}

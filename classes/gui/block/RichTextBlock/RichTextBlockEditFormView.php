@@ -39,7 +39,7 @@ final class RichTextBlockEditFormView extends AbstractBlockEditFormView {
 		$textArea = new ilTextAreaInputGUI($this->plugin->txt('rich_text_block_content'), self::POST_CONTENT);
 		$textArea->setRequired(true);
 
-		$textArea->setRTESupport(\ilObject::_lookupObjId($_GET['ref_id']), "dcl", ilLearnplacesPlugin::PLUGIN_ID, null, false); // We have to prepend that this is a datacollection
+		$textArea->setRTESupport(\ilObject::_lookupObjId($this->ctrl->getParameterArrayByClass(xsrlRichTextBlockGUI::class)['ref_id']), "dcl", ilLearnplacesPlugin::PLUGIN_ID, null, false); // We have to prepend that this is a datacollection
 		$textArea->setUseRte(true);
 		$textArea->setRteTags([
 			'p',

@@ -89,7 +89,9 @@ final class AfterVisitPlaceVisibleDecorator implements LearnplaceService {
 
 	private function hasVisitedPlace(LearnplaceModel $learnplace): bool {
 		foreach ($learnplace->getVisitJournals() as $visit) {
-			if($visit->getUserId() > $this->user->getId())
+
+			//the user id could also be string
+			if($visit->getUserId() === intval($this->user->getId()))
 				return true;
 		}
 		return false;

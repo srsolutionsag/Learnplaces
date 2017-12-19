@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
@@ -34,7 +35,7 @@ final class xsrlContentGUI {
 	const CMD_SEQUENCE = 'sequence';
 
 	private static $blockTypeViewMapping = [
-		BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
+		//BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
 		BlockType::PICTURE          => xsrlPictureBlockGUI::class,
 		BlockType::RICH_TEXT        => xsrlRichTextBlockGUI::class,
 		BlockType::ILIAS_LINK       => xsrlIliasLinkBlockGUI::class,
@@ -60,10 +61,6 @@ final class xsrlContentGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -83,6 +80,14 @@ final class xsrlContentGUI {
 	 * @var LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
 	 */
 	private $learnplaceServiceDecorationFactory;
+	/**
+	 * @var BlockAddFormGUI $blockAddGUI
+	 */
+	private $blockAddGUI;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
@@ -92,24 +97,26 @@ final class xsrlContentGUI {
 	 * @param ilTemplate                        $template
 	 * @param ilCtrl                            $controlFlow
 	 * @param ilAccessHandler                   $access
-	 * @param GlobalHttpState                   $http
 	 * @param ilLearnplacesPlugin               $plugin
 	 * @param RenderableBlockViewFactory        $renderableFactory
 	 * @param LearnplaceService                 $learnplaceService
 	 * @param AccordionBlockService             $accordionService
 	 * @param LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
+	 * @param BlockAddFormGUI                   $blockAddGUI
+	 * @param ServerRequestInterface            $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService, LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService, LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory, BlockAddFormGUI $blockAddGUI, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->renderableFactory = $renderableFactory;
 		$this->learnplaceService = $learnplaceService;
 		$this->accordionService = $accordionService;
 		$this->learnplaceServiceDecorationFactory = $learnplaceServiceDecorationFactory;
+		$this->blockAddGUI = $blockAddGUI;
+		$this->request = $request;
 	}
 
 
@@ -152,7 +159,8 @@ final class xsrlContentGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	//actions
@@ -189,12 +197,11 @@ final class xsrlContentGUI {
 	}
 
 	private function add() {
-		$form = new BlockAddFormGUI();
-		$this->template->setContent($form->getHTML());
+		$this->template->setContent($this->blockAddGUI->getHTML());
 	}
 
 	private function create() {
-		$blockAdd = new BlockAddFormGUI();
+		$blockAdd = $this->blockAddGUI;
 		if($blockAdd->checkInput()) {
 			$input = intval($blockAdd->getInput(BlockAddFormGUI::POST_BLOCK_TYPES, true));
 			$controller = static::$blockTypeViewMapping[$input];
@@ -225,7 +232,7 @@ final class xsrlContentGUI {
 
 		$blockIterator->append(new ArrayIterator($learnplace->getBlocks()));
 
-		$post = $this->http->request()->getParsedBody();
+		$post = $this->request->getParsedBody();
 
 		//yield ['block_12' => '5']
 		$iterator = new RegexIterator(new ArrayIterator($post),  '/^(?:block\_\d+)$/',RegexIterator::MATCH, RegexIterator::USE_KEY);

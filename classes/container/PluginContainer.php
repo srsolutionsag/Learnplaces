@@ -9,6 +9,7 @@ use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\container\exception\DependencyResolutionException;
 use SRAG\Learnplaces\container\provider\BlockServiceProvider;
 use SRAG\Learnplaces\container\provider\GUIProvider;
+use SRAG\Learnplaces\container\provider\HttpServiceProvider;
 use SRAG\Learnplaces\container\provider\MediaServiceProvider;
 use SRAG\Learnplaces\container\provider\PluginProvider;
 use SRAG\Learnplaces\container\provider\RepositoryProvider;
@@ -38,6 +39,7 @@ final class PluginContainer {
 		GUIProvider::class,
 		ViewProvider::class,
 		VisibilityServiceProvider::class,
+		HttpServiceProvider::class,
 
 		//Add new service provider here
 	];

@@ -22,7 +22,8 @@
         "sabre/uri": "^2.1",
         "symfony/console": "^3.3",
         "symfony/expression-language": "^3.3",
-        "wapmorgan/file-type-detector": "^1.1"
+        "wapmorgan/file-type-detector": "^1.1",
+        "zendframework/zend-diactoros": "^1.6"
     },
     "autoload": {
         "psr-4": {
@@ -37,6 +38,11 @@
             "./classes/class.ilObjLearnplacesListGUI.php",
             "./classes/gui",
             "../../../../../../../Services/Repository",
+            "../../../../../../../Services/Form",
+            "../../../../../../../Services/AccessControl",
+            "../../../../../../../Services/Link",
+            "../../../../../../../Services/UIComponent",
+            "../../../../../../../Services/Maps",
             "../../../../../../../Services/Utilities",
             "../../../../../../../Services/Component"
         ]

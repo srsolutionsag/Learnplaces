@@ -41,7 +41,7 @@ class Configuration extends ActiveRecord {
 	 * @con_fieldtype  integer
 	 * @con_length     1
 	 */
-	protected $online = 0;
+	protected $object_online = 0;
 	/**
 	 * @var int|null
 	 *
@@ -76,18 +76,18 @@ class Configuration extends ActiveRecord {
 	/**
 	 * @return int
 	 */
-	public function getOnline(): int {
-		return intval($this->online);
+	public function getObjectOnline(): int {
+		return intval($this->object_online);
 	}
 
 
 	/**
-	 * @param int $online
+	 * @param int $object_online
 	 *
 	 * @return Configuration
 	 */
-	public function setOnline(int $online): Configuration {
-		$this->online = $online;
+	public function setObjectOnline(int $object_online): Configuration {
+		$this->object_online = $object_online;
 
 		return $this;
 	}

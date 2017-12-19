@@ -58,7 +58,7 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 
 		$configurationEntity = \SRAG\Learnplaces\persistence\entity\Configuration
 			::innerjoinAR(new Learnplace(), 'pk_id', 'fk_configuration')
-			->where(['fk_object_id' => $objectId])
+			->where([Learnplace::returnDbTableName().'.fk_object_id' => $objectId])
 			->first();
 
 		if(is_null($configurationEntity))
@@ -78,7 +78,7 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 			$configuration
 				->setId($configurationEntity->getPkId())
 				->setDefaultVisibility($visibility->getName())
-				->setOnline($configurationEntity->getOnline() === 1);
+				->setOnline($configurationEntity->getObjectOnline() === 1);
 
 			return $configuration;
 		}
@@ -101,7 +101,7 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 		$visibility = Visibility::where(['name' => $configuration->getDefaultVisibility()])->first();
 
 		$activeRecord
-			->setOnline($configuration->isOnline() ? 1 : 0)
+			->setObjectOnline($configuration->isOnline() ? 1 : 0)
 			->setFkVisibilityDefault($visibility->getPkId());
 
 		return $activeRecord;

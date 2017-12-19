@@ -6,6 +6,8 @@ namespace SRAG\Learnplaces\container\provider;
 use ilLearnplacesPlugin;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Psr\Http\Message\ServerRequestInterface;
+use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactoryImpl;
 use SRAG\Learnplaces\service\media\PictureService;
@@ -51,12 +53,13 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[RenderableBlockViewFactory::class],
 			$c[LearnplaceService::class],
 			$c[AccordionBlockService::class],
-			$c[LearnplaceServiceDecoratorFactory::class]
+			$c[LearnplaceServiceDecoratorFactory::class],
+			$c[BlockAddFormGUI::class],
+			$c[ServerRequestInterface::class]
 			);
 		};
 
@@ -65,12 +68,12 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[PictureUploadBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -79,13 +82,13 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[PictureService::class],
 			$c[PictureBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -94,12 +97,12 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[RichTextBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -108,12 +111,12 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[ILIASLinkBlockService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -122,11 +125,11 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[MapBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -135,13 +138,13 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[VideoBlockService::class],
 			$c[VideoService::class],
 			$c[LearnplaceService::class],
 			$c[ConfigurationService::class],
-			$c[AccordionBlockService::class]
+			$c[AccordionBlockService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -150,11 +153,11 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[AccordionBlockService::class],
 			$c[LearnplaceService::class],
-			$c[ConfigurationService::class]
+			$c[ConfigurationService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 
@@ -163,7 +166,6 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c['tpl'],
 			$c['ilCtrl'],
 			$c['ilAccess'],
-			$c['http'],
 			$c[ilLearnplacesPlugin::class],
 			$c[ConfigurationService::class],
 			$c[LocationService::class],

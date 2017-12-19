@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\gui\settings;
 
 use ilCheckboxInputGUI;
+use ilCtrl;
 use ilFormSectionHeaderGUI;
 use ilLearnplacesPlugin;
 use ilLocationInputGUI;
@@ -47,24 +48,30 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 	 * @var SettingModel $configuration
 	 */
 	private $configuration;
+	/**
+	 * @var ilCtrl $controlFlow
+	 */
+	private $controlFlow;
 
 
 	/**
 	 * SettingEditFormView constructor.
 	 *
 	 * @param SettingModel        $setting
-	 * @param ilLearnplacesPlugin $pluggin
+	 * @param ilLearnplacesPlugin $plugin
+	 * @param ilCtrl              $controlFlow
 	 */
-	public function __construct(SettingModel $setting, ilLearnplacesPlugin $pluggin) {
+	public function __construct(SettingModel $setting, ilLearnplacesPlugin $plugin, ilCtrl $controlFlow) {
 		parent::__construct();
 		$this->configuration = $setting;
-		$this->plugin = $pluggin;
+		$this->plugin = $plugin;
+		$this->controlFlow = $controlFlow;
 		$this->initForm();
 	}
 
 	private function initForm() {
 
-		$this->setFormAction($this->ctrl->getFormActionByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
+		$this->setFormAction($this->controlFlow->getFormActionByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		$this->setPreventDoubleSubmission(true);
 		$this->setShowTopButtons(false);
 

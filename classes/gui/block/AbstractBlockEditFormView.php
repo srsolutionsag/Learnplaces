@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\gui\block;
 
 use function array_merge_clobber;
+use ilCtrl;
 use ilFormSectionHeaderGUI;
 use ilHiddenInputGUI;
 use ilLearnplacesPlugin;
@@ -13,6 +14,7 @@ use ilRadioGroupInputGUI;
 use ilRadioOption;
 use function in_array;
 use function intval;
+use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
@@ -46,6 +48,10 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	protected $plugin;
+	/**
+	 * @var ilCtrl $ctrl
+	 */
+	protected $ctrl;
 
 
 	/**
@@ -56,6 +62,7 @@ abstract class AbstractBlockEditFormView extends ilPropertyFormGUI {
 	public function __construct(BlockModel $setting) {
 		parent::__construct();
 		$this->block = $setting;
+		$this->ctrl = PluginContainer::resolve('ilCtrl');
 		$this->plugin = ilLearnplacesPlugin::getInstance();
 		$this->initForm();
 	}

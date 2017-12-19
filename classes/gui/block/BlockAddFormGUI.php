@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\gui\block;
 
+use ilCtrl;
 use ilFormSectionHeaderGUI;
-use ilHiddenInputGUI;
 use ilLearnplacesPlugin;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
@@ -30,24 +30,33 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
+	/**
+	 * @var ilCtrl $controlFlow
+	 */
+	private $controlFlow;
+
 
 	/**
 	 * BlockAddFormGUI constructor.
+	 *
+	 * @param ilLearnplacesPlugin $plugin
+	 * @param ilCtrl              $controlFlow
 	 */
-	public function __construct() {
+	public function __construct(ilLearnplacesPlugin $plugin, ilCtrl $controlFlow) {
 		parent::__construct();
 
-		$this->plugin = ilLearnplacesPlugin::getInstance();
+		$this->plugin = $plugin;
+		$this->controlFlow = $controlFlow;
 		$this->initForm();
 	}
 
 
 	private function initForm() {
 
-		$this->ctrl->saveParameterByClass(xsrlContentGUI::class, PlusView::POSITION_QUERY_PARAM);
-		$this->ctrl->saveParameterByClass(xsrlContentGUI::class, PlusView::ACCORDION_QUERY_PARAM);
+		$this->controlFlow->saveParameterByClass(xsrlContentGUI::class, PlusView::POSITION_QUERY_PARAM);
+		$this->controlFlow->saveParameterByClass(xsrlContentGUI::class, PlusView::ACCORDION_QUERY_PARAM);
 
-		$this->setFormAction($this->ctrl->getFormActionByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX));
+		$this->setFormAction($this->controlFlow->getFormActionByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX));
 		$this->setPreventDoubleSubmission(true);
 
 		//create visibility
@@ -56,8 +65,7 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 		$this->addItem($visibilitySectionHeader);
 
 		$radioGroup = new ilRadioGroupInputGUI($this->plugin->txt('block_type_title'), self::POST_BLOCK_TYPES);
-		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture_upload'), BlockType::PICTURE_UPLOAD));
-
+		//$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture_upload'), BlockType::PICTURE_UPLOAD));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture'), BlockType::PICTURE));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_accordion'), BlockType::ACCORDION));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_ilias_link'), BlockType::ILIAS_LINK));

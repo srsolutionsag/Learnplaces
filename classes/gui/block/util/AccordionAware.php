@@ -19,18 +19,18 @@ trait AccordionAware {
 	 * Fetch the requested accordion which should contain the new block.
 	 * If the id is 0, the block should be put in the learnplace it self.
 	 *
-	 * @param ServerRequestInterface $request   The request which should be used to search after the query parameter.
+	 * @param string[] $queries The request queries which should be used to search after the query parameter.
 	 *
 	 * @return int  The positive accordion block id.
 	 *
 	 * @see PlusView::ACCORDION_QUERY_PARAM  The query param which is searched by this method.
 	 */
-	private function getCurrentAccordionId(ServerRequestInterface $request): int {
+	private function getCurrentAccordionId(array $queries): int {
 		$accordionId = 0;
-		if(!array_key_exists(PlusView::ACCORDION_QUERY_PARAM, $request->getQueryParams()))
+		if(!array_key_exists(PlusView::ACCORDION_QUERY_PARAM, $queries))
 			return $accordionId;
 
-		$accordionId = intval($request->getQueryParams()[PlusView::ACCORDION_QUERY_PARAM]);
+		$accordionId = intval($queries[PlusView::ACCORDION_QUERY_PARAM]);
 		$accordionId = $accordionId >= 0 ? $accordionId : 0;
 		return $accordionId;
 	}

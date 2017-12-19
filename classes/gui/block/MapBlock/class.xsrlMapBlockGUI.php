@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use ILIAS\HTTP\GlobalHttpState;
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\MapBlockEditFormView;
@@ -9,7 +9,6 @@ use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
-use SRAG\Learnplaces\persistence\entity\Learnplace;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
@@ -47,10 +46,6 @@ final class xsrlMapBlockGUI {
 	 */
 	private $access;
 	/**
-	 * @var GlobalHttpState $http
-	 */
-	private $http;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -66,31 +61,35 @@ final class xsrlMapBlockGUI {
 	 * @var ConfigurationService $configService
 	 */
 	private $configService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
 
 
 	/**
 	 * xsrlMapBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI            $tabs
-	 * @param ilTemplate           $template
-	 * @param ilCtrl               $controlFlow
-	 * @param ilAccessHandler      $access
-	 * @param GlobalHttpState      $http
-	 * @param ilLearnplacesPlugin  $plugin
-	 * @param MapBlockService      $mapBlockService
-	 * @param LearnplaceService    $learnplaceService
-	 * @param ConfigurationService $configService
+	 * @param ilTabsGUI              $tabs
+	 * @param ilTemplate             $template
+	 * @param ilCtrl                 $controlFlow
+	 * @param ilAccessHandler        $access
+	 * @param ilLearnplacesPlugin    $plugin
+	 * @param MapBlockService        $mapBlockService
+	 * @param LearnplaceService      $learnplaceService
+	 * @param ConfigurationService   $configService
+	 * @param ServerRequestInterface $request
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, GlobalHttpState $http, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
 		$this->access = $access;
-		$this->http = $http;
 		$this->plugin = $plugin;
 		$this->mapBlockService = $mapBlockService;
 		$this->learnplaceService = $learnplaceService;
 		$this->configService = $configService;
+		$this->request = $request;
 	}
 
 
@@ -132,7 +131,8 @@ final class xsrlMapBlockGUI {
 	}
 
 	private function getCurrentRefId(): int {
-		return intval($this->http->request()->getQueryParams()["ref_id"]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries["ref_id"]);
 	}
 
 	private function index() {
@@ -169,6 +169,8 @@ final class xsrlMapBlockGUI {
 	private function create() {
 		$form = new MapBlockEditFormView(new MapBlockModel());
 		try {
+			$queries = $this->request->getQueryParams();
+
 			//store block
 			$block = $form->getBlockModel();
 			$block = $this->mapBlockService->store($block);
@@ -178,7 +180,7 @@ final class xsrlMapBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			array_splice($blocks, $this->getInsertPosition($this->http->request()), 0, [$block]);
+			array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 
@@ -231,6 +233,7 @@ final class xsrlMapBlockGUI {
 	}
 
 	private function confirm() {
+		$queries = $this->request->getQueryParams();
 		$confirm = new ilConfirmationGUI();
 		$confirm->setHeaderText($this->plugin->txt('confirm_delete_header'));
 		$confirm->setFormAction(
@@ -238,7 +241,7 @@ final class xsrlMapBlockGUI {
 			'&' .
 			self::BLOCK_ID_QUERY_KEY .
 			'=' .
-			$this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]
+			$queries[self::BLOCK_ID_QUERY_KEY]
 		);
 		$confirm->setConfirm($this->plugin->txt('common_delete'), CommonControllerAction::CMD_DELETE);
 		$confirm->setCancel($this->plugin->txt('common_cancel'), CommonControllerAction::CMD_CANCEL);
@@ -250,7 +253,8 @@ final class xsrlMapBlockGUI {
 	}
 
 	private function getBlockId(): int {
-		return intval($this->http->request()->getQueryParams()[self::BLOCK_ID_QUERY_KEY]);
+		$queries = $this->request->getQueryParams();
+		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
 	}
 
 	private function fetchMapModelFromLearnplace(LearnplaceModel $learnplace): MapBlockModel {
