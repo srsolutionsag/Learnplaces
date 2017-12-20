@@ -9,6 +9,7 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
+use SRAG\Learnplaces\service\security\AccessGuard;
 use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 
 /**
@@ -196,19 +197,10 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	private function hasMap(): bool {
 		/**
-		 * @var ilAccessHandler $access
-		 * @var LearnplaceServiceDecoratorFactory $decorators
-		 * @var LearnplaceService $learnplaceService
+		 * @var AccessGuard $access
 		 */
-		$access = PluginContainer::resolve('ilAccess');
-		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
-		$decorators = PluginContainer::resolve(LearnplaceServiceDecoratorFactory::class);
-		$learnplaceService = ($access->checkAccess('write', '', $this->ref_id)) ? $learnplaceService : $decorators->decorate($learnplaceService);
-		$learnplace = $learnplaceService->findByObjectId($this->objectId);
-		foreach ($learnplace->getBlocks() as $block) {
-			if($block instanceof MapBlockModel)
-				return true;
-		}
-		return false;
+		$access = PluginContainer::resolve(AccessGuard::class);
+		$map = $this->mapBlockService->findByObjectId(ilObject::_lookupObjectId($this->ref_id));
+		return $access->isValidBlockReference($map->getId());
 	}
 }

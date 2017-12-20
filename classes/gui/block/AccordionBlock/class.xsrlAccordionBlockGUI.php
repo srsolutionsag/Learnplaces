@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockEditFormView;
-use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
@@ -14,7 +13,7 @@ use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuard;
 
 /**
  * Class xsrlAccordionBlock
@@ -45,10 +44,6 @@ final class xsrlAccordionBlockGUI {
 	 */
 	private $controlFlow;
 	/**
-	 * @var ilAccessHandler $access
-	 */
-	private $access;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -68,6 +63,10 @@ final class xsrlAccordionBlockGUI {
 	 * @var ServerRequestInterface $request
 	 */
 	private $request;
+	/**
+	 * @var AccessGuard $blockAccessGuard
+	 */
+	private $blockAccessGuard;
 
 
 	/**
@@ -76,19 +75,17 @@ final class xsrlAccordionBlockGUI {
 	 * @param ilTabsGUI              $tabs
 	 * @param ilTemplate             $template
 	 * @param ilCtrl                 $controlFlow
-	 * @param ilAccessHandler        $access
 	 * @param ilLearnplacesPlugin    $plugin
 	 * @param AccordionBlockService  $accordionService
 	 * @param LearnplaceService      $learnplaceService
 	 * @param ConfigurationService   $configService
 	 * @param ServerRequestInterface $request
-	 * @param BlockAccessGuard       $blockAccessGuard
+	 * @param AccessGuard            $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, AccordionBlockService $accordionService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
-		$this->access = $access;
 		$this->plugin = $plugin;
 		$this->accordionService = $accordionService;
 		$this->learnplaceService = $learnplaceService;
@@ -112,7 +109,7 @@ final class xsrlAccordionBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId('write')) {
+				if ($this->blockAccessGuard->hasWritePermission()) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -189,8 +186,10 @@ final class xsrlAccordionBlockGUI {
 			$block = $form->getBlockModel();
 			$this->redirectInvalidRequests($block->getId());
 			$accordion = $this->accordionService->find($block->getId());
-			$block->setBlocks($accordion->getBlocks());
-			$this->accordionService->store($block);
+			$accordion->setTitle($block->getTitle());
+			$accordion->setExpand($block->isExpand());
+			$accordion->setVisibility($block->getVisibility());
+			$this->accordionService->store($accordion);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
 			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);

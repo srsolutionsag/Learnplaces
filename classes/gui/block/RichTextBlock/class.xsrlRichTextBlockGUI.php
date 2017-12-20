@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
 use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuard;
 
 /**
  * Class xsrlRichTextBlock
@@ -47,10 +47,6 @@ final class xsrlRichTextBlockGUI {
 	 */
 	private $controlFlow;
 	/**
-	 * @var ilAccessHandler $access
-	 */
-	private $access;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -74,6 +70,10 @@ final class xsrlRichTextBlockGUI {
 	 * @var ServerRequestInterface $request
 	 */
 	private $request;
+	/**
+	 * @var AccessGuard $blockAccessGuard
+	 */
+	private $blockAccessGuard;
 
 
 	/**
@@ -82,20 +82,18 @@ final class xsrlRichTextBlockGUI {
 	 * @param ilTabsGUI              $tabs
 	 * @param ilTemplate             $template
 	 * @param ilCtrl                 $controlFlow
-	 * @param ilAccessHandler        $access
 	 * @param ilLearnplacesPlugin    $plugin
 	 * @param RichTextBlockService   $richTextBlockService
 	 * @param LearnplaceService      $learnplaceService
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accordionService
 	 * @param ServerRequestInterface $request
-	 * @param BlockAccessGuard       $blockAccessGuard
+	 * @param AccessGuard            $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, RichTextBlockService $richTextBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
-		$this->access = $access;
 		$this->plugin = $plugin;
 		$this->richTextBlockService = $richTextBlockService;
 		$this->learnplaceService = $learnplaceService;
@@ -120,7 +118,7 @@ final class xsrlRichTextBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId('write')) {
+				if ($this->blockAccessGuard->hasWritePermission()) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -212,6 +210,8 @@ final class xsrlRichTextBlockGUI {
 			 */
 			$block = $form->getBlockModel();
 			$this->redirectInvalidRequests($block->getId());
+			$oldBlock = $this->richTextBlockService->find($block->getId());
+			$block->setSequence($oldBlock->getSequence());
 			$this->richTextBlockService->store($block);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);

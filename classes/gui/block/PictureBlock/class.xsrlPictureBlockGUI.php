@@ -17,7 +17,7 @@ use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuard;
 
 /**
  * Class xsrlPictureBlockGUI
@@ -47,10 +47,6 @@ final class xsrlPictureBlockGUI {
 	 */
 	private $controlFlow;
 	/**
-	 * @var ilAccessHandler $access
-	 */
-	private $access;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -78,6 +74,10 @@ final class xsrlPictureBlockGUI {
 	 * @var ServerRequestInterface $request
 	 */
 	private $request;
+	/**
+	 * @var AccessGuard $blockAccessGuard
+	 */
+	private $blockAccessGuard;
 
 
 	/**
@@ -86,7 +86,6 @@ final class xsrlPictureBlockGUI {
 	 * @param ilTabsGUI              $tabs
 	 * @param ilTemplate             $template
 	 * @param ilCtrl                 $controlFlow
-	 * @param ilAccessHandler        $access
 	 * @param ilLearnplacesPlugin    $plugin
 	 * @param PictureService         $pictureService
 	 * @param PictureBlockService    $pictureBlockService
@@ -94,13 +93,12 @@ final class xsrlPictureBlockGUI {
 	 * @param ConfigurationService   $configService
 	 * @param AccordionBlockService  $accordionService
 	 * @param ServerRequestInterface $request
-	 * @param BlockAccessGuard       $blockAccessGuard
+	 * @param AccessGuard            $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, PictureService $pictureService, PictureBlockService $pictureBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, AccordionBlockService $accordionService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
-		$this->access = $access;
 		$this->plugin = $plugin;
 		$this->pictureService = $pictureService;
 		$this->pictureBlockService = $pictureBlockService;
@@ -126,7 +124,7 @@ final class xsrlPictureBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId('write')) {
+				if ($this->blockAccessGuard->hasWritePermission()) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -241,6 +239,7 @@ final class xsrlPictureBlockGUI {
 				$this->pictureService->delete($oldPicture->getId());
 			}
 
+			$block->setSequence($oldPictureBlock->getSequence());
 			$this->pictureBlockService->store($block);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);

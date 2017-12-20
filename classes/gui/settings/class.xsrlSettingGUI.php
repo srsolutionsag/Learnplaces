@@ -10,6 +10,7 @@ use SRAG\Learnplaces\gui\settings\SettingModel;
 use SRAG\Learnplaces\service\publicapi\block\ConfigurationService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\LocationService;
+use SRAG\Learnplaces\service\security\AccessGuard;
 
 /**
  * Class xsrlSettingGUI
@@ -38,10 +39,6 @@ final class xsrlSettingGUI {
 	 */
 	private $controlFlow;
 	/**
-	 * @var ilAccessHandler $access
-	 */
-	private $access;
-	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
 	private $plugin;
@@ -57,31 +54,39 @@ final class xsrlSettingGUI {
 	 * @var LearnplaceService $learnplaceService
 	 */
 	private $learnplaceService;
+	/**
+	 * @var ServerRequestInterface $request
+	 */
+	private $request;
+	/**
+	 * @var AccessGuard $accessGuard
+	 */
+	private $accessGuard;
 
 
 	/**
 	 * xsrlSettingGUI constructor.
 	 *
-	 * @param ilTabsGUI            $tabs
-	 * @param ilTemplate           $template
-	 * @param ilCtrl               $controlFlow
-	 * @param ilAccessHandler      $access
-	 * @param ilLearnplacesPlugin  $plugin
-	 * @param ConfigurationService $configService
-	 * @param LocationService      $locationService
-	 * @param LearnplaceService    $learnplaceService
+	 * @param ilTabsGUI              $tabs
+	 * @param ilTemplate             $template
+	 * @param ilCtrl                 $controlFlow
+	 * @param ilLearnplacesPlugin    $plugin
+	 * @param ConfigurationService   $configService
+	 * @param LocationService        $locationService
+	 * @param LearnplaceService      $learnplaceService
+	 * @param ServerRequestInterface $request
+	 * @param AccessGuard            $accessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService, ServerRequestInterface $request) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService, ServerRequestInterface $request, AccessGuard $accessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
-		$this->access = $access;
 		$this->plugin = $plugin;
 		$this->configService = $configService;
 		$this->locationService = $locationService;
 		$this->learnplaceService = $learnplaceService;
 		$this->request = $request;
-
+		$this->accessGuard = $accessGuard;
 	}
 
 
@@ -94,7 +99,7 @@ final class xsrlSettingGUI {
 		switch ($cmd) {
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId('write')) {
+				if ($this->accessGuard->hasWritePermission()) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;

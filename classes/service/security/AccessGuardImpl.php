@@ -4,14 +4,16 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\service\security;
 
 use Generator;
+use ilAccessHandler;
 use ilObject;
-use function intval;
-use function is_null;
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
+use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
+use function intval;
+use function is_null;
 
 /**
  * Class BlockAccessGuardImpl
@@ -20,16 +22,28 @@ use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-final class BlockAccessGuardImpl implements BlockAccessGuard {
+final class AccessGuardImpl implements AccessGuard {
 
 	/**
 	 * @var int $objectId
 	 */
 	private $objectId = 0;
 	/**
+	 * @var int $refId
+	 */
+	private $refId = 0;
+	/**
 	 * @var LearnplaceService $learnplaceService
 	 */
 	private $learnplaceService;
+	/**
+	 * @var LearnplaceServiceDecoratorFactory $decorator
+	 */
+	private $decorator;
+	/**
+	 * @var ilAccessHandler $access
+	 */
+	private $access;
 	/**
 	 * @var LearnplaceModel $learnplace
 	 */
@@ -37,15 +51,20 @@ final class BlockAccessGuardImpl implements BlockAccessGuard {
 
 
 	/**
-	 * BlockAccessGuardImpl constructor.
+	 * AccessGuardImpl constructor.
 	 *
-	 * @param ServerRequestInterface $request
-	 * @param LearnplaceService      $learnplaceService
+	 * @param ServerRequestInterface            $request
+	 * @param LearnplaceService                 $learnplaceService
+	 * @param LearnplaceServiceDecoratorFactory $decorator
+	 * @param ilAccessHandler                   $access
 	 */
-	public function __construct(ServerRequestInterface $request, LearnplaceService $learnplaceService) {
-		$this->learnplaceService = $learnplaceService;
+	public function __construct(ServerRequestInterface $request, LearnplaceService $learnplaceService, LearnplaceServiceDecoratorFactory $decorator, ilAccessHandler $access) {
+		$this->decorator = $decorator;
+		$this->access = $access;
 		$refId = intval($request->getQueryParams()['ref_id']);
+		$this->refId = $refId;
 		$this->objectId = ilObject::_lookupObjectId($refId);
+		$this->learnplaceService = $this->hasWritePermission() ? $learnplaceService : $decorator->decorate($learnplaceService);
 	}
 
 
@@ -62,6 +81,21 @@ final class BlockAccessGuardImpl implements BlockAccessGuard {
 		return false;
 	}
 
+
+	/**
+	 * @inheritdoc
+	 */
+	public function hasReadPermission(): bool {
+		return $this->access->checkAccess(AccessGuard::PERMISSION_READ, '', $this->refId);
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	public function hasWritePermission(): bool {
+		return $this->access->checkAccess(AccessGuard::PERMISSION_WRITE, '', $this->refId);
+	}
 
 	/**
 	 * @param BlockModel[] $blocks

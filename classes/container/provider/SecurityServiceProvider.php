@@ -7,8 +7,9 @@ use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
-use SRAG\Learnplaces\service\security\BlockAccessGuardImpl;
+use SRAG\Learnplaces\service\security\AccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuardImpl;
+use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 
 /**
  * Class SecurityServiceProvider
@@ -22,9 +23,11 @@ use SRAG\Learnplaces\service\security\BlockAccessGuardImpl;
 final class SecurityServiceProvider implements ServiceProviderInterface {
 
 	public function register(Container $pimple) {
-		$pimple[BlockAccessGuard::class] = function($c) {return new BlockAccessGuardImpl(
+		$pimple[AccessGuard::class] = function($c) {return new AccessGuardImpl(
 			$c[ServerRequestInterface::class],
-			$c[LearnplaceService::class]
+			$c[LearnplaceService::class],
+			$c[LearnplaceServiceDecoratorFactory::class],
+			$c['ilAccess']
 		);
 		};
 	}

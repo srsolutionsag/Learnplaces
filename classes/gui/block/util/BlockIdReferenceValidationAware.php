@@ -7,7 +7,7 @@ use ilCtrl;
 use ilLearnplacesPlugin;
 use ilUtil;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuard;
 use xsrlContentGUI;
 
 /**
@@ -20,7 +20,7 @@ use xsrlContentGUI;
 trait BlockIdReferenceValidationAware {
 
 	/**
-	 * @var BlockAccessGuard $blockAccessGuard
+	 * @var AccessGuard $blockAccessGuard
 	 */
 	private $blockAccessGuard;
 	/**

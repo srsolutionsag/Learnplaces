@@ -15,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
 use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
-use SRAG\Learnplaces\service\security\BlockAccessGuard;
+use SRAG\Learnplaces\service\security\AccessGuard;
 
 /**
  * Class xsrlMapBlockGUI
@@ -25,7 +25,7 @@ use SRAG\Learnplaces\service\security\BlockAccessGuard;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlMapBlockGUI {
-	
+
 	use BlockIdReferenceValidationAware;
 	use ReferenceIdAware;
 
@@ -44,10 +44,6 @@ final class xsrlMapBlockGUI {
 	 * @var ilCtrl $controlFlow
 	 */
 	private $controlFlow;
-	/**
-	 * @var ilAccessHandler $access
-	 */
-	private $access;
 	/**
 	 * @var ilLearnplacesPlugin $plugin
 	 */
@@ -68,6 +64,10 @@ final class xsrlMapBlockGUI {
 	 * @var ServerRequestInterface $request
 	 */
 	private $request;
+	/**
+	 * @var AccessGuard $blockAccessGuard
+	 */
+	private $blockAccessGuard;
 
 
 	/**
@@ -76,19 +76,17 @@ final class xsrlMapBlockGUI {
 	 * @param ilTabsGUI              $tabs
 	 * @param ilTemplate             $template
 	 * @param ilCtrl                 $controlFlow
-	 * @param ilAccessHandler        $access
 	 * @param ilLearnplacesPlugin    $plugin
 	 * @param MapBlockService        $mapBlockService
 	 * @param LearnplaceService      $learnplaceService
 	 * @param ConfigurationService   $configService
 	 * @param ServerRequestInterface $request
-	 * @param BlockAccessGuard       $blockAccessGuard
+	 * @param AccessGuard            $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, BlockAccessGuard $blockAccessGuard) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
-		$this->access = $access;
 		$this->plugin = $plugin;
 		$this->mapBlockService = $mapBlockService;
 		$this->learnplaceService = $learnplaceService;
@@ -106,7 +104,7 @@ final class xsrlMapBlockGUI {
 
 		switch ($cmd) {
 			case CommonControllerAction::CMD_INDEX:
-				if ($this->checkRequestReferenceId('read')) {
+				if ($this->blockAccessGuard->hasReadPermission()) {
 					$this->index();
 					$this->template->show();
 					return true;
@@ -119,7 +117,7 @@ final class xsrlMapBlockGUI {
 			case CommonControllerAction::CMD_DELETE:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
-				if ($this->checkRequestReferenceId('write')) {
+				if ($this->blockAccessGuard->hasWritePermission()) {
 					$this->{$cmd}();
 					$this->template->show();
 					return true;
@@ -140,8 +138,10 @@ final class xsrlMapBlockGUI {
 			 */
 			$view = PluginContainer::resolve(MapBlockPresentationView::class);
 			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
-			$view->setModels($this->fetchMapModelFromLearnplace($learnplace), $learnplace->getLocation());
-			$writePermission = $this->access->checkAccess('write', '', $this->getCurrentRefId());
+			$mapModel = $this->fetchMapModelFromLearnplace($learnplace);
+			$this->redirectInvalidRequests($mapModel->getId());
+			$view->setModels($mapModel, $learnplace->getLocation());
+			$writePermission = $this->blockAccessGuard->hasWritePermission();
 			$view->setReadonly(!$writePermission);
 			$this->template->setContent($view->getHTML());
 		}
@@ -213,7 +213,9 @@ final class xsrlMapBlockGUI {
 			 */
 			$block = $form->getBlockModel();
 			$this->redirectInvalidRequests($block->getId());
-			$this->mapBlockService->store($block);
+			$mapBlock = $this->mapBlockService->find($block->getId());
+			$mapBlock->setVisibility($block->getVisibility());
+			$this->mapBlockService->store($mapBlock);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
 			$this->controlFlow->redirectByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_INDEX);
