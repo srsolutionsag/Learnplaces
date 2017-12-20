@@ -40,6 +40,8 @@ final class AccordionBlockEditFormView extends AbstractBlockEditFormView {
 	protected function initBlockSpecificForm() {
 		$title = new ilTextInputGUI($this->plugin->txt('accordion_block_title'), self::POST_TITLE);
 		$title->setMaxLength(256);
+		$title->setRequired(true);
+
 		$expand = new ilCheckboxInputGUI($this->plugin->txt('accordion_block_expand'), self::POST_EXPAND);
 		$expand->setChecked(true);
 
