@@ -6,7 +6,6 @@ use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\MapBlock\MapBlockPresentationView;
 use SRAG\Learnplaces\gui\block\PictureUploadBlock\MapBlockEditFormView;
 use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
-use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\exception\ValidationException;
@@ -26,8 +25,7 @@ use SRAG\Learnplaces\service\security\BlockAccessGuard;
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
 final class xsrlMapBlockGUI {
-
-	use InsertPositionAware;
+	
 	use BlockIdReferenceValidationAware;
 	use ReferenceIdAware;
 
@@ -180,7 +178,7 @@ final class xsrlMapBlockGUI {
 
 			//store relation learnplace <-> block
 			$blocks = $learnplace->getBlocks();
-			array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
+			$blocks[] = $block;
 			$learnplace->setBlocks($blocks);
 			$this->learnplaceService->store($learnplace);
 
