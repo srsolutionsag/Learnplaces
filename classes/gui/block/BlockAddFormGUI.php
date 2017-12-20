@@ -35,6 +35,9 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 	 */
 	private $controlFlow;
 
+	private $mapEnabled = true;
+	private $accordionEnabled = true;
+
 
 	/**
 	 * BlockAddFormGUI constructor.
@@ -47,7 +50,6 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 
 		$this->plugin = $plugin;
 		$this->controlFlow = $controlFlow;
-		$this->initForm();
 	}
 
 
@@ -64,14 +66,20 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 		$visibilitySectionHeader->setTitle($this->plugin->txt('block_add_header'));
 		$this->addItem($visibilitySectionHeader);
 
+		$accordionOption = new ilRadioOption($this->plugin->txt('block_accordion'), BlockType::ACCORDION);
+		$accordionOption->setDisabled(!$this->accordionEnabled);
+
+		$mapOption = new ilRadioOption($this->plugin->txt('block_map'), BlockType::MAP);
+		$mapOption->setDisabled(!$this->mapEnabled);
+
 		$radioGroup = new ilRadioGroupInputGUI($this->plugin->txt('block_type_title'), self::POST_BLOCK_TYPES);
 		//$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture_upload'), BlockType::PICTURE_UPLOAD));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture'), BlockType::PICTURE));
-		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_accordion'), BlockType::ACCORDION));
+		$radioGroup->addOption($accordionOption);
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_ilias_link'), BlockType::ILIAS_LINK));
-		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_map'), BlockType::MAP));
+		$radioGroup->addOption($mapOption);
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_rich_text'), BlockType::RICH_TEXT));
-		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_video'), BlockType::VIDEO));
+		$radioGroup->addOption((new ilRadioOption($this->plugin->txt('block_video'), BlockType::VIDEO)));
 		$radioGroup->setValue(BlockType::PICTURE);
 		$this->addItem($radioGroup);
 
@@ -81,5 +89,35 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 	private function initButtons() {
 		$this->addCommandButton(CommonControllerAction::CMD_CREATE, $this->plugin->txt('common_add'));
 		$this->addCommandButton(CommonControllerAction::CMD_CANCEL, $this->plugin->txt('common_cancel'));
+	}
+
+
+	/**
+	 * @param bool $mapEnabled
+	 *
+	 * @return BlockAddFormGUI
+	 */
+	public function setMapEnabled(bool $mapEnabled): BlockAddFormGUI {
+		$this->mapEnabled = $mapEnabled;
+
+		return $this;
+	}
+
+
+	/**
+	 * @param bool $accordionEnabled
+	 *
+	 * @return BlockAddFormGUI
+	 */
+	public function setAccordionEnabled(bool $accordionEnabled): BlockAddFormGUI {
+		$this->accordionEnabled = $accordionEnabled;
+
+		return $this;
+	}
+
+
+	public function getHTML() {
+		$this->initForm();
+		return parent::getHTML();
 	}
 }

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\AccordionBlock\AccordionBlockEditFormView;
+use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\BlockIdReferenceValidationAware;
 use SRAG\Learnplaces\gui\block\util\InsertPositionAware;
 use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;

@@ -7,6 +7,7 @@ use SRAG\Learnplaces\container\PluginContainer;
 use SRAG\Learnplaces\gui\block\BlockAddFormGUI;
 use SRAG\Learnplaces\gui\block\BlockType;
 use SRAG\Learnplaces\gui\block\RenderableBlockViewFactory;
+use SRAG\Learnplaces\gui\block\util\AccordionAware;
 use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\component\PlusView;
 use SRAG\Learnplaces\gui\ContentPresentationView;
@@ -15,6 +16,7 @@ use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
+use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 
 /**
@@ -30,6 +32,7 @@ use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 final class xsrlContentGUI {
 
 	use ReferenceIdAware;
+	use AccordionAware;
 
 	const TAB_ID = 'content';
 	/**
@@ -193,6 +196,16 @@ final class xsrlContentGUI {
 	}
 
 	private function add() {
+		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		foreach ($learnplace->getBlocks() as $block) {
+			if($block instanceof MapBlockModel) {
+				$this->blockAddGUI->setMapEnabled(false);
+				break;
+			}
+		}
+
+		$this->blockAddGUI->setAccordionEnabled($this->getCurrentAccordionId($this->request->getQueryParams()) === 0);
+
 		$this->template->setContent($this->blockAddGUI->getHTML());
 	}
 
