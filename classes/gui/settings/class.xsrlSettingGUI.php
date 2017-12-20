@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\gui\block\util\ReferenceIdAware;
 use SRAG\Learnplaces\gui\exception\ValidationException;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
@@ -70,7 +71,7 @@ final class xsrlSettingGUI {
 	 * @param LocationService      $locationService
 	 * @param LearnplaceService    $learnplaceService
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService) {
+	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilAccessHandler $access, ilLearnplacesPlugin $plugin, ConfigurationService $configService, LocationService $locationService, LearnplaceService $learnplaceService, ServerRequestInterface $request) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -79,6 +80,8 @@ final class xsrlSettingGUI {
 		$this->configService = $configService;
 		$this->locationService = $locationService;
 		$this->learnplaceService = $learnplaceService;
+		$this->request = $request;
+
 	}
 
 

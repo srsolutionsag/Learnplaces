@@ -177,7 +177,8 @@ final class GUIProvider implements ServiceProviderInterface {
 			$c[ilLearnplacesPlugin::class],
 			$c[ConfigurationService::class],
 			$c[LocationService::class],
-			$c[LearnplaceService::class]
+			$c[LearnplaceService::class],
+			$c[ServerRequestInterface::class]
 		);
 		};
 	}
