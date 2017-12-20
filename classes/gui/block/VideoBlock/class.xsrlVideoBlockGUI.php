@@ -166,7 +166,7 @@ final class xsrlVideoBlockGUI {
 			$block->setId(0); //mitigate block id injection
 			$accordionId = $this->getCurrentAccordionId($queries);
 			if($accordionId > 0)
-				$this->redirectInvalidRequests($block->getId());
+				$this->redirectInvalidRequests($accordionId);
 
 			$video = $this->videoService->storeUpload(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$block
