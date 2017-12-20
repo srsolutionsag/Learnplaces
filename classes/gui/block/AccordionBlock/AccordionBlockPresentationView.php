@@ -77,7 +77,7 @@ final class AccordionBlockPresentationView implements Renderable {
 		$this->template->setVariable('ACCORDION_ID', $this->model->getId());
 		$this->template->setVariable('TITLE', $this->model->getTitle());
 		$this->template->setVariable('CONTENT', $this->contentView->getHTML());
-		$this->template->setVariable('EXPANDED', $this->model->isExpand() ? 'true' : 'false');
+		$this->template->setVariable('EXPANDED', $this->model->isExpand() ? 'in' : '');
 	}
 
 	public function setModel(AccordionBlockModel $model) {
