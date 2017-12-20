@@ -265,6 +265,7 @@ final class xsrlPictureBlockGUI {
 		$blockId = $this->getBlockId();
 		$this->redirectInvalidRequests($blockId);
 		$this->pictureBlockService->delete($blockId);
+		$this->regenerateSequence();
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
@@ -293,5 +294,10 @@ final class xsrlPictureBlockGUI {
 	private function getBlockId(): int {
 		$queries = $this->request->getQueryParams();
 		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
+	}
+
+	private function regenerateSequence() {
+		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		$this->learnplaceService->store($learnplace);
 	}
 }

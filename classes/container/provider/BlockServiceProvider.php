@@ -86,7 +86,8 @@ final class BlockServiceProvider implements ServiceProviderInterface {
 																					$c[PictureBlockService::class],
 																					$c[PictureUploadBlockService::class],
 																					$c[MapBlockService::class],
-																					$c[RichTextBlockService::class]
+																					$c[RichTextBlockService::class],
+																					$c[VideoBlockService::class]
 																					);
 																				$accordion = $c[AccordionBlockService::class];
 																				$accordion->postConstruct($dispatcher);

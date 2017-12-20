@@ -4,13 +4,13 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\service\publicapi\block\util;
 
 use LogicException;
-use SRAG\Learnplaces\service\media\PictureService;
 use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 use SRAG\Learnplaces\service\publicapi\block\ILIASLinkBlockService;
 use SRAG\Learnplaces\service\publicapi\block\MapBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureBlockService;
 use SRAG\Learnplaces\service\publicapi\block\PictureUploadBlockService;
 use SRAG\Learnplaces\service\publicapi\block\RichTextBlockService;
+use SRAG\Learnplaces\service\publicapi\block\VideoBlockService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\ILIASLinkBlockModel;
@@ -18,6 +18,7 @@ use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureUploadBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
 
 /**
  * Class DefaultBlockOperationDispatcher
@@ -52,6 +53,10 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 	 * @var RichTextBlockService $richTextBlockService
 	 */
 	private $richTextBlockService;
+	/**
+	 * @var VideoBlockService $videoBlockService
+	 */
+	private $videoBlockService;
 
 
 	/**
@@ -63,14 +68,16 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 	 * @param PictureUploadBlockService $pictureUploadBlockService
 	 * @param MapBlockService           $mapBlockService
 	 * @param RichTextBlockService      $richTextBlockService
+	 * @param VideoBlockService         $videoBlockService
 	 */
-	public function __construct(AccordionBlockService $accordionBlockService, ILIASLinkBlockService $iliasLinkBlockService, PictureBlockService $pictureBlockService, PictureUploadBlockService $pictureUploadBlockService, MapBlockService $mapBlockService, RichTextBlockService $richTextBlockService) {
+	public function __construct(AccordionBlockService $accordionBlockService, ILIASLinkBlockService $iliasLinkBlockService, PictureBlockService $pictureBlockService, PictureUploadBlockService $pictureUploadBlockService, MapBlockService $mapBlockService, RichTextBlockService $richTextBlockService, VideoBlockService $videoBlockService) {
 		$this->accordionBlockService = $accordionBlockService;
 		$this->iliasLinkBlockService = $iliasLinkBlockService;
 		$this->pictureBlockService = $pictureBlockService;
 		$this->pictureUploadBlockService = $pictureUploadBlockService;
 		$this->mapBlockService = $mapBlockService;
 		$this->richTextBlockService = $richTextBlockService;
+		$this->videoBlockService = $videoBlockService;
 	}
 
 
@@ -111,6 +118,9 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 			case $block instanceof RichTextBlockModel:
 				$this->richTextBlockService->delete($block->getId());
 				return;
+			case $block instanceof VideoBlockModel:
+				$this->videoBlockService->delete($block->getId());
+				return;
 			default:
 				throw new LogicException('Unable to dispatch block delete operation');
 		}
@@ -135,6 +145,9 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 				return;
 			case $block instanceof RichTextBlockModel:
 				$this->richTextBlockService->store($block);
+				return;
+			case $block instanceof VideoBlockModel:
+				$this->videoBlockService->store($block);
 				return;
 			default:
 				throw new LogicException('Unable to dispatch block store operation');

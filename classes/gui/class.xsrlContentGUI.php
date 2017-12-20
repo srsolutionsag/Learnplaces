@@ -255,7 +255,6 @@ final class xsrlContentGUI {
 					//sort accordion blocks
 					if($block instanceof AccordionBlockModel) {
 						$block->setBlocks($this->sortBlocksBySequence($block->getBlocks()));
-						$this->accordionService->store($block);
 					}
 
 					break;

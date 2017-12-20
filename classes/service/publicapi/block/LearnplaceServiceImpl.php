@@ -6,6 +6,7 @@ namespace SRAG\Learnplaces\service\publicapi\block;
 use function intval;
 use InvalidArgumentException;
 use LogicException;
+use const PHP_INT_MAX;
 use SRAG\Learnplaces\persistence\dto\Learnplace;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\LearnplaceRepository;
@@ -14,7 +15,7 @@ use SRAG\Learnplaces\service\publicapi\block\util\BlockOperationDispatcher;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
-
+use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 
 /**
  * Class LearnplaceServiceImpl
@@ -187,6 +188,7 @@ final class LearnplaceServiceImpl  implements LearnplaceService {
 
 	/**
 	 * Regenerate the sequence numbers of the block in the current order.
+	 * Except the map block which will get the highest sequence.
 	 *
 	 * @param BlockModel[] $blocks  List of blocks with possible inconsistent sequence numbers.
 	 *
@@ -194,11 +196,19 @@ final class LearnplaceServiceImpl  implements LearnplaceService {
 	 */
 	private function regenerateSequence(array $blocks): array {
 		$regenerated = [];
+		$accordions = [];
 		foreach ($blocks as $key => $block) {
 			$block->setSequence($key + 1);
+			if($block instanceof MapBlockModel)
+				$block->setSequence(PHP_INT_MAX);
+			if($block instanceof AccordionBlockModel)
+				$accordions[] = $block;
+
 			$regenerated[] = $block;
 		}
 
+		//store the accordions to regenerate the accordion child block sequences as well
+		$this->blockOperationDispatcher->storeAll($accordions);
 		return $regenerated;
 	}
 }

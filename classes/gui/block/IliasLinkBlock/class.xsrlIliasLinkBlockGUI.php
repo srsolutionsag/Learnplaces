@@ -233,6 +233,7 @@ $next_class = $this->controlFlow->getNextClass();
 		$this->redirectInvalidRequests($blockId);
 
 		$this->iliasLinkService->delete($blockId);
+		$this->regenerateSequence();
 		ilUtil::sendSuccess($this->plugin->txt('message_delete_success'), true);
 		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
@@ -260,5 +261,10 @@ $next_class = $this->controlFlow->getNextClass();
 	private function getBlockId(): int {
 		$queries = $this->request->getQueryParams();
 		return intval($queries[self::BLOCK_ID_QUERY_KEY]);
+	}
+
+	private function regenerateSequence() {
+		$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
+		$this->learnplaceService->store($learnplace);
 	}
 }
