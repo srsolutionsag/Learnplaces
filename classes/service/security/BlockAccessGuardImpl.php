@@ -3,11 +3,14 @@ declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\security;
 
+use Generator;
 use ilObject;
 use function intval;
 use function is_null;
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
+use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
+use SRAG\Learnplaces\service\publicapi\model\BlockModel;
 use SRAG\Learnplaces\service\publicapi\model\LearnplaceModel;
 
 /**
@@ -50,12 +53,27 @@ final class BlockAccessGuardImpl implements BlockAccessGuard {
 	 * @inheritdoc
 	 */
 	public function isValidBlockReference(int $blockId): bool {
-		foreach ($this->getLearnplace()->getBlocks() as $block) {
+		$blocks = $this->getLearnplace()->getBlocks();
+		foreach ($this->walkBlockTree($blocks) as $block) {
 			if($block->getId() === $blockId)
 				return true;
 		}
 
 		return false;
+	}
+
+
+	/**
+	 * @param BlockModel[] $blocks
+	 *
+	 * @return Generator
+	 */
+	private function walkBlockTree(array $blocks): Generator {
+		foreach ($blocks as $block) {
+			yield $block;
+			if($block instanceof AccordionBlockModel)
+				yield from $this->walkBlockTree($block->getBlocks());
+		}
 	}
 
 	private function getLearnplace() {
