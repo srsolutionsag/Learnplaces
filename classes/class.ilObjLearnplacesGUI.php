@@ -48,9 +48,9 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 */
 	private $learnplaceTabs;
 	/**
-	 * @var ilAccessHandler $accessControl
+	 * @var AccessGuard $accessGuard
 	 */
-	private $accessControl;
+	private $accessGuard;
 	/**
 	 * @var ilObjUser $currentUser
 	 */
@@ -71,7 +71,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$this->mapBlockService = PluginContainer::resolve(MapBlockService::class);
 		$this->objectId = intval(ilObject::_lookupObjectId($this->ref_id));
 		$this->learnplaceTabs = PluginContainer::resolve('ilTabs');
-		$this->accessControl = PluginContainer::resolve('ilAccess');
+		$this->accessGuard = PluginContainer::resolve(AccessGuard::class);
 		$this->currentUser = PluginContainer::resolve('ilUser');
 	}
 
@@ -97,26 +97,38 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$template->setTitle(ilObject::_lookupTitle($this->objectId));
 		$template->setDescription(ilObject::_lookupDescription($this->objectId));
 		$template->setTitleIcon(ilObject::_getIcon($this->objectId));
+		$properties = [];
+		if(!ilObjLearnplacesAccess::checkOnline(intval($this->obj_id))) {
+			$properties[] = [
+				'property' => $this->txt('common_status'),
+				'value' => $this->txt('common_offline'),
+			];
+		}
+		$template->setAlertProperties($properties);
 
-		$this->renderTabs();
 		switch ($nextClass) {
 			case "":
 			case strtolower(static::class):
 				parent::executeCommand();
 				break;
 			case strtolower(xsrlContentGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlContentGUI::class));
 				break;
 			case strtolower(xsrlPictureUploadBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlPictureUploadBlockGUI::class));
 				break;
 			case strtolower(xsrlPictureBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlPictureBlockGUI::class));
 				break;
 			case strtolower(xsrlRichTextBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlRichTextBlockGUI::class));
 				break;
 			case strtolower(xsrlIliasLinkBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlIliasLinkBlockGUI::class));
 				break;
 			case strtolower(xsrlIliasLinkBlockEditFormViewGUI::class):
@@ -124,39 +136,45 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand(new xsrlIliasLinkBlockEditFormViewGUI(new ILIASLinkBlockModel()));
 				break;
 			case strtolower(xsrlMapBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlMapBlockGUI::class));
 				break;
 			case strtolower(xsrlVideoBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlVideoBlockGUI::class));
 				break;
 			case strtolower(xsrlAccordionBlockGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlAccordionBlockGUI::class));
 				break;
 			case strtolower(xsrlSettingGUI::class):
+				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlSettingGUI::class));
 				break;
 			case strtolower(ilPermissionGUI::class):
+				$this->renderTabs();
 				$this->learnplaceTabs->activateTab(self::TAB_ID_PERMISSION);
 				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
 				$template->getStandardTemplate();
 				$template->show();
 				break;
 			default:
-				$this->ctrl->redirectByClass(static::class);
+				$this->ctrl->redirectByClass(static::class, $this->getStandardCmd());
 				break;
 		}
 	}
 
-
-	/**
-	 * @param $cmd string of command which should be
-	 */
-	public function performCommand($cmd) {
-		if (!$this->accessControl->checkAccess('read', $cmd, $this->currentUser->getId())) {
-			$this->{$cmd}();
+	protected function performCommand(string $command) {
+		if($this->accessGuard->hasReadPermission()) {
+			switch ($command) {
+				case CommonControllerAction::CMD_INDEX:
+					$this->index();
+					return;
+			}
 		}
-	}
 
+		$this->ctrl->redirectByClass(ilRepositoryGUI::class, $this->getStandardCmd());
+	}
 
 	/**
 	 * This command will be executed after a new repository object was created.
@@ -186,7 +204,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$this->learnplaceTabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
 		if($this->hasMap())
 			$this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
-		if($this->accessControl->checkAccess('write', '', $this->ref_id) === true) {
+		if($this->accessGuard->hasWritePermission()) {
 			$this->learnplaceTabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}
 		parent::setTabs();
@@ -196,11 +214,15 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	}
 
 	private function hasMap(): bool {
-		/**
-		 * @var AccessGuard $access
-		 */
-		$access = PluginContainer::resolve(AccessGuard::class);
-		$map = $this->mapBlockService->findByObjectId(ilObject::_lookupObjectId($this->ref_id));
-		return $access->isValidBlockReference($map->getId());
+		if(is_null($this->ref_id))
+			return false;
+
+		try {
+			$map = $this->mapBlockService->findByObjectId(ilObject::_lookupObjectId($this->ref_id));
+			return $this->accessGuard->isValidBlockReference($map->getId());
+		}
+		catch (InvalidArgumentException $ex) {
+			return false;
+		}
 	}
 }

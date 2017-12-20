@@ -6,6 +6,7 @@ namespace SRAG\Learnplaces\service\security;
 use Generator;
 use ilAccessHandler;
 use ilObject;
+use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
 use SRAG\Learnplaces\service\publicapi\block\LearnplaceService;
 use SRAG\Learnplaces\service\publicapi\model\AccordionBlockModel;
@@ -72,13 +73,20 @@ final class AccessGuardImpl implements AccessGuard {
 	 * @inheritdoc
 	 */
 	public function isValidBlockReference(int $blockId): bool {
-		$blocks = $this->getLearnplace()->getBlocks();
-		foreach ($this->walkBlockTree($blocks) as $block) {
-			if($block->getId() === $blockId)
-				return true;
+		try {
+			$blocks = $this->getLearnplace()->getBlocks();
+			foreach ($this->walkBlockTree($blocks) as $block) {
+				if($block->getId() === $blockId)
+					return true;
+			}
+
+			return false;
+		}
+		catch (InvalidArgumentException $ex) {
+			//no learnplace found, therefore no valid block references
+			return false;
 		}
 
-		return false;
 	}
 
 
