@@ -200,7 +200,7 @@ final class xsrlPictureBlockGUI {
 		}
 		catch (FileUploadException $ex) {
 			$form->setValuesByPost();
-			ilUtil::sendFailure($this->plugin->txt('video_block_upload_error'));
+			ilUtil::sendFailure($this->plugin->txt('picture_block_upload_error'));
 			$this->template->setContent($form->getHTML());
 		}
 	}
