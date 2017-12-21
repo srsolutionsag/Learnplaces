@@ -77,7 +77,7 @@ final class LearnplaceServiceImpl  implements LearnplaceService {
 	 */
 	public function delete(int $id) {
 		try {
-			$learnplace = $this->learnplaceRepository->find($id);
+			$learnplace = $this->learnplaceRepository->find($id)->toModel();
 			$this->blockOperationDispatcher->deleteAll($learnplace->getBlocks());
 			$this->configService->delete($learnplace->getConfiguration()->getId());
 			$this->locationService->delete($learnplace->getId());

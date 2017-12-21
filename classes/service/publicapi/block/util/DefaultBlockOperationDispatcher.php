@@ -90,6 +90,9 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 		}
 	}
 
+	/**
+	 * @inheritDoc
+	 */
 	public function storeAll(array $blocks) {
 		foreach ($blocks as $block) {
 			$this->storeBlockByType($block);
