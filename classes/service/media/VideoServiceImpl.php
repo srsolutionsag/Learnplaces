@@ -73,7 +73,10 @@ final class VideoServiceImpl implements VideoService {
 		 * @var UploadedFileInterface $file
 		 */
 		$file = array_pop($this->request->getUploadedFiles());
-		$this->validateUpload($file);
+
+		//TODO: specify valid video header !!!
+		//$this->validateUpload($file);
+
 		$videoPath = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
 
 		$this->filesystem->putStream($videoPath, $file->getStream()->detach());

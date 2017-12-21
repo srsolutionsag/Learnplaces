@@ -95,7 +95,9 @@ final class PictureServiceImpl implements PictureService {
 
 		$path = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
 		$this->filesystem->putStream($path, $file->getStream()->detach());
-		$this->validateImageContent($path);
+
+		//TODO: specify valid picture header !!!
+		//$this->validateImageContent($path);
 
 		$previewPath = $this->generatePreview($objectId, $path);
 		
