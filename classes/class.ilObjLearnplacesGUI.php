@@ -98,6 +98,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$template->setDescription(ilObject::_lookupDescription($this->objectId));
 		$template->setTitleIcon(ilObject::_getIcon($this->objectId));
 		$properties = [];
+
 		if(!ilObjLearnplacesAccess::checkOnline(intval($this->obj_id))) {
 			$properties[] = [
 				'property' => $this->txt('common_status'),

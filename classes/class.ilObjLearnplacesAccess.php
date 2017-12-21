@@ -71,11 +71,17 @@ final class ilObjLearnplacesAccess extends ilObjectPluginAccess {
 	public static function checkOnline(int $objectId) {
 		global $DIC;
 
-		/**
-		 * @var ConfigurationService $configurationService
-		 */
-		$configurationService = $DIC[ConfigurationService::class];
-		$config = $configurationService->findByObjectId($objectId);
-		return $config->isOnline();
+		try {
+			/**
+			 * @var ConfigurationService $configurationService
+			 */
+			$configurationService = $DIC[ConfigurationService::class];
+			$config = $configurationService->findByObjectId($objectId);
+			return $config->isOnline();
+		}
+		catch (InvalidArgumentException $ex) {
+			return true;
+		}
+
 	}
 }
