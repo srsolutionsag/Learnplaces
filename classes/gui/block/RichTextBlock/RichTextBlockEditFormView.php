@@ -36,10 +36,8 @@ final class RichTextBlockEditFormView extends AbstractBlockEditFormView {
 	 * @inheritDoc
 	 */
 	protected function initBlockSpecificForm() {
-		$textArea = new ilTextAreaInputGUI($this->plugin->txt('rich_text_block_content'), self::POST_CONTENT);
+		$textArea = new ilTextareaInputGUI($this->plugin->txt('rich_text_block_content'), self::POST_CONTENT);
 		$textArea->setRequired(true);
-
-		$textArea->setRTESupport(\ilObject::_lookupObjId($this->ctrl->getParameterArrayByClass(xsrlRichTextBlockGUI::class)['ref_id']), "dcl", ilLearnplacesPlugin::PLUGIN_ID, null, false); // We have to prepend that this is a datacollection
 		$textArea->setUseRte(true);
 		$textArea->setRteTags([
 			'p',
@@ -47,11 +45,14 @@ final class RichTextBlockEditFormView extends AbstractBlockEditFormView {
 			'strong',
 			'b',
 			'i',
+			'u',
+			's',
+			'strike',
 			'em',
 			'span',
 		]);
-		$textArea->usePurifier(true);
-		$textArea->disableButtons(array(
+
+		$textArea->disableButtons([
 			'charmap',
 			'undo',
 			'redo',
@@ -79,8 +80,10 @@ final class RichTextBlockEditFormView extends AbstractBlockEditFormView {
 			'unlink',
 			'code',
 			'ilimgupload',
+			'imgupload',
+			'mce_ilimgupload',
 			'pasteword',
-		));
+		]);
 		$this->addItem($textArea);
 	}
 
