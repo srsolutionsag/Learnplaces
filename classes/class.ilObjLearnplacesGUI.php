@@ -97,7 +97,9 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$template->setTitle(ilObject::_lookupTitle($this->objectId));
 		$template->setDescription(ilObject::_lookupDescription($this->objectId));
 		$template->setTitleIcon(ilObject::_getIcon($this->objectId));
-		$this->setLocator();
+		if (!$this->getCreationMode()) {
+			$this->setLocator();
+		}
 		$properties = [];
 
 		if(!ilObjLearnplacesAccess::checkOnline(intval($this->obj_id))) {
