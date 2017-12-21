@@ -79,9 +79,6 @@ final class RichTextBlockEditFormView extends AbstractBlockEditFormView {
 			'link',
 			'unlink',
 			'code',
-			'ilimgupload',
-			'imgupload',
-			'mce_ilimgupload',
 			'pasteword',
 		]);
 		$this->addItem($textArea);
