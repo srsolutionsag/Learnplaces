@@ -43,6 +43,13 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 			->setObjectId(intval($this->getId()));
 
 		$learnplaceService->store($learnplace);
+		$news = new ilNewsItem();
+		$news->setUserId($this->getOwner());
+		$news->setTitle($this->txt('news_created'));
+		$news->setContextObjId($this->getId());
+		$news->setContextObjType($this->getType());
+		$news->setCreationDate($this->getCreateDate());
+		$news->create();
 	}
 
 

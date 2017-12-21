@@ -70,3 +70,6 @@ setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross
 setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1 und 40'000 Meter.
 
 content_save_sequence#:#Reihenfolge speichern
+
+news_created#:#Lernort wurde erstellt.
+news_deleted#:#Lernort wurde gelöscht.

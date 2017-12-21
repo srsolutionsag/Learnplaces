@@ -39,6 +39,7 @@
             "./classes/gui",
             "../../../../../../../Services/Repository",
             "../../../../../../../Services/Form",
+            "../../../../../../../Services/News",
             "../../../../../../../Services/AccessControl",
             "../../../../../../../Services/Link",
             "../../../../../../../Services/UIComponent",

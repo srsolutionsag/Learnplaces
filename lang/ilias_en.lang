@@ -72,3 +72,6 @@ setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1
 setting_validation_failure_radius#:#The radius must be between 1 and 40'000 meter.
 
 content_save_sequence#:#Save sequence
+
+news_created#:#Learnplace created.
+news_deleted#:#Learnplace deleted.
