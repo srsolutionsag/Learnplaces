@@ -89,7 +89,6 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$this->addItem($title);
 
 		$description = new ilTextAreaInputGUI( $this->plugin->txt('common_description'), self::POST_DESCRIPTION);
-		$description->setRequired(true);
 		$this->addItem($description);
 
 		$online = new ilCheckboxInputGUI($this->plugin->txt('common_online'), self::POST_ONLINE);
