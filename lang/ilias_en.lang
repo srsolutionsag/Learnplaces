@@ -16,6 +16,8 @@ common_save#:#Save
 common_delete#:#Delete
 common_visibility#:#Visibility
 common_access_denied#:#Access denied.
+common_title#:#Title
+common_description#:#Description
 
 message_changes_save_success#:#Changes successfully saved.
 message_delete_success#:#Block successfully deleted.
@@ -74,4 +76,5 @@ setting_validation_failure_radius#:#The radius must be between 1 and 40'000 mete
 content_save_sequence#:#Save sequence
 
 news_created#:#Learnplace created.
+news_updated#:#Learnplace settings updated.
 news_deleted#:#Learnplace deleted.

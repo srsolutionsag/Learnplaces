@@ -11,6 +11,7 @@ use ilLocationInputGUI;
 use ilPropertyFormGUI;
 use ilRadioGroupInputGUI;
 use ilRadioOption;
+use ilTextAreaInputGUI;
 use ilTextInputGUI;
 use function intval;
 use SRAG\Learnplaces\gui\exception\ValidationException;
@@ -32,6 +33,8 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 	const POST_DEFAULT_VISIBILITY = 'post_default_visibility';
 	const POST_LOCATION = 'post_location';
 	const POST_LOCATION_RADIUS = 'post_location_radius';
+	const POST_TITLE = 'post_title';
+	const POST_DESCRIPTION = 'post_description';
 
 	private static $validVisibilities = [
 		Visibility::ALWAYS,
@@ -80,6 +83,14 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$generalSectionHeader = new ilFormSectionHeaderGUI();
 		$generalSectionHeader->setTitle($this->plugin->txt('setting_general'));
 		$this->addItem($generalSectionHeader);
+
+		$title = new ilTextInputGUI( $this->plugin->txt('common_title'), self::POST_TITLE);
+		$title->setRequired(true);
+		$this->addItem($title);
+
+		$description = new ilTextAreaInputGUI( $this->plugin->txt('common_description'), self::POST_DESCRIPTION);
+		$description->setRequired(true);
+		$this->addItem($description);
 
 		$online = new ilCheckboxInputGUI($this->plugin->txt('common_online'), self::POST_ONLINE);
 		$online->setRequired(true);
@@ -139,6 +150,8 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$this->configuration->setOnline(intval($this->getInput(self::POST_ONLINE)) === 1);
 		$this->configuration->setRadius(intval($this->getInput(self::POST_LOCATION_RADIUS)));
 		$this->configuration->setElevation(0);
+		$this->configuration->setTitle($this->getInput(self::POST_TITLE));
+		$this->configuration->setDescription($this->getInput(self::POST_DESCRIPTION));
 		return $this->configuration;
 	}
 
@@ -154,6 +167,8 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 			self::POST_ONLINE               => $this->configuration->isOnline(),
 			self::POST_LOCATION             => ['latitude' => $this->configuration->getLatitude(), 'longitude' => $this->configuration->getLongitude()],
 			self::POST_LOCATION_RADIUS      => $this->configuration->getRadius(),
+			self::POST_TITLE                => $this->configuration->getTitle(),
+			self::POST_DESCRIPTION          =>$this->configuration->getDescription(),
 		];
 
 		$this->setValuesByArray($values);

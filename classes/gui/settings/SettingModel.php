@@ -13,6 +13,14 @@ namespace SRAG\Learnplaces\gui\settings;
 final class SettingModel {
 
 	/**
+	 * @var string $title
+	 */
+	private $title = "";
+	/**
+	 * @var string $description
+	 */
+	private $description = "";
+	/**
 	 * @var bool $online
 	 */
 	private $online = false;
@@ -36,6 +44,48 @@ final class SettingModel {
 	 * @var int $radius
 	 */
 	private $radius = 200;
+
+
+	/**
+	 * @return string
+	 */
+	public function getTitle(): string {
+		return $this->title;
+	}
+
+
+	/**
+	 * @param string $title
+	 *
+	 * @return SettingModel
+	 */
+	public function setTitle(string $title): SettingModel {
+		$this->title = $title;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return string
+	 */
+	public function getDescription(): string {
+		return $this->description;
+	}
+
+
+	/**
+	 * @param string $description
+	 *
+	 * @return SettingModel
+	 */
+	public function setDescription(string $description): SettingModel {
+		$this->description = $description;
+
+		return $this;
+	}
+
+
 
 
 	/**

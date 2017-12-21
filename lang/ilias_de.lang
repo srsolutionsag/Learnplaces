@@ -16,6 +16,8 @@ common_save#:#Speichern
 common_delete#:#L&ouml;schen
 common_visibility#:#Sichtbarkeit
 common_access_denied#:#Sie verfügen nicht über die erforderlichen Berechtigungen.
+common_title#:#Titel
+common_description#:#Beschreibung
 
 message_changes_save_success#:#&Auml;nderungen erfolgreich gespeichert.
 message_delete_success#:#Block erfolgreich gel&ouml;scht.
@@ -72,4 +74,5 @@ setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1
 content_save_sequence#:#Reihenfolge speichern
 
 news_created#:#Lernort wurde erstellt.
+news_updated#:#Lernort Einstellungen wurden aktualisiert.
 news_deleted#:#Lernort wurde gelöscht.

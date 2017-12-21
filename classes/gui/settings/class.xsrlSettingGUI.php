@@ -116,6 +116,7 @@ final class xsrlSettingGUI {
 		$learnplce = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 		$config = $learnplce->getConfiguration();
 		$location = $learnplce->getLocation();
+		$objectId = ilObject::_lookupObjectId($this->getCurrentRefId());
 		$model = new SettingModel();
 		$model
 			->setLatitude($location->getLatitude())
@@ -123,7 +124,9 @@ final class xsrlSettingGUI {
 			->setRadius($location->getRadius())
 			->setElevation($location->getElevation())
 			->setOnline($config->isOnline())
-			->setDefaultVisibility($config->getDefaultVisibility());
+			->setDefaultVisibility($config->getDefaultVisibility())
+			->setTitle(ilObject::_lookupTitle($objectId))
+			->setDescription(ilObject::_lookupDescription($objectId));
 
 		$view = new SettingEditFormView($model, $this->plugin, $this->controlFlow);
 		$view->fillForm();
@@ -151,6 +154,11 @@ final class xsrlSettingGUI {
 				->setElevation($settings->getElevation())
 				->setRadius($settings->getRadius());
 			$this->locationService->store($location);
+
+			$pluginObject = new ilObjLearnplaces($this->getCurrentRefId());
+			$pluginObject->setTitle($settings->getTitle());
+			$pluginObject->setDescription($settings->getDescription());
+			$pluginObject->update();
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
 			$this->controlFlow->redirect($this, CommonControllerAction::CMD_EDIT);
