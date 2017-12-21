@@ -18,9 +18,9 @@ use Zend\Diactoros\ServerRequestFactory;
 final class HttpServiceProvider implements ServiceProviderInterface {
 
 	public function register(Container $pimple) {
-		$pimple[ServerRequestInterface::class] = function(Container $c) {
+		$pimple[ServerRequestInterface::class] = function(Container $c): ServerRequestInterface {
 			if($c->offsetExists('http'))
-				return $c['http']; //use ilias 5.3 http service
+				return $c['http']->request(); //use ilias 5.3 http service
 
 			//use Zend Diactoros
 			return ServerRequestFactory::fromGlobals($_SERVER,
