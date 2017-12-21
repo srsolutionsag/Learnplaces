@@ -200,6 +200,22 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	}
 
 
+	/**
+	 * @inheritdoc
+	 */
+	protected function supportsCloning() {
+		return false;
+	}
+
+
+	/**
+	 * @inheritdoc
+	 */
+	protected function supportsExport() {
+		return false;
+	}
+
+
 	public function index() {
 		$this->ctrl->redirectByClass(xsrlContentGUI::class, self::DEFAULT_CMD);
 	}
