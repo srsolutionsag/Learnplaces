@@ -17,7 +17,7 @@ Start at your ILIAS root directory
 ```bash
 mkdir -p Customizing/global/plugins/Services/Repository/RepositoryObject  
 cd Customizing/global/plugins/Services/Repository/RepositoryObject
-git clone https://git.studer-raimann.ch/ILIAS/Plugins/Learnplaces.git -b develop
+git clone https://github.com/studer-raimann/Learnplaces.git
 cd ./Learnplaces
 php composer.phar install --no-dev
 ```  
