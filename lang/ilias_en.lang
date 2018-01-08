@@ -1,0 +1,80 @@
+objs_xsrl#:#Learnplaces
+objs_xsrl_duplicate#:#Copy existing learnplace
+obj_xsrl#:#Learnplace
+xsrl_new#:#Create new learnplace
+
+xsrl_add#:#Create
+
+common_create#:#Create
+common_status#:#Status
+common_cancel#:#Cancel
+common_offline#:#Offline
+common_online#:#Online
+common_add#:#Add
+common_edit#:#Edit
+common_save#:#Save
+common_delete#:#Delete
+common_visibility#:#Visibility
+common_access_denied#:#Access denied.
+common_title#:#Title
+common_description#:#Description
+
+message_changes_save_success#:#Changes successfully saved.
+message_delete_success#:#Block successfully deleted.
+message_create_failure#:#An error occurred while creating the block.
+error_message_no_map_found#:#No map found for the current learnplace.
+
+tabs_content#:#Content
+tabs_edit#:#Edit block
+tabs_settings#:#Settings
+tabs_map#:#Map
+
+block_specific_settings#:#Block specific settings
+picture_upload_block_content#:#Picture upload block
+
+confirm_delete_header#:#Warning, the block will be deleted permanently.
+
+block_rich_text#:#Rich text
+block_map#:#Map
+block_ilias_link#:#ILIAS link
+block_accordion#:#Accordion
+block_picture#:#Picture
+block_picture_upload#:#Picture upload
+block_video#:#Video
+block_type_title#:#Available blocks:
+block_add_header#:#Add block
+
+picture_block_enter_title#:#Title
+picture_block_enter_description#:#Description
+picture_block_select_picture#:#Picture
+picture_block_upload_error#:#Picture only partially uploaded, or unsupported picture format.
+
+video_block_select_video#:#Video
+video_block_upload_error#:#Video only partially uploaded, or unsupported video format.
+
+rich_text_block_content#:#Content
+
+ilias_link_block_select_target#:#ILIAS link
+
+accordion_block_title#:#Title
+accordion_block_expand#:#Expand accordion
+
+visibility_title#:#Available visibilities:
+visibility_always#:#Always visible
+visibility_after_visit_place#:#Visible after visit
+visibility_only_at_place#:#Visible at place
+visibility_never#:#Never visible
+
+setting_location#:#Location
+setting_general#:#General
+setting_radius#:#Radius
+setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross das Umfeld des Lernortes ist. Es wird generel empfohlen den Wert von 50 Metern nicht zu unterschreiten. Der minimum Radius beträgt 1 Meter und der maximale 40'000 Meter.
+setting_radius_info#:#The radius is measured in meter and describes the size of the learnplace. It is recommended to set this value at list to 50 meter. The value must be between 1 and 40'000 meter.
+setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1 und 40'000 Meter.
+setting_validation_failure_radius#:#The radius must be between 1 and 40'000 meter.
+
+content_save_sequence#:#Save sequence
+
+news_created#:#Learnplace created.
+news_updated#:#Learnplace settings updated.
+news_deleted#:#Learnplace deleted.

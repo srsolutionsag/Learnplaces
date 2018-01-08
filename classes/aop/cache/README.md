@@ -1,0 +1,1 @@
+This directory is used by the go aop framework to cache data.
