@@ -83,8 +83,9 @@ class VisitJournalRepositoryImpl implements VisitJournalRepository {
 			function($visit) { return $this->mapToDTO($visit); },                                                //mapping function
 			\SRAG\Learnplaces\persistence\entity\VisitJournal::innerjoinAR(new Learnplace(),
 				'fk_learnplace_id',
-				'pk_id'
-			)->where(['fk_learnplace_id' => $id])->get()                                                         //input
+				'pk_id',
+				['fk_object_id', 'pk_id']
+			)->where([Learnplace::returnDbTableName() . '.fk_object_id' => $id])->get()                                                         //input
 		);
 	}
 
