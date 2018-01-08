@@ -11,7 +11,7 @@ the old learnplaces plugin.
 ### Composer
 The latest composer release can be downloaded here <https://getcomposer.org/download/>
 
-###Plugin
+### Plugin
 Start at your ILIAS root directory  
 
 ```bash
