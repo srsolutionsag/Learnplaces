@@ -52,3 +52,8 @@ $visibilityAfterVisitPlace->create();
 $visibilityAfterVisitOtherPlace->setName(\SRAG\Learnplaces\util\Visibility::AFTER_VISIT_OTHER_PLACE);
 $visibilityAfterVisitOtherPlace->create();
 ?>
+<#2>
+<?php
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
+\SRAG\Learnplaces\persistence\entity\Configuration::updateDB(); //map_zoom_level field added
+?>

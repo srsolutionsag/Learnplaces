@@ -146,6 +146,7 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$this->configuration->setDefaultVisibility($visibility);
 		$this->configuration->setLongitude(doubleval($this->getInput(self::POST_LOCATION)['longitude']));
 		$this->configuration->setLatitude(doubleval($this->getInput(self::POST_LOCATION)['latitude']));
+		$this->configuration->setMapZoom(intval($this->getInput(self::POST_LOCATION)['zoom']));
 		$this->configuration->setOnline(intval($this->getInput(self::POST_ONLINE)) === 1);
 		$this->configuration->setRadius(intval($this->getInput(self::POST_LOCATION_RADIUS)));
 		$this->configuration->setElevation(0);
@@ -164,7 +165,11 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$values = [
 			self::POST_DEFAULT_VISIBILITY   => $this->configuration->getDefaultVisibility(),
 			self::POST_ONLINE               => $this->configuration->isOnline(),
-			self::POST_LOCATION             => ['latitude' => $this->configuration->getLatitude(), 'longitude' => $this->configuration->getLongitude()],
+			self::POST_LOCATION             => [
+				'latitude'  => $this->configuration->getLatitude(),
+				'longitude' => $this->configuration->getLongitude(),
+				'zoom'      => $this->configuration->getMapZoom()
+			],
 			self::POST_LOCATION_RADIUS      => $this->configuration->getRadius(),
 			self::POST_TITLE                => $this->configuration->getTitle(),
 			self::POST_DESCRIPTION          =>$this->configuration->getDescription(),

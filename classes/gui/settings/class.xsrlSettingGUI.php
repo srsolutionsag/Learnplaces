@@ -126,7 +126,8 @@ final class xsrlSettingGUI {
 			->setOnline($config->isOnline())
 			->setDefaultVisibility($config->getDefaultVisibility())
 			->setTitle(ilObject::_lookupTitle($objectId))
-			->setDescription(ilObject::_lookupDescription($objectId));
+			->setDescription(ilObject::_lookupDescription($objectId))
+			->setMapZoom($config->getMapZoomLevel());
 
 		$view = new SettingEditFormView($model, $this->plugin, $this->controlFlow);
 		$view->fillForm();
@@ -145,7 +146,8 @@ final class xsrlSettingGUI {
 			$settings = $view->getSettings();
 			$config
 				->setOnline($settings->isOnline())
-				->setDefaultVisibility($settings->getDefaultVisibility());
+				->setDefaultVisibility($settings->getDefaultVisibility())
+				->setMapZoomLevel($settings->getMapZoom());
 			$this->configService->store($config);
 
 			$location
