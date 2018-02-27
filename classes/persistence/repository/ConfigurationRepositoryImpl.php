@@ -78,11 +78,13 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 			$configuration
 				->setId($configurationEntity->getPkId())
 				->setDefaultVisibility($visibility->getName())
-				->setOnline($configurationEntity->getObjectOnline() === 1);
+				->setOnline($configurationEntity->getObjectOnline() === 1)
+				->setMapZoomLevel($configurationEntity->getMapZoomLevel());
 
 			return $configuration;
 		}
 		catch (arException $ex) {
+			$id = $configurationEntity->getFkVisibilityDefault();
 			throw new EntityNotFoundException("Visibility with id \"$id\" not found", $ex);
 		}
 
@@ -102,7 +104,8 @@ class ConfigurationRepositoryImpl implements ConfigurationRepository {
 
 		$activeRecord
 			->setObjectOnline($configuration->isOnline() ? 1 : 0)
-			->setFkVisibilityDefault($visibility->getPkId());
+			->setFkVisibilityDefault($visibility->getPkId())
+			->setMapZoomLevel($configuration->getMapZoomLevel());
 
 		return $activeRecord;
 	}

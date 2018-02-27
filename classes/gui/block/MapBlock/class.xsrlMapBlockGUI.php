@@ -140,7 +140,7 @@ final class xsrlMapBlockGUI {
 			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$mapModel = $this->fetchMapModelFromLearnplace($learnplace);
 			$this->redirectInvalidRequests($mapModel->getId());
-			$view->setModels($mapModel, $learnplace->getLocation());
+			$view->setModels($mapModel, $learnplace->getLocation(), $learnplace->getConfiguration());
 			$writePermission = $this->blockAccessGuard->hasWritePermission();
 			$view->setReadonly(!$writePermission);
 			$this->template->setContent($view->getHTML());

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace SRAG\Learnplaces\persistence\entity;
 
 use ActiveRecord;
+use function intval;
 
 /**
  * Class Configuration
@@ -42,6 +43,15 @@ class Configuration extends ActiveRecord {
 	 * @con_length     1
 	 */
 	protected $object_online = 0;
+	/**
+	 * @var int
+	 *
+	 * @con_has_field  true
+	 * @con_is_notnull true
+	 * @con_fieldtype  integer
+	 * @con_length     1
+	 */
+	protected $map_zoom_level = 0;
 	/**
 	 * @var int|null
 	 *
@@ -108,6 +118,26 @@ class Configuration extends ActiveRecord {
 	 */
 	public function setFkVisibilityDefault($fk_visibility_default) {
 		$this->fk_visibility_default = $fk_visibility_default;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getMapZoomLevel(): int {
+		return intval($this->map_zoom_level);
+	}
+
+
+	/**
+	 * @param int $map_zoom_level
+	 *
+	 * @return Configuration
+	 */
+	public function setMapZoomLevel(int $map_zoom_level): Configuration {
+		$this->map_zoom_level = $map_zoom_level;
 
 		return $this;
 	}

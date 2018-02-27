@@ -28,6 +28,10 @@ final class ConfigurationModel {
 	 * @var string $defaultVisibility
 	 */
 	private $defaultVisibility = "ALWAYS";
+	/**
+	 * @var int $mapZoomLevel
+	 */
+	private $mapZoomLevel = 0;
 
 	/**
 	 * @return int
@@ -84,6 +88,26 @@ final class ConfigurationModel {
 	 */
 	public function setDefaultVisibility(string $defaultVisibility): ConfigurationModel {
 		$this->defaultVisibility = $defaultVisibility;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getMapZoomLevel(): int {
+		return $this->mapZoomLevel;
+	}
+
+
+	/**
+	 * @param int $mapZoomLevel
+	 *
+	 * @return ConfigurationModel
+	 */
+	public function setMapZoomLevel(int $mapZoomLevel): ConfigurationModel {
+		$this->mapZoomLevel = $mapZoomLevel;
 
 		return $this;
 	}

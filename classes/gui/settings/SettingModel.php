@@ -44,6 +44,10 @@ final class SettingModel {
 	 * @var int $radius
 	 */
 	private $radius = 200;
+	/**
+	 * @var int $mapZoom
+	 */
+	private $mapZoom = 0;
 
 
 	/**
@@ -203,6 +207,26 @@ final class SettingModel {
 	 */
 	public function setRadius(int $radius): SettingModel {
 		$this->radius = $radius;
+
+		return $this;
+	}
+
+
+	/**
+	 * @return int
+	 */
+	public function getMapZoom(): int {
+		return $this->mapZoom;
+	}
+
+
+	/**
+	 * @param int $mapZoom
+	 *
+	 * @return SettingModel
+	 */
+	public function setMapZoom(int $mapZoom): SettingModel {
+		$this->mapZoom = $mapZoom;
 
 		return $this;
 	}

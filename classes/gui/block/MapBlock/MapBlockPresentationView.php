@@ -12,6 +12,7 @@ use ilToolbarGUI;
 use LogicException;
 use SRAG\Learnplaces\gui\block\util\ReadOnlyViewAware;
 use SRAG\Learnplaces\gui\helper\CommonControllerAction;
+use SRAG\Learnplaces\service\publicapi\model\ConfigurationModel;
 use SRAG\Learnplaces\service\publicapi\model\LocationModel;
 use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
 use SRAG\Learnplaces\service\publicapi\model\PictureBlockModel;
@@ -27,8 +28,6 @@ use xsrlMapBlockGUI;
 final class MapBlockPresentationView {
 
 	use ReadOnlyViewAware;
-
-	const MAP_ZOOM = 10;
 
 	/**
 	 * @var ilLearnplacesPlugin $plugin
@@ -50,6 +49,10 @@ final class MapBlockPresentationView {
 	 * @var LocationModel $location
 	 */
 	private $location;
+	/**
+	 * @var ConfigurationModel $configuration
+	 */
+	private $configuration;
 
 
 	/**
@@ -83,7 +86,7 @@ final class MapBlockPresentationView {
 		$map->setMapId($map_id = "map_" . hash('sha256', uniqid('map', true)))
 				->setLatitude($this->location->getLatitude())
 				->setLongitude($this->location->getLongitude())
-				->setZoom(self::MAP_ZOOM)
+				->setZoom($this->configuration->getMapZoomLevel())
 				->setEnableTypeControl(true)
 				->setEnableLargeMapControl(true)
 				->setEnableUpdateListener(false)
@@ -97,9 +100,10 @@ final class MapBlockPresentationView {
 		$this->template->setVariable('CONTENT', $map->getHtml());
 	}
 
-	public function setModels(MapBlockModel $model, LocationModel $location) {
+	public function setModels(MapBlockModel $model, LocationModel $location, ConfigurationModel $configuration) {
 		$this->model = $model;
 		$this->location = $location;
+		$this->configuration = $configuration;
 	}
 
 
