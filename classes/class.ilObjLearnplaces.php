@@ -59,14 +59,14 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 
 
 	protected function doUpdate() {
-		$news = new ilNewsItem();
-		$news->setUserId($this->getOwner());
+		global $DIC;
+		$user = $DIC->user();
+
+		$news = new ilNewsItem(ilNewsItem::getLastNewsIdForContext($this->getId(), $this->getType()));
 		$news->setTitle($this->txt('news_updated'));
-		$news->setContextObjId($this->getId());
-		$news->setContextObjType($this->getType());
-		$news->setCreationDate($this->getCreateDate());
 		$news->setUpdateDate($this->getLastUpdateDate());
-		$news->create();
+		$news->setUpdateUserId($user->getId());
+		$news->update();
 	}
 
 
