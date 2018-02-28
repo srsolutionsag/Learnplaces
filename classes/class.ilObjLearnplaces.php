@@ -45,7 +45,9 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		$learnplaceService->store($learnplace);
 		$news = new ilNewsItem();
 		$news->setUserId($this->getOwner());
-		$news->setTitle($this->txt('news_created'));
+		$news->setTitle('news_created');
+		$news->setContentTextIsLangVar(1);
+		$news->setContentIsLangVar(true);
 		$news->setContextObjId($this->getId());
 		$news->setContextObjType($this->getType());
 		$news->setCreationDate($this->getCreateDate());
@@ -63,7 +65,9 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		$user = $DIC->user();
 
 		$news = new ilNewsItem(ilNewsItem::getLastNewsIdForContext($this->getId(), $this->getType()));
-		$news->setTitle($this->txt('news_updated'));
+		$news->setTitle('news_updated');
+		$news->setContentTextIsLangVar(1);
+		$news->setContentIsLangVar(true);
 		$news->setUpdateDate($this->getLastUpdateDate());
 		$news->setUpdateUserId($user->getId());
 		$news->update();
