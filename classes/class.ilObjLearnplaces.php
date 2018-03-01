@@ -16,6 +16,9 @@ use SRAG\Learnplaces\service\publicapi\model\LocationModel;
  */
 final class ilObjLearnplaces extends ilObjectPlugin {
 
+	const TRANSLATE_NEWS_TITLE = true;
+	const TRANSLATE_NEWS_CONTENT = 0; //has to be a number
+
 	protected function initType() {
 		$this->setType(ilLearnplacesPlugin::PLUGIN_ID);
 	}
@@ -46,8 +49,9 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		$news = new ilNewsItem();
 		$news->setUserId($this->getOwner());
 		$news->setTitle('news_created');
-		$news->setContentTextIsLangVar(1);
-		$news->setContentIsLangVar(true);
+		$news->setContentIsLangVar(self::TRANSLATE_NEWS_TITLE);
+		$news->setContentTextIsLangVar(self::TRANSLATE_NEWS_CONTENT);
+		$news->setContent('');
 		$news->setContextObjId($this->getId());
 		$news->setContextObjType($this->getType());
 		$news->setCreationDate($this->getCreateDate());
@@ -61,13 +65,13 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 
 
 	protected function doUpdate() {
-		global $DIC;
-		$user = $DIC->user();
+		$user = PluginContainer::resolve('ilUser');
 
 		$news = new ilNewsItem(ilNewsItem::getLastNewsIdForContext($this->getId(), $this->getType()));
 		$news->setTitle('news_updated');
-		$news->setContentTextIsLangVar(1);
-		$news->setContentIsLangVar(true);
+		$news->setContentIsLangVar(self::TRANSLATE_NEWS_TITLE);
+		$news->setContentTextIsLangVar(self::TRANSLATE_NEWS_CONTENT);
+		$news->setContent('');
 		$news->setUpdateDate($this->getLastUpdateDate());
 		$news->setUpdateUserId($user->getId());
 		$news->update();
