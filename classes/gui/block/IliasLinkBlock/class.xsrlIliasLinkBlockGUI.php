@@ -35,6 +35,7 @@ final class xsrlIliasLinkBlockGUI {
 
 	const TAB_ID = 'Content';
 	const BLOCK_ID_QUERY_KEY = 'block';
+	const ANCHOR_TEMPLATE = 'sequence-';
 
 	/**
 	 * @var ilTabsGUI $tabs
@@ -169,12 +170,14 @@ $next_class = $this->controlFlow->getNextClass();
 			$block = $this->iliasLinkService->store($block);
 
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE;
 			if($accordionId > 0) {
 				$accordion = $this->accprdionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$accordion->setBlocks($blocks);
 				$this->accprdionService->store($accordion);
+				$anchor .= $accordion->getSequence();
 			}
 			else {
 				//fetch learnplace
@@ -185,10 +188,11 @@ $next_class = $this->controlFlow->getNextClass();
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
+				$anchor .= $block->getSequence();
 			}
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();
@@ -218,8 +222,9 @@ $next_class = $this->controlFlow->getNextClass();
 			$linkBlock->setVisibility($block->getVisibility());
 			$this->iliasLinkService->store($linkBlock);
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE . $block->getSequence();
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();

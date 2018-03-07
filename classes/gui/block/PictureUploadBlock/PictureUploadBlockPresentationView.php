@@ -114,6 +114,7 @@ final class PictureUploadBlockPresentationView implements Renderable {
 			$outerTemplate->setVariable('SEQUENCE_INPUT', $input->render());
 		}
 		$outerTemplate->setVariable('CONTENT', $blockTemplate->get());
+		$outerTemplate->setVariable('SEQUENCE', $this->model->getSequence());
 		return $outerTemplate;
 	}
 }

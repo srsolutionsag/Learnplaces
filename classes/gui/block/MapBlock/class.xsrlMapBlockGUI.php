@@ -183,7 +183,7 @@ final class xsrlMapBlockGUI {
 			$this->learnplaceService->store($learnplace);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_INDEX);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();

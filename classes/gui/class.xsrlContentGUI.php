@@ -39,6 +39,11 @@ final class xsrlContentGUI {
 	 * Command to store the sequence numbers
 	 */
 	const CMD_SEQUENCE = 'sequence';
+	/**
+	 * The anchor start which is used to
+	 * jump to the edited block after leaving the edit / creation view.
+	 */
+	const ANCHOR_TEMPLATE = 'sequence-';
 
 	private static $blockTypeViewMapping = [
 		//BlockType::PICTURE_UPLOAD   => xsrlPictureUploadBlockGUI::class,
