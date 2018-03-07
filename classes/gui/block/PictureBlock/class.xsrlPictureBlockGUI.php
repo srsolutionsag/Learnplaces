@@ -169,12 +169,14 @@ final class xsrlPictureBlockGUI {
 			$block->setPicture($picture);
 			$block = $this->pictureBlockService->store($block);
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE;
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$accordion->setBlocks($blocks);
 				$this->accordionService->store($accordion);
+				$anchor .= $accordion->getSequence();
 			}
 			else {
 				//fetch learnplace
@@ -185,10 +187,11 @@ final class xsrlPictureBlockGUI {
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$block]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
+				$anchor .= $block->getSequence();
 			}
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();
@@ -242,8 +245,9 @@ final class xsrlPictureBlockGUI {
 			$block->setSequence($oldPictureBlock->getSequence());
 			$this->pictureBlockService->store($block);
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE . $block->getSequence();
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();
