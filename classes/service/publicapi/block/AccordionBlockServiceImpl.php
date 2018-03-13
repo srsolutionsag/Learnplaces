@@ -119,7 +119,7 @@ final class AccordionBlockServiceImpl implements AccordionBlockService {
 	private function regenerateSequence(array $blocks): array {
 		$regenerated = [];
 		foreach ($blocks as $key => $block) {
-			$block->setSequence(($key > 0) ? $key * self::SEQUENCE_SPACE : 1);
+			$block->setSequence(($key+1) * self::SEQUENCE_SPACE );
 			$regenerated[] = $block;
 		}
 
