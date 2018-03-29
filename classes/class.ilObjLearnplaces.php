@@ -16,8 +16,10 @@ use SRAG\Learnplaces\service\publicapi\model\LocationModel;
  */
 final class ilObjLearnplaces extends ilObjectPlugin {
 
+	/*
 	const TRANSLATE_NEWS_TITLE = true;
 	const TRANSLATE_NEWS_CONTENT = 0; //has to be a number
+	*/
 
 	protected function initType() {
 		$this->setType(ilLearnplacesPlugin::PLUGIN_ID);
@@ -87,9 +89,9 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		/**
 		 * @var LearnplaceService $learnplaceService
 		 */
-		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
-		$learnplace = $learnplaceService->findByObjectId(intval($this->getId()));
-		$learnplaceService->delete($learnplace->getId());
+//		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
+//		$learnplace = $learnplaceService->findByObjectId(intval($this->getId()));
+//		$learnplaceService->delete($learnplace->getId());
 	}
 
 
