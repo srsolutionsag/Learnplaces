@@ -30,7 +30,7 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		/**
 		 * @var LearnplaceService $learnplaceService
 		 */
-		// $learnplaceService = PluginContainer::resolve(LearnplaceService::class);
+		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
 		/**
 		 * @var ConfigurationService $configService
 		 */
@@ -48,8 +48,8 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 			->setConfiguration($config)
 			->setObjectId(intval($this->getId()));
 
-		/*
 		$learnplaceService->store($learnplace);
+		/*
 		$news = new ilNewsItem();
 		$news->setUserId($this->getOwner());
 		$news->setTitle('news_created');
@@ -89,9 +89,9 @@ final class ilObjLearnplaces extends ilObjectPlugin {
 		/**
 		 * @var LearnplaceService $learnplaceService
 		 */
-//		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
-//		$learnplace = $learnplaceService->findByObjectId(intval($this->getId()));
-//		$learnplaceService->delete($learnplace->getId());
+		$learnplaceService = PluginContainer::resolve(LearnplaceService::class);
+		$learnplace = $learnplaceService->findByObjectId(intval($this->getId()));
+		$learnplaceService->delete($learnplace->getId());
 	}
 
 
