@@ -37,7 +37,7 @@ confirm_delete_header#:#Achtung, der block wird unwiderruflich gelöscht!
 block_rich_text#:#Rich text
 block_map#:#Karte
 block_ilias_link#:#ILIAS link
-block_accordion#:#Accordeon
+block_accordion#:#Akkordeon
 block_picture#:#Bild
 block_picture_upload#:#Bilderupload
 block_video#:#Video
