@@ -100,7 +100,7 @@ final class SettingEditFormView extends ilPropertyFormGUI {
 		$visibilitySectionHeader->setTitle($this->plugin->txt('common_visibility'));
 		$this->addItem($visibilitySectionHeader);
 
-		$radioGroup = new ilRadioGroupInputGUI($this->plugin->txt('visibility_title'), self::POST_DEFAULT_VISIBILITY);
+		$radioGroup = new ilRadioGroupInputGUI($this->plugin->txt('setting_visibility_default'), self::POST_DEFAULT_VISIBILITY);
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_always'), Visibility::ALWAYS));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_after_visit_place'), Visibility::AFTER_VISIT_PLACE));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('visibility_only_at_place'), Visibility::ONLY_AT_PLACE));
