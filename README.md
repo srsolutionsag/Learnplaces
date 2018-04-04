@@ -66,6 +66,9 @@ enabled in order to use the rich text editing functionality of the plugin.
 ## Versioning
 We use SemVer for versioning. For the versions available, see the tags on this repository.
 
+## License
+This project is licensed under the GNU LGPLv3 License - see the LICENSE.md file for details.
+
 ## Acknowledgments
 [composer](https://getcomposer.org/)
 
@@ -83,9 +86,6 @@ We use SemVer for versioning. For the versions available, see the tags on this r
 
 [mockery/mockery](https://github.com/mockery/mockery)
 
-## License
-This project is licensed under the GNU LGPLv3 License - see the LICENSE.md file for details.
-
 ## Contact
 
 studer + raimann ag  
@@ -93,5 +93,5 @@ Farbweg 9
 3400 Burgdorf  
 Switzerland
 
-info@studer-raimann.ch  
-www.studer-raimann.ch 
+[info@studer-raimann.ch](mailto:info@studer-raimann.ch)  
+<www.studer-raimann.ch>
