@@ -72,6 +72,7 @@ setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross
 setting_radius_info#:#The radius is measured in meter and describes the size of the learnplace. It is recommended to set this value at list to 50 meter. The value must be between 1 and 40'000 meter.
 setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1 und 40'000 Meter.
 setting_validation_failure_radius#:#The radius must be between 1 and 40'000 meter.
+setting_visibility_default#:#Default visibility
 
 content_save_sequence#:#Save sequence
 
