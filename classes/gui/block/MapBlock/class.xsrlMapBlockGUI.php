@@ -140,7 +140,7 @@ final class xsrlMapBlockGUI {
 			$learnplace = $this->learnplaceService->findByObjectId(ilObject::_lookupObjectId($this->getCurrentRefId()));
 			$mapModel = $this->fetchMapModelFromLearnplace($learnplace);
 			$this->redirectInvalidRequests($mapModel->getId());
-			$view->setModels($mapModel, $learnplace->getLocation());
+			$view->setModels($mapModel, $learnplace->getLocation(), $learnplace->getConfiguration());
 			$writePermission = $this->blockAccessGuard->hasWritePermission();
 			$view->setReadonly(!$writePermission);
 			$this->template->setContent($view->getHTML());
@@ -183,7 +183,7 @@ final class xsrlMapBlockGUI {
 			$this->learnplaceService->store($learnplace);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_INDEX);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();

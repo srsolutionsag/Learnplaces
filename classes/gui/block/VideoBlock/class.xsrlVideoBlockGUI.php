@@ -175,12 +175,14 @@ final class xsrlVideoBlockGUI {
 
 			$videoBlock = $this->videoBlockService->store($block);
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE;
 			if($accordionId > 0) {
 				$accordion = $this->accordionService->find($accordionId);
 				$blocks = $accordion->getBlocks();
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$videoBlock]);
 				$accordion->setBlocks($blocks);
 				$this->accordionService->store($accordion);
+				$anchor .= $accordion->getSequence();
 			}
 			else {
 				//fetch learnplace
@@ -191,10 +193,11 @@ final class xsrlVideoBlockGUI {
 				array_splice($blocks, $this->getInsertPosition($queries), 0, [$videoBlock]);
 				$learnplace->setBlocks($blocks);
 				$this->learnplaceService->store($learnplace);
+				$anchor .= $block->getSequence();
 			}
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();
@@ -254,8 +257,9 @@ final class xsrlVideoBlockGUI {
 			$block->setSequence($oldVideoBlock->getSequence());
 			$this->videoBlockService->store($block);
 
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE . $block->getSequence();
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();

@@ -26,6 +26,8 @@ use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
  */
 final class LearnplaceServiceImpl  implements LearnplaceService {
 
+	const SEQUENCE_SPACE = 10;
+
 	/**
 	 * @var ConfigurationService $configService
 	 */
@@ -198,7 +200,7 @@ final class LearnplaceServiceImpl  implements LearnplaceService {
 		$regenerated = [];
 		$accordions = [];
 		foreach ($blocks as $key => $block) {
-			$block->setSequence($key + 1);
+			$block->setSequence(($key+1) * self::SEQUENCE_SPACE);
 			if($block instanceof MapBlockModel)
 				$block->setSequence(PHP_INT_MAX);
 			if($block instanceof AccordionBlockModel)

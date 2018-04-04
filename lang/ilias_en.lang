@@ -68,10 +68,9 @@ visibility_never#:#Never visible
 setting_location#:#Location
 setting_general#:#General
 setting_radius#:#Radius
-setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross das Umfeld des Lernortes ist. Es wird generel empfohlen den Wert von 50 Metern nicht zu unterschreiten. Der minimum Radius beträgt 1 Meter und der maximale 40'000 Meter.
-setting_radius_info#:#The radius is measured in meter and describes the size of the learnplace. It is recommended to set this value at list to 50 meter. The value must be between 1 and 40'000 meter.
-setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1 und 40'000 Meter.
+setting_radius_info#:#The radius is measured in meter and describes the size of the learnplace. It is recommended to set this value at least to 50 meter. The value must be between 1 and 40'000 meter.
 setting_validation_failure_radius#:#The radius must be between 1 and 40'000 meter.
+setting_visibility_default#:#Default visibility
 
 content_save_sequence#:#Save sequence
 

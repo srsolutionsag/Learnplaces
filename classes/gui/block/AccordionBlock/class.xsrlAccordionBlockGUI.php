@@ -157,7 +157,8 @@ final class xsrlAccordionBlockGUI {
 			$this->learnplaceService->store($learnplace);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE . $block->getSequence();
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();
@@ -192,7 +193,8 @@ final class xsrlAccordionBlockGUI {
 			$this->accordionService->store($accordion);
 
 			ilUtil::sendSuccess($this->plugin->txt('message_changes_save_success'), true);
-			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
+			$anchor = xsrlContentGUI::ANCHOR_TEMPLATE . $block->getSequence();
+			$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX, $anchor);
 		}
 		catch (ValidationException $ex) {
 			$form->setValuesByPost();

@@ -97,6 +97,7 @@ final class xsrlSettingGUI {
 		$this->tabs->activateTab(self::TAB_ID);
 
 		switch ($cmd) {
+			case CommonControllerAction::CMD_CANCEL:
 			case CommonControllerAction::CMD_EDIT:
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->accessGuard->hasWritePermission()) {
@@ -108,6 +109,7 @@ final class xsrlSettingGUI {
 		}
 
 		ilUtil::sendFailure($this->plugin->txt('common_access_denied'), true);
+		$this->controlFlow->redirectByClass(ilRepositoryGUI::class);
 
 		return false;
 	}
@@ -126,7 +128,8 @@ final class xsrlSettingGUI {
 			->setOnline($config->isOnline())
 			->setDefaultVisibility($config->getDefaultVisibility())
 			->setTitle(ilObject::_lookupTitle($objectId))
-			->setDescription(ilObject::_lookupDescription($objectId));
+			->setDescription(ilObject::_lookupDescription($objectId))
+			->setMapZoom($config->getMapZoomLevel());
 
 		$view = new SettingEditFormView($model, $this->plugin, $this->controlFlow);
 		$view->fillForm();
@@ -145,7 +148,8 @@ final class xsrlSettingGUI {
 			$settings = $view->getSettings();
 			$config
 				->setOnline($settings->isOnline())
-				->setDefaultVisibility($settings->getDefaultVisibility());
+				->setDefaultVisibility($settings->getDefaultVisibility())
+				->setMapZoomLevel($settings->getMapZoom());
 			$this->configService->store($config);
 
 			$location
@@ -167,5 +171,9 @@ final class xsrlSettingGUI {
 			$view->setValuesByPost();
 			$this->template->setContent($view->getHTML());
 		}
+	}
+
+	private function cancel() {
+		$this->controlFlow->redirectByClass(xsrlContentGUI::class, CommonControllerAction::CMD_INDEX);
 	}
 }

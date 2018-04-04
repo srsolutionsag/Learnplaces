@@ -10,19 +10,19 @@ common_status#:#Status
 common_cancel#:#Abbrechen
 common_offline#:#Inaktiv
 common_online#:#Aktiv
-common_add#:#Hinzufügen
+common_add#:#Hinzuf&uuml;gen
 common_edit#:#Bearbeiten
 common_save#:#Speichern
 common_delete#:#L&ouml;schen
 common_visibility#:#Sichtbarkeit
-common_access_denied#:#Sie verfügen nicht über die erforderlichen Berechtigungen.
+common_access_denied#:#Sie verf&uuml;gen nicht die erforderlichen Berechtigungen.
 common_title#:#Titel
 common_description#:#Beschreibung
 
 message_changes_save_success#:#&Auml;nderungen erfolgreich gespeichert.
 message_delete_success#:#Block erfolgreich gel&ouml;scht.
-message_create_failure#:#Fehler bei der Block Erstellung.
-error_message_no_map_found#:#Keine Karte gefunden f&uuml;r den aktuellen Lernort.
+message_create_failure#:#Fehler beim Erstellen des Blocks.
+error_message_no_map_found#:#F&uuml;r den aktuellen Lernort ist keine Karte vorhanden.
 
 tabs_content#:#Inhalt
 tabs_edit#:#Block bearbeiten
@@ -32,17 +32,17 @@ tabs_map#:#Karte
 block_specific_settings#:#Block spezifische Einstellungen
 picture_upload_block_content#:#Bildupload Block
 
-confirm_delete_header#:#Achtung, der block wird unwiderruflich gelöscht!
+confirm_delete_header#:#Achtung, der block wird unwiderruflich gel&ouml;scht!
 
 block_rich_text#:#Rich text
 block_map#:#Karte
 block_ilias_link#:#ILIAS link
-block_accordion#:#Accordeon
+block_accordion#:#Akkordeon
 block_picture#:#Bild
 block_picture_upload#:#Bilderupload
 block_video#:#Video
-block_type_title#:#Verfügbare Blöcke:
-block_add_header#:#Block hinzufügen
+block_type_title#:#Verf&uuml;gbare Bl&ouml;cke:
+block_add_header#:#Block hinzuf&uuml;gen
 
 picture_block_enter_title#:#Titel
 picture_block_enter_description#:#Beschreibung
@@ -68,11 +68,12 @@ visibility_never#:#Nie sichtbar
 setting_location#:#Position
 setting_general#:#Allgemein
 setting_radius#:#Radius
-setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross das Umfeld des Lernortes ist. Es wird generel empfohlen den Wert von 50 Metern nicht zu unterschreiten. Der minimum Radius beträgt 1 Meter und der maximale 40'000 Meter.
-setting_validation_failure_radius#:#Ein gütiger Radius befindet sich zwischen 1 und 40'000 Meter.
+setting_radius_info#:#Der Radius wird in Metern angegeben und bestimmt wie gross das Umfeld des Lernortes ist. Es wird generell empfohlen den Wert von 50 Metern nicht zu unterschreiten. Der minimum Radius beträgt 1 Meter und der maximale 40'000 Meter.
+setting_validation_failure_radius#:#Ein g&uuml;tiger Radius befindet sich zwischen 1 und 40'000 Meter.
+setting_visibility_default#:#Standart Sichtbarkeit
 
 content_save_sequence#:#Reihenfolge speichern
 
 news_created#:#Lernort wurde erstellt.
 news_updated#:#Lernort Einstellungen wurden aktualisiert.
-news_deleted#:#Lernort wurde gelöscht.
+news_deleted#:#Lernort wurde gel&ouml;scht.

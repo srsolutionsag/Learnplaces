@@ -36,9 +36,13 @@ final class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 		return self::$instance;
 	}
 
+
+
 	public function getPluginName() {
 		return self::PLUGIN_NAME;
 	}
+
+
 
 
 	protected function uninstallCustom() {
@@ -47,8 +51,8 @@ final class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 	}
 
 	private function dropDatabase() {
-		global $DIC;
-		$database = $DIC->database();
+
+		$database = PluginContainer::resolve(ilDB::class);
 		$database->dropTable(\SRAG\Learnplaces\persistence\entity\AccordionBlock::returnDbTableName(), false);
 		$database->dropTable(\SRAG\Learnplaces\persistence\entity\AccordionBlockMember::returnDbTableName(), false);
 		$database->dropTable(\SRAG\Learnplaces\persistence\entity\Answer::returnDbTableName(), false);
