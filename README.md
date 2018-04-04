@@ -94,4 +94,4 @@ Farbweg 9
 Switzerland
 
 [info@studer-raimann.ch](mailto:info@studer-raimann.ch)  
-<www.studer-raimann.ch>
+<https://www.studer-raimann.ch>
