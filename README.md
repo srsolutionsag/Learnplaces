@@ -23,6 +23,24 @@ php composer.phar install --no-dev
 ```  
 As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.  
 
+## Update
+
+### Composer
+Update composer to the latest version.
+
+Composer update guide <https://getcomposer.org/doc/03-cli.md#self-update-selfupdate->
+
+### Plugin
+Start at your ILIAS root directory
+
+```bash
+cd Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces
+git pull
+php composer.phar install --no-dev
+```
+
+As ILIAS administrator go to "Administration->Plugins" and update/activate the plugin.
+
 ## Versioning
 We use SemVer for versioning. For the versions available, see the tags on this repository.
 
