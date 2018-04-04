@@ -67,7 +67,7 @@ enabled in order to use the rich text editing functionality of the plugin.
 We use SemVer for versioning. For the versions available, see the tags on this repository.
 
 ## License
-This project is licensed under the GNU LGPLv3 License - see the LICENSE.md file for details.
+This project is licensed under the GNU GPLv3 License - see the LICENSE.md file for details.
 
 ## Acknowledgments
 [composer](https://getcomposer.org/)
