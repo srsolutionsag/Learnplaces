@@ -51,7 +51,7 @@ final class ilObjLearnplacesListGUI extends ilObjectPluginListGUI {
 		$this->delete_enabled = true;
 
 		// Should be overwritten according to status
-		$this->cut_enabled = false;
+		$this->cut_enabled = true;
 		$this->copy_enabled = false;
 
 		$commands = array(
