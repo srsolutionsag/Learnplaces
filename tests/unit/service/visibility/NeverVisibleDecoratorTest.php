@@ -36,7 +36,7 @@ class NeverVisibleDecoratorTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->learnplaceServiceMock = Mockery::mock(LearnplaceService::class);
 		$this->subject = new NeverVisibleDecorator($this->learnplaceServiceMock);
@@ -48,7 +48,7 @@ class NeverVisibleDecoratorTest extends TestCase {
 	 * @small
 	 * @dataProvider blockDataProvider
 	 */
-	public function testFindByObjectIdWithoutAccordionBlocksWhichShouldSucceed($blocks, $expected) {
+	public function testFindByObjectIdWithoutAccordionBlocksWhichShouldSucceed($blocks, $expected): void {
 		$learnplaceModel = new LearnplaceModel();
 		$learnplaceModel->setId(5)
 			->setObjectId(45)

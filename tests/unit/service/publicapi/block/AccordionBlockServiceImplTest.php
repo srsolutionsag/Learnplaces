@@ -42,7 +42,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 
 		$this->accordionBlockRepositoryMock = Mockery::mock(AccordionBlockRepository::class);
@@ -55,7 +55,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new AccordionBlockModel();
 		$model
 			->setTitle('Title')
@@ -80,7 +80,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$model = new AccordionBlockModel();
 		$model
 			->setTitle('Title')
@@ -105,7 +105,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithMissingBlockWhichShouldFail() {
+	public function testFindWithMissingBlockWhichShouldFail(): void {
 		$modelId = 6;
 
 		$this->accordionBlockRepositoryMock
@@ -123,7 +123,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$blockId = 6;
 		$accordion = new AccordionBlockModel();
 		$accordion->setId($blockId);
@@ -150,7 +150,7 @@ class AccordionBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithMissingCommentWhichShouldFail() {
+	public function testDeleteWithMissingCommentWhichShouldFail(): void {
 		$blockId = 6;
 		$accordion = new AccordionBlockModel();
 		$accordion->setId($blockId);

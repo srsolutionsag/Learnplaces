@@ -34,7 +34,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->configurationRepositoryMock = Mockery::mock(ConfigurationRepository::class);
 		$this->subject = new ConfigurationServiceImpl($this->configurationRepositoryMock);
@@ -44,7 +44,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new ConfigurationModel();
 		$model
 			->setId(6)
@@ -63,7 +63,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$model = new ConfigurationModel();
 		$model
 			->setId(6)
@@ -82,7 +82,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->configurationRepositoryMock
@@ -103,7 +103,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$dto = new Configuration();
 		$dto
 			->setId(6)
@@ -122,7 +122,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithInvalidIdWhichShouldFail() {
+	public function testFindWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->configurationRepositoryMock
@@ -141,7 +141,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindByObjectIdWhichShouldSucceed() {
+	public function testFindByObjectIdWhichShouldSucceed(): void {
 		$objectId = 280;
 		$dto = new Configuration();
 		$dto
@@ -161,7 +161,7 @@ class ConfigurationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindByObjectIdWithInvalidIdWhichShouldFail() {
+	public function testFindByObjectIdWithInvalidIdWhichShouldFail(): void {
 		$objectId = 6;
 
 		$this->configurationRepositoryMock

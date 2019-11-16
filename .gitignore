@@ -75,3 +75,6 @@ fabric.properties
 .idea/sonarlint
 
 # End of https://www.gitignore.io/api/composer,phpstorm
+
+# Ignore phpunit result cache
+.phpunit.result.*

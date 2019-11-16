@@ -66,7 +66,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->learnplaceRepositoryMock = Mockery::mock(LearnplaceRepository::class);
 		$this->configurationServiceMock = Mockery::mock(ConfigurationService::class);
@@ -82,7 +82,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$dto = $this->createLearnplace()->toDto();
 
 		$this->learnplaceRepositoryMock
@@ -98,7 +98,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithNonExistentIdWhichShouldFail() {
+	public function testFindWithNonExistentIdWhichShouldFail(): void {
 		$learnplaceId = 1;
 
 		$this->learnplaceRepositoryMock
@@ -117,7 +117,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindByObjectIdWhichShouldSucceed() {
+	public function testFindByObjectIdWhichShouldSucceed(): void {
 		$dto = $this->createLearnplace()->toDto();
 
 		$this->learnplaceRepositoryMock
@@ -133,7 +133,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindByObjectIdWithNonExistentIdWhichShouldFail() {
+	public function testFindByObjectIdWithNonExistentIdWhichShouldFail(): void {
 		$objectId = 45;
 
 		$this->learnplaceRepositoryMock
@@ -152,7 +152,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$dto = $this->createLearnplace()->toDto();
 		$dto->setId(1)
 			->setLocation(new Location())
@@ -172,7 +172,7 @@ class LearnplaceServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWithNonPersistentChildWhichShouldFail() {
+	public function testStoreWithNonPersistentChildWhichShouldFail(): void {
 		$dto = $this->createLearnplace()->toDto();
 
 		$this->learnplaceRepositoryMock

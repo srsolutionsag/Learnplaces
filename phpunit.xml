@@ -34,8 +34,8 @@
 		failOnWarning="true"
 		>
 	<testsuites>
-		<testsuite name="ILIAS plugin Learnplaces Test Suite">
-			<directory suffix="Test.php" phpVersion="7.0.8" phpVersionOperator=">=">.</directory>
+		<testsuite name="Learnplaces Unit Tests">
+			<directory suffix="Test.php" phpVersion="7.2.0" phpVersionOperator=">=">./unit</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

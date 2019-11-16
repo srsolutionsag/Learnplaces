@@ -1,5 +1,4 @@
 <?php
-declare(strict_types=1);
 
 namespace SRAG\Learnplaces\service\publicapi\block;
 
@@ -8,51 +7,53 @@ use Mockery;
 use Mockery\MockInterface;
 use PHPUnit\Framework\TestCase;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
-use SRAG\Learnplaces\persistence\repository\MapBlockRepository;
-use SRAG\Learnplaces\service\publicapi\model\MapBlockModel;
+use SRAG\Learnplaces\persistence\repository\RichTextBlockRepository;
+use SRAG\Learnplaces\service\publicapi\model\RichTextBlockModel;
 
 /**
- * Class MapBlockServiceImplTest
+ * Class RichTextBlockServiceImplTest
  *
  * @package SRAG\Learnplaces\service\publicapi\block
  *
  * @author  Nicolas Schäfli <ns@studer-raimann.ch>
  */
-class MapBlockServiceImplTest extends TestCase {
+class RichTextBlockServiceImplTest extends TestCase {
 
 	use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 	/**
-	 * @var MapBlockRepository|MockInterface $mapBlockRepositoryMock
+	 * @var RichTextBlockRepository|MockInterface $richTextBlockRepositoryMock
 	 */
-	private $mapBlockRepositoryMock;
+	private $richTextBlockRepositoryMock;
 	/**
-	 * @var MapBlockServiceImpl $subject
+	 * @var RichTextBlockServiceImpl $subject
 	 */
 	private $subject;
 
 	/**
 	 * @inheritDoc
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
-		
-		$this->mapBlockRepositoryMock = Mockery::mock(MapBlockRepository::class);
-		$this->subject = new MapBlockServiceImpl($this->mapBlockRepositoryMock);
+
+		$this->richTextBlockRepositoryMock = Mockery::mock(RichTextBlockRepository::class);
+		$this->subject = new RichTextBlockServiceImpl($this->richTextBlockRepositoryMock);
 	}
 
 	/**
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
-		$model = new MapBlockModel();
-		$model->setId(6)
+	public function testStoreWhichShouldSucceed(): void {
+		$model = new RichTextBlockModel();
+		$model
+			->setContent("Hello World")
+			->setId(6)
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->mapBlockRepositoryMock
+		$this->richTextBlockRepositoryMock
 			->shouldReceive('store')
 			->once()
 			->with(Mockery::any())
@@ -65,13 +66,15 @@ class MapBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
-		$model = new MapBlockModel();
-		$model->setId(6)
+	public function testDeleteWhichShouldSucceed(): void {
+		$model = new RichTextBlockModel();
+		$model
+			->setContent("Hello World")
+			->setId(6)
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->mapBlockRepositoryMock
+		$this->richTextBlockRepositoryMock
 			->shouldReceive('delete')
 			->once()
 			->with($model->getId())
@@ -84,17 +87,17 @@ class MapBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
-		$this->mapBlockRepositoryMock
+		$this->richTextBlockRepositoryMock
 			->shouldReceive('delete')
 			->once()
 			->with($blockId)
 			->andThrow(new EntityNotFoundException('Entity not found'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The map block with the given id could not be deleted, because the block was not found.');
+		$this->expectExceptionMessage('The rich text block with the given id could not be deleted, because the block was not found.');
 
 		$this->subject->delete($blockId);
 
@@ -105,13 +108,15 @@ class MapBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
-		$model = new MapBlockModel();
-		$model->setId(6)
+	public function testFindWhichShouldSucceed(): void {
+		$model = new RichTextBlockModel();
+		$model
+			->setContent("Hello World")
+			->setId(6)
 			->setSequence(15)
 			->setVisibility("ALWAYS");
 
-		$this->mapBlockRepositoryMock
+		$this->richTextBlockRepositoryMock
 			->shouldReceive('findByBlockId')
 			->once()
 			->with($model->getId())
@@ -124,17 +129,17 @@ class MapBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithInvalidIdWhichShouldFail() {
+	public function testFindWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
-		$this->mapBlockRepositoryMock
+		$this->richTextBlockRepositoryMock
 			->shouldReceive('findByBlockId')
 			->once()
 			->with($blockId)
 			->andThrow(new EntityNotFoundException('Entity not found'));
 
 		$this->expectException(InvalidArgumentException::class);
-		$this->expectExceptionMessage('The map block with the given id does not exist.');
+		$this->expectExceptionMessage('The rich text block with the given id does not exist.');
 
 		$this->subject->find($blockId);
 

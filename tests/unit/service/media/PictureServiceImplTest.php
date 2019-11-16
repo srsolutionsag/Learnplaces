@@ -61,7 +61,7 @@ class PictureServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->pictureRepositoryMock = Mockery::mock(PictureRepository::class);
 		$this->requestMock = Mockery::mock(ServerRequestInterface::class);
@@ -76,7 +76,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithNoUploadWhichShouldFail() {
+	public function testStoreUploadWithNoUploadWhichShouldFail(): void {
 		$this->requestMock->shouldReceive('getUploadedFiles')
 			->once()
 			->withNoArgs()
@@ -92,7 +92,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithErrorUploadWhichShouldFail() {
+	public function testStoreUploadWithErrorUploadWhichShouldFail(): void {
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
 		 */
@@ -118,7 +118,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail() {
+	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail(): void {
 
 		$filename = 'TheAnswerIs42.php';
 
@@ -158,7 +158,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWhichShouldSucceed() {
+	public function testStoreUploadWhichShouldSucceed(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';
@@ -249,7 +249,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidPictureContentWhichShouldFail() {
+	public function testStoreUploadWithInvalidPictureContentWhichShouldFail(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';

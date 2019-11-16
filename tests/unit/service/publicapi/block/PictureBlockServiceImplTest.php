@@ -40,7 +40,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	/**
 	 * @inheritDoc
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 		$this->pictureService = Mockery::mock(PictureService::class);
 		$this->pictureBlockRepositoryMock = Mockery::mock(PictureBlockRepository::class);
@@ -51,7 +51,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new PictureBlockModel();
 		$model
 			->setId(6)
@@ -71,7 +71,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$picture = new PictureModel();
 		$picture->setId(56);
 
@@ -106,7 +106,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithoutPictureWhichShouldSucceed() {
+	public function testDeleteWithoutPictureWhichShouldSucceed(): void {
 		$model = new PictureBlockModel();
 		$model
 			->setId(6)
@@ -131,7 +131,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->pictureBlockRepositoryMock
@@ -152,7 +152,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$model = new PictureBlockModel();
 		$model
 			->setId(6)
@@ -172,7 +172,7 @@ class PictureBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithInvalidIdWhichShouldFail() {
+	public function testFindWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->pictureBlockRepositoryMock

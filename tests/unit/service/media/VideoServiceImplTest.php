@@ -39,7 +39,7 @@ class VideoServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->requestMock = Mockery::mock(ServerRequestInterface::class);
 		$this->fileTypeDetectorMock = Mockery::mock(FileTypeDetector::class);
@@ -50,7 +50,7 @@ class VideoServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithNoUploadWhichShouldFail() {
+	public function testStoreUploadWithNoUploadWhichShouldFail(): void {
 		$this->requestMock->shouldReceive('getUploadedFiles')
 			->once()
 			->withNoArgs()
@@ -66,7 +66,7 @@ class VideoServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithErrorUploadWhichShouldFail() {
+	public function testStoreUploadWithErrorUploadWhichShouldFail(): void {
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
 		 */
@@ -92,7 +92,7 @@ class VideoServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail() {
+	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail(): void {
 
 		$filename = 'TheAnswerIs42.avi';
 
@@ -131,7 +131,7 @@ class VideoServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidVideoContentWhichShouldFail() {
+	public function testStoreUploadWithInvalidVideoContentWhichShouldFail(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.mp4';
@@ -184,7 +184,7 @@ class VideoServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWhichShouldSucceed() {
+	public function testStoreUploadWhichShouldSucceed(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.mp4';

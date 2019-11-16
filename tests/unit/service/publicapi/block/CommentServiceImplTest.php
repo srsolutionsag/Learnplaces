@@ -36,7 +36,7 @@ class CommentServiceImplTest extends TestCase {
 	/**
 	 * @inheritDoc
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->commentRepositoryMock = Mockery::mock(CommentRepository::class);
@@ -48,7 +48,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreCommentWithNoAnswersWhichShouldSucceed() {
+	public function testStoreCommentWithNoAnswersWhichShouldSucceed(): void {
 		$comment = new CommentModel();
 		$comment
 			->setId(0)
@@ -70,7 +70,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreCommentWithNonPersistentAnswerWhichShouldFail() {
+	public function testStoreCommentWithNonPersistentAnswerWhichShouldFail(): void {
 		$comment = new CommentModel();
 		$comment
 			->setContent("Hello World")
@@ -93,7 +93,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$comment = new CommentModel();
 		$comment
 			->setContent("Hello World")
@@ -114,7 +114,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithMissingCommentWhichShouldFail() {
+	public function testFindWithMissingCommentWhichShouldFail(): void {
 		$comment = new CommentModel();
 		$comment
 			->setContent("Hello World")
@@ -138,7 +138,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$commentId = 6;
 
 		$this->commentRepositoryMock
@@ -153,7 +153,7 @@ class CommentServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithMissingCommentWhichShouldFail() {
+	public function testDeleteWithMissingCommentWhichShouldFail(): void {
 		$commentId = 6;
 
 		$this->commentRepositoryMock

@@ -42,7 +42,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	/**
 	 * @inheritDoc
 	 */
-	protected function setUp() {
+	protected function setUp(): void {
 		parent::setUp();
 
 		$this->videoServiceMock = Mockery::mock(VideoService::class);
@@ -54,7 +54,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new VideoBlockModel();
 		$model->setId(6)
 			->setSequence(15)
@@ -73,7 +73,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$model = new VideoBlockModel();
 		$model
 			->setPath("Hello")
@@ -104,7 +104,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->videoBlockRepositoryMock
@@ -125,7 +125,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$model = new VideoBlockModel();
 		$model
 			->setPath("Hello")
@@ -147,7 +147,7 @@ class VideoBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithInvalidIdWhichShouldFail() {
+	public function testFindWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->videoBlockRepositoryMock
