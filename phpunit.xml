@@ -3,14 +3,14 @@
 		xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.4/phpunit.xsd"
 		backupGlobals="false"
 		backupStaticAttributes="false"
-		bootstrap="bootstrap.php"
+		bootstrap="tests/bootstrap.php"
 		cacheTokens="false"
 		colors="true"
 		convertErrorsToExceptions="true"
 		convertNoticesToExceptions="true"
 		convertWarningsToExceptions="true"
 		forceCoversAnnotation="false"
-		printerClass="PHPUnit_TextUI_ResultPrinter"
+		printerClass="PHPUnit\TextUI\ResultPrinter"
 		processIsolation="false"
 		stopOnWarning="false"
 		stopOnError="false"
@@ -35,7 +35,7 @@
 		>
 	<testsuites>
 		<testsuite name="Learnplaces Unit Tests">
-			<directory suffix="Test.php" phpVersion="7.2.0" phpVersionOperator=">=">./unit</directory>
+			<directory suffix="Test.php" phpVersion="7.2.0" phpVersionOperator=">=">tests/unit</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>
