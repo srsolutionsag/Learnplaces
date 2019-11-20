@@ -87,14 +87,16 @@ final class PictureServiceImpl implements PictureService {
 		if($this->hasUploadedFiles() === false)
 			throw new LogicException('Unable to store image without upload.');
 
+		$files = $this->request->getUploadedFiles();
 		/**
 		 * @var UploadedFileInterface $file
 		 */
-		$file = array_pop($this->request->getUploadedFiles());
+		$file = array_pop($files);
 		$this->validateUpload($file);
 
 		$path = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');
-		$this->filesystem->putStream($path, $file->getStream()->detach());
+		$uploadedFile = $file->getStream()->detach();
+		$this->filesystem->putStream($path, $uploadedFile);
 
 		//TODO: specify valid picture header !!!
 		//$this->validateImageContent($path);
