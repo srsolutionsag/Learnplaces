@@ -32,7 +32,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 */
 	private $subject;
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->iliasLinkBlockRepositoryMock = Mockery::mock(ILIASLinkBlockRepository::class);
 		$this->subject = new ILIASLinkBlockServiceImpl($this->iliasLinkBlockRepositoryMock);
@@ -42,7 +42,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new ILIASLinkBlockModel();
 		$model
 			->setRefId(234)
@@ -61,7 +61,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$model = new ILIASLinkBlockModel();
 		$model
 			->setRefId(56)
@@ -80,7 +80,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithMissingBlockWhichShouldFail() {
+	public function testFindWithMissingBlockWhichShouldFail(): void {
 		$modelId = 6;
 
 		$this->iliasLinkBlockRepositoryMock
@@ -98,7 +98,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$commentId = 6;
 
 		$this->iliasLinkBlockRepositoryMock
@@ -113,7 +113,7 @@ class ILIASLinkBlockServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithMissingCommentWhichShouldFail() {
+	public function testDeleteWithMissingCommentWhichShouldFail(): void {
 		$commentId = 6;
 
 		$this->iliasLinkBlockRepositoryMock

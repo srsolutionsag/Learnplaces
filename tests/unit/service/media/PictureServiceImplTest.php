@@ -61,7 +61,7 @@ class PictureServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->pictureRepositoryMock = Mockery::mock(PictureRepository::class);
 		$this->requestMock = Mockery::mock(ServerRequestInterface::class);
@@ -76,7 +76,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithNoUploadWhichShouldFail() {
+	public function testStoreUploadWithNoUploadWhichShouldFail(): void {
 		$this->requestMock->shouldReceive('getUploadedFiles')
 			->once()
 			->withNoArgs()
@@ -92,7 +92,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithErrorUploadWhichShouldFail() {
+	public function testStoreUploadWithErrorUploadWhichShouldFail(): void {
 		/**
 		 * @var UploadedFileInterface|MockInterface $file
 		 */
@@ -111,14 +111,15 @@ class PictureServiceImplTest extends TestCase {
 		$this->expectExceptionMessage('Unable to store picture due to an upload error.');
 		$this->expectExceptionCode(UPLOAD_ERR_PARTIAL);
 
-		$this->subject->storeUpload(42);
+		$objectId = 42;
+		$this->subject->storeUpload($objectId);
 	}
 
 	/**
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail() {
+	public function testStoreUploadWithInvalidFileExtensionWhichShouldFail(): void {
 
 		$filename = 'TheAnswerIs42.php';
 
@@ -150,7 +151,8 @@ class PictureServiceImplTest extends TestCase {
 		$this->expectExceptionMessage('Picture with invalid extension uploaded.');
 		$this->expectExceptionCode(UPLOAD_ERR_OK);
 
-		$this->subject->storeUpload(42);
+		$objectId = 42;
+		$this->subject->storeUpload($objectId);
 	}
 
 
@@ -158,7 +160,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWhichShouldSucceed() {
+	public function testStoreUploadWhichShouldSucceed(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';
@@ -184,7 +186,9 @@ class PictureServiceImplTest extends TestCase {
 				->getMock()
 			->shouldReceive('moveTo')
 				->once()
-				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"));
+				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
+                ->getMock();
+
 
 		$this->fileTypeDetectorMock->shouldReceive('detectByFilename')
 				->once()
@@ -194,7 +198,8 @@ class PictureServiceImplTest extends TestCase {
 			->shouldReceive('detectByContent')
 				->once()
 				->with(Mockery::pattern("/\.\/data\/default\/.*?\.png/"))
-				->andReturn([Detector::IMAGE, Detector::PNG, '']);
+				->andReturn([Detector::IMAGE, Detector::PNG, ''])
+                ->getMock();
 
 		$image = Mockery::mock(Image::class);
 		$this->imageManagerMock->shouldReceive('make')
@@ -239,7 +244,8 @@ class PictureServiceImplTest extends TestCase {
 				return $args;
 			});
 
-		$pictureModel = $this->subject->storeUpload(42);
+		$objectId = 42;
+		$pictureModel = $this->subject->storeUpload($objectId);
 
 		$this->assertRegExp("/\.\/data\/default\/.*?\.png/", $pictureModel->getOriginalPath(), 'Original path must match the path pattern.');
 		$this->assertRegExp("/\.\/data\/default\/.*?\.png/", $pictureModel->getPreviewPath(), 'Preview path must match the path pattern.');
@@ -249,7 +255,7 @@ class PictureServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreUploadWithInvalidPictureContentWhichShouldFail() {
+	public function testStoreUploadWithInvalidPictureContentWhichShouldFail(): void {
 
 		$webDir = './data/default';
 		$filename = 'TheAnswerIs42.png';
@@ -295,7 +301,8 @@ class PictureServiceImplTest extends TestCase {
 		$this->expectException(FileUploadException::class);
 		$this->expectExceptionMessage('Picture with invalid content uploaded.');
 
-		$this->subject->storeUpload(42);
+		$objectId = 42;
+		$this->subject->storeUpload($objectId);
 
 	}
 }

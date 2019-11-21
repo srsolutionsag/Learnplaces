@@ -34,7 +34,7 @@ class LocationServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->locationRepositoryMock = Mockery::mock(LocationRepository::class);
 		$this->subject = new LocationServiceImpl($this->locationRepositoryMock);
@@ -44,7 +44,7 @@ class LocationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWhichShouldSucceed() {
+	public function testStoreWhichShouldSucceed(): void {
 		$model = new LocationModel();
 		$model
 			->setId(6)
@@ -63,7 +63,7 @@ class LocationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$model = new LocationModel();
 		$model
 			->setId(6)
@@ -82,7 +82,7 @@ class LocationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->locationRepositoryMock
@@ -103,7 +103,7 @@ class LocationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$dto = new Location();
 		$dto
 			->setId(6)
@@ -122,7 +122,7 @@ class LocationServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithInvalidIdWhichShouldFail() {
+	public function testFindWithInvalidIdWhichShouldFail(): void {
 		$blockId = 6;
 
 		$this->locationRepositoryMock

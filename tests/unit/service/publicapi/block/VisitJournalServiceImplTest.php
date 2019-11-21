@@ -36,7 +36,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	private $subject;
 
 
-	public function setUp() {
+	public function setUp(): void {
 		parent::setUp();
 		$this->visitJournalRepositoryMock = Mockery::mock(VisitJournalRepository::class);
 		$this->subject = new VisitJournalServiceImpl($this->visitJournalRepositoryMock);
@@ -47,7 +47,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testStoreWithValidIdWhichShouldSucceed() {
+	public function testStoreWithValidIdWhichShouldSucceed(): void {
 		$visitJournal = new VisitJournalModel();
 		$visitJournal
 			->setId(6)
@@ -68,7 +68,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWhichShouldSucceed() {
+	public function testDeleteWhichShouldSucceed(): void {
 		$journalId = 6;
 		$this->visitJournalRepositoryMock->shouldReceive('delete')
 			->once()
@@ -81,7 +81,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testDeleteWithInvalidIdWhichShouldFail() {
+	public function testDeleteWithInvalidIdWhichShouldFail(): void {
 		$journalId = 6;
 		$this->visitJournalRepositoryMock->shouldReceive('delete')
 			->once()
@@ -98,7 +98,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWhichShouldSucceed() {
+	public function testFindWhichShouldSucceed(): void {
 		$journal = new VisitJournalModel();
 		$journal->setId(6)
 			->setUserId(45)
@@ -119,7 +119,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindWithNotExistingVisitJournalWhichShouldFail() {
+	public function testFindWithNotExistingVisitJournalWhichShouldFail(): void {
 		$journalId = 6;
 
 		$this->visitJournalRepositoryMock->shouldReceive('find')
@@ -137,7 +137,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindAllByObjectIdWithoutResultsWhichShouldSucceed() {
+	public function testFindAllByObjectIdWithoutResultsWhichShouldSucceed(): void {
 		$objectId = 6;
 
 		$this->visitJournalRepositoryMock->shouldReceive('findByObjectId')
@@ -152,7 +152,7 @@ class VisitJournalServiceImplTest extends TestCase {
 	 * @Test
 	 * @small
 	 */
-	public function testFindAllByObjectIdWithResultsWhichShouldSucceed() {
+	public function testFindAllByObjectIdWithResultsWhichShouldSucceed(): void {
 		$objectId = 6;
 
 		$dto = new VisitJournal();
