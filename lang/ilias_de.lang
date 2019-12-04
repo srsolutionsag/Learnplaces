@@ -19,8 +19,8 @@ xsrl_add#:#Erstellen
 common_create#:#Erstellen
 common_status#:#Status
 common_cancel#:#Abbrechen
-common_offline#:#Inaktiv
-common_online#:#Aktiv
+common_offline#:#Offline
+common_online#:#Online
 common_add#:#Hinzuf&uuml;gen
 common_edit#:#Bearbeiten
 common_save#:#Speichern
