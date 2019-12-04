@@ -1,3 +1,14 @@
+rep_robj_xsrl_root_create_xsrl#:#Create Learnplace
+rep_robj_xsrl_cat_create_xsrl#:#Create Learnplace
+rep_robj_xsrl_crs_create_xsrl#:#Create Learnplace
+rep_robj_xsrl_grp_create_xsrl#:#Create Learnplace
+rep_robj_xsrl_fold_create_xsrl#:#Create Learnplace
+rep_robj_xsrl_xsrl_visible#:#Visible: Learnplace is visible
+rep_robj_xsrl_xsrl_read#:#Read: User can read Learnplace
+rep_robj_xsrl_xsrl_write#:#Edit Settings: User can edit Learnplace
+rep_robj_xsrl_xsrl_delete#:#Delete: User can move or delete Learnplace
+rep_robj_xsrl_xsrl_edit_permission#:#Change Permissions: User can change permission settings
+
 objs_xsrl#:#Learnplaces
 objs_xsrl_duplicate#:#Copy existing learnplace
 obj_xsrl#:#Learnplace
