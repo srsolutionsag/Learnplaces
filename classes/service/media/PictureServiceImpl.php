@@ -122,8 +122,8 @@ final class PictureServiceImpl implements PictureService {
 			$picture = $this->pictureRepository->find($pictureId);
 			$this->pictureRepository->delete($pictureId);
 
-			$this->deleteFile($picture->getOriginalPath());
-			$this->deleteFile($picture->getPreviewPath());
+			$this->deleteFile(PathHelper::generateRelativePathFrom($picture->getOriginalPath()));
+			$this->deleteFile(PathHelper::generateRelativePathFrom($picture->getPreviewPath()));
 		}
 		catch (EntityNotFoundException $ex) {
 			throw new InvalidArgumentException("Unable to delete picture with id \"$pictureId\".", 0, $ex);

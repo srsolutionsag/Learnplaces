@@ -5,6 +5,7 @@ namespace SRAG\Lernplaces\persistence\mapping;
 
 use SRAG\Learnplaces\persistence\dto\Picture;
 use SRAG\Learnplaces\service\publicapi\model\PictureModel;
+use SRAG\Learnplaces\service\filesystem\PathHelper;
 
 /**
  * Trait PictureDtoMappingAware
@@ -23,8 +24,8 @@ trait PictureDtoMappingAware {
 		 * @var PictureModel|PictureDtoMappingAware $this
 		 */
 		$dto = new Picture();
-		$dto->setPreviewPath($this->getPreviewPath())
-			->setOriginalPath($this->getOriginalPath())
+		$dto->setPreviewPath(PathHelper::generatePluginInternalPathFrom($this->getPreviewPath()))
+			->setOriginalPath(PathHelper::generatePluginInternalPathFrom($this->getOriginalPath()))
 			->setId($this->getId());
 
 		return $dto;
@@ -47,8 +48,8 @@ trait PictureModelMappingAware {
 		 * @var Picture|PictureDtoMappingAware $this
 		 */
 		$model = new PictureModel();
-		$model->setPreviewPath($this->getPreviewPath())
-			->setOriginalPath($this->getOriginalPath())
+		$model->setPreviewPath(PathHelper::generateRelativePathFrom($this->getPreviewPath()))
+			->setOriginalPath(PathHelper::generateRelativePathFrom($this->getOriginalPath()))
 			->setId($this->getId());
 
 		return $model;
