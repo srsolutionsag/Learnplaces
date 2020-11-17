@@ -32,21 +32,12 @@
             "./classes/class.ilObjLearnplacesAccess.php",
             "./classes/class.ilObjLearnplacesGUI.php",
             "./classes/class.ilObjLearnplacesListGUI.php",
-            "./classes/gui",
-            "../../../../../../../Services/Repository",
-            "../../../../../../../Services/Form",
-            "../../../../../../../Services/News",
-            "../../../../../../../Services/AccessControl",
-            "../../../../../../../Services/Link",
-            "../../../../../../../Services/UIComponent",
-            "../../../../../../../Services/Maps",
-            "../../../../../../../Services/Utilities",
-            "../../../../../../../Services/Component"
+            "./classes/gui"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "SRAG\\Learnplaces\\": "tests/"
+            "SRAG\\Learnplaces\\": "tests/unit/"
         }
     },
     "config": {
@@ -56,7 +47,10 @@
         "discard-changes": true,
         "htaccess-protect": true,
         "secure-http": true,
-        "process-timeout": 600
+        "process-timeout": 600,
+        "platform": {
+            "php": "7.0.0"
+        }
     },
     "require-dev": {
         "mockery/mockery": "^1.0",
