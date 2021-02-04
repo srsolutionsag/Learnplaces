@@ -91,7 +91,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$nextClass = $this->ctrl->getNextClass();
 
 		/**
-		 * @var ilTemplate $template
+		 * @var ilGlobalPageTemplate | ilTemplate $template
 		 */
 		$template = PluginContainer::resolve('tpl');
 		$template->setTitle(ilObject::_lookupTitle($this->objectId));
@@ -159,8 +159,12 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				$this->renderTabs();
 				$this->learnplaceTabs->activateTab(self::TAB_ID_PERMISSION);
 				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
-				$template->getStandardTemplate();
-				$template->show();
+                if ($template instanceof ilGlobalPageTemplate) {
+                    $template->printToStdout();
+                } else {
+                    $template->getStandardTemplate();
+                    $template->show();
+                }
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class, $this->getStandardCmd());
@@ -204,7 +208,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 * @inheritdoc
 	 */
 	protected function supportsCloning() {
-		return false;
+		return true;
 	}
 
 
@@ -222,8 +226,10 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	private function renderTabs() {
 		$this->learnplaceTabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
-		if($this->hasMap())
-			$this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
+		if($this->accessGuard->hasWritePermission() && !$this->hasMap())
+            $this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_ADD));
+		else if ($this->hasMap())
+            $this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
 		if($this->accessGuard->hasWritePermission()) {
 			$this->learnplaceTabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}

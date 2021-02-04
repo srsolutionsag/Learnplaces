@@ -69,15 +69,11 @@ final class BlockAddFormGUI extends ilPropertyFormGUI {
 		$accordionOption = new ilRadioOption($this->plugin->txt('block_accordion'), BlockType::ACCORDION);
 		$accordionOption->setDisabled(!$this->accordionEnabled);
 
-		$mapOption = new ilRadioOption($this->plugin->txt('block_map'), BlockType::MAP);
-		$mapOption->setDisabled(!$this->mapEnabled);
-
 		$radioGroup = new ilRadioGroupInputGUI($this->plugin->txt('block_type_title'), self::POST_BLOCK_TYPES);
 		//$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture_upload'), BlockType::PICTURE_UPLOAD));
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_picture'), BlockType::PICTURE));
 		$radioGroup->addOption($accordionOption);
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_ilias_link'), BlockType::ILIAS_LINK));
-		$radioGroup->addOption($mapOption);
 		$radioGroup->addOption(new ilRadioOption($this->plugin->txt('block_rich_text'), BlockType::RICH_TEXT));
 		$radioGroup->addOption((new ilRadioOption($this->plugin->txt('block_video'), BlockType::VIDEO)));
 		$radioGroup->setValue(BlockType::PICTURE);

@@ -1,12 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Learnplaces\container\provider;
+namespace SRAG\Learnplaces\container\provider\v54;
 
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Zend\Diactoros\ServerRequestFactory;
 
 /**
  * Class HttpServiceProvider
@@ -19,16 +18,7 @@ final class HttpServiceProvider implements ServiceProviderInterface {
 
 	public function register(Container $pimple) {
 		$pimple[ServerRequestInterface::class] = function(Container $c): ServerRequestInterface {
-			if($c->offsetExists('http'))
-				return $c['http']->request(); //use ilias 5.3 http service
-
-			//use Zend Diactoros
-			return ServerRequestFactory::fromGlobals($_SERVER,
-				$_GET,
-				$_POST,
-				$_COOKIE,
-				$_FILES
-			);
+		    return $c['http']->request();
 		};
 	}
 }

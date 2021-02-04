@@ -12,7 +12,6 @@ use SRAG\Learnplaces\persistence\entity\Block;
 use SRAG\Learnplaces\persistence\entity\Visibility;
 use SRAG\Learnplaces\persistence\repository\exception\EntityNotFoundException;
 use SRAG\Learnplaces\persistence\repository\util\BlockAccumulator;
-use SRAG\Learnplaces\service\publicapi\block\AccordionBlockService;
 
 class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 
@@ -222,11 +221,15 @@ class AccordionBlockRepositoryImpl implements AccordionBlockRepository {
 			 * @var \SRAG\Learnplaces\persistence\dto\Block $block
 			 */
 			foreach($blocks as $block) {
+                /**
+                 * @var Block $blockEntity
+                 */
 				$blockEntity = Block::findOrFail($block->getId());
-				/**
-				 * @var Block $blockEntity
-				 */
-				$blockEntity->setFkLearnplaceId($learnplace->getPkId());
+
+				// Only update the learnplace relation if we have one, for example while cloning we don't know the learnplace relation until the end
+				if ($learnplace !== null) {
+                    $blockEntity->setFkLearnplaceId($learnplace->getPkId());
+                }
 				$blockEntity->setSequence($block->getSequence());
 				$blockEntity->update();
 

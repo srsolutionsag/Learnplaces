@@ -18,8 +18,7 @@
         "intervention/image": "^2.4",
         "league/flysystem": "^1.0",
         "sabre/uri": "^2.1",
-        "wapmorgan/file-type-detector": "^1.1",
-        "zendframework/zend-diactoros": "^1.6"
+        "wapmorgan/file-type-detector": "^1.1"
     },
     "autoload": {
         "psr-4": {
@@ -32,21 +31,12 @@
             "./classes/class.ilObjLearnplacesAccess.php",
             "./classes/class.ilObjLearnplacesGUI.php",
             "./classes/class.ilObjLearnplacesListGUI.php",
-            "./classes/gui",
-            "../../../../../../../Services/Repository",
-            "../../../../../../../Services/Form",
-            "../../../../../../../Services/News",
-            "../../../../../../../Services/AccessControl",
-            "../../../../../../../Services/Link",
-            "../../../../../../../Services/UIComponent",
-            "../../../../../../../Services/Maps",
-            "../../../../../../../Services/Utilities",
-            "../../../../../../../Services/Component"
+            "./classes/gui"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "SRAG\\Learnplaces\\": "tests/"
+            "SRAG\\Learnplaces\\": "tests/unit/"
         }
     },
     "config": {
@@ -56,13 +46,20 @@
         "discard-changes": true,
         "htaccess-protect": true,
         "secure-http": true,
-        "process-timeout": 600
+        "process-timeout": 600,
+        "platform": {
+            "php": "7.0.0"
+        }
     },
     "require-dev": {
-        "mockery/mockery": "^1.0",
-        "phpunit/phpunit": "^8.4"
     },
     "scripts": {
-        "test": "./vendor/bin/phpunit"
+        "test": "../../../../../../../libs/composer/vendor/bin/phpunit",
+        "php-lint-70": "docker run --rm -v $(pwd):/source:ro -w /source php:8.0-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )",
+        "php-lint-71": "docker run --rm -v $(pwd):/source:ro -w /source php:7.1-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )",
+        "php-lint-72": "docker run --rm -v $(pwd):/source:ro -w /source php:7.2-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )",
+        "php-lint-73": "docker run --rm -v $(pwd):/source:ro -w /source php:7.3-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )",
+        "php-lint-74": "docker run --rm -v $(pwd):/source:ro -w /source php:7.4-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )",
+        "php-lint-80": "docker run --rm -v $(pwd):/source:ro -w /source php:8.0-cli find . -type f -name '*.php' -exec php -l {} \\; | (! grep -v \"No syntax errors detected\" )"
     }
 }

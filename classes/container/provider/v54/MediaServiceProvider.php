@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace SRAG\Learnplaces\container\provider;
+namespace SRAG\Learnplaces\container\provider\v54;
 
 use const ILIAS_ABSOLUTE_PATH;
 use Intervention\Image\ImageManager;

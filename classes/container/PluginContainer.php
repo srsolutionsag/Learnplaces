@@ -7,15 +7,15 @@ use ILIAS\DI\Container;
 use InvalidArgumentException;
 use Pimple\ServiceProviderInterface;
 use SRAG\Learnplaces\container\exception\DependencyResolutionException;
-use SRAG\Learnplaces\container\provider\BlockServiceProvider;
-use SRAG\Learnplaces\container\provider\GUIProvider;
-use SRAG\Learnplaces\container\provider\HttpServiceProvider;
-use SRAG\Learnplaces\container\provider\MediaServiceProvider;
-use SRAG\Learnplaces\container\provider\PluginProvider;
-use SRAG\Learnplaces\container\provider\RepositoryProvider;
-use SRAG\Learnplaces\container\provider\SecurityServiceProvider;
-use SRAG\Learnplaces\container\provider\ViewProvider;
-use SRAG\Learnplaces\container\provider\VisibilityServiceProvider;
+use SRAG\Learnplaces\container\provider\v54\BlockServiceProvider;
+use SRAG\Learnplaces\container\provider\v54\GUIProvider;
+use SRAG\Learnplaces\container\provider\v54\HttpServiceProvider;
+use SRAG\Learnplaces\container\provider\v54\MediaServiceProvider;
+use SRAG\Learnplaces\container\provider\v54\PluginProvider;
+use SRAG\Learnplaces\container\provider\v54\RepositoryProvider;
+use SRAG\Learnplaces\container\provider\v54\SecurityServiceProvider;
+use SRAG\Learnplaces\container\provider\v54\ViewProvider;
+use SRAG\Learnplaces\container\provider\v54\VisibilityServiceProvider;
 
 /**
  * Class PluginContainer
@@ -32,7 +32,7 @@ final class PluginContainer {
 	/**
 	 * @var ServiceProviderInterface[] $provider
 	 */
-	private static $provider = [
+	private static $provider54 = [
 		PluginProvider::class,
 		RepositoryProvider::class,
 		MediaServiceProvider::class,
@@ -45,11 +45,28 @@ final class PluginContainer {
 
 		//Add new service provider here
 	];
+
+    /**
+     * @var ServiceProviderInterface[] $provider
+     */
+    private static $provider6 = [
+        PluginProvider::class,
+        RepositoryProvider::class,
+        MediaServiceProvider::class,
+        BlockServiceProvider::class,
+        \SRAG\Learnplaces\container\provider\v6\GUIProvider::class,
+        ViewProvider::class,
+        VisibilityServiceProvider::class,
+        HttpServiceProvider::class,
+        SecurityServiceProvider::class,
+
+        //Add new service provider here
+    ];
+
 	/**
 	 * @var Container $container
 	 */
 	private static $container;
-
 
 	/**
 	 * Bootstraps the plugin dependency container, with all service providers.
@@ -61,10 +78,17 @@ final class PluginContainer {
 	public static function bootstrap() {
 		static::$container = $GLOBALS['DIC'];
 
-		foreach (static::$provider as $providerClass) {
-			$provider = new $providerClass();
-			static::$container->register($provider);
-		}
+        if (version_compare(ILIAS_VERSION_NUMERIC, "6.0", "<")) {
+            foreach (static::$provider54 as $providerClass) {
+                $provider = new $providerClass();
+                static::$container->register($provider);
+            }
+        } else {
+            foreach (static::$provider6 as $providerClass) {
+                $provider = new $providerClass();
+                static::$container->register($provider);
+            }
+        }
 	}
 
 

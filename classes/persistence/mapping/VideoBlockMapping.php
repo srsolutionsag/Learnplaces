@@ -5,6 +5,7 @@ namespace SRAG\Lernplaces\persistence\mapping;
 
 use SRAG\Learnplaces\persistence\dto\VideoBlock;
 use SRAG\Learnplaces\service\publicapi\model\VideoBlockModel;
+use SRAG\Learnplaces\service\filesystem\PathHelper;
 
 /**
  * Trait VideoBlockDtoMappingAware
@@ -23,8 +24,8 @@ trait VideoBlockDtoMappingAware {
 		 */
 		$dto = new VideoBlock();
 		$dto
-			->setPath($this->getPath())
-			->setCoverPath($this->getCoverPath());
+			->setPath(PathHelper::generatePluginInternalPathFrom($this->getPath()))
+			->setCoverPath(PathHelper::generatePluginInternalPathFrom($this->getCoverPath()));
 
 		$this->fillBaseBlock($dto);
 
@@ -49,8 +50,8 @@ trait VideoBlockModelMappingAware {
 		 */
 		$model = new VideoBlockModel();
 		$model
-			->setPath($this->getPath())
-			->setCoverPath($this->getCoverPath());
+			->setPath(PathHelper::generateRelativePathFrom($this->getPath()))
+			->setCoverPath(PathHelper::generateRelativePathFrom($this->getCoverPath()));
 		$this->fillBaseBlock($model);
 
 		return $model;
