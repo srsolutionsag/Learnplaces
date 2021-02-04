@@ -93,10 +93,13 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 	/**
 	 * @inheritDoc
 	 */
-	public function storeAll(array $blocks) {
+	public function storeAll(array $blocks): array {
+	    $storedBlockModels = [];
 		foreach ($blocks as $block) {
-			$this->storeBlockByType($block);
+			$storedBlockModels[] = $this->storeBlockByType($block);
 		}
+
+		return $storedBlockModels;
 	}
 
 
@@ -129,29 +132,22 @@ final class DefaultBlockOperationDispatcher implements BlockOperationDispatcher 
 		}
 	}
 
-	private function storeBlockByType(BlockModel $block) {
+	private function storeBlockByType(BlockModel $block): BlockModel {
 		switch (true) {
 			case $block instanceof AccordionBlockModel:
-				$this->accordionBlockService->store($block);
-				return;
+				return $this->accordionBlockService->store($block);
 			case $block instanceof PictureBlockModel:
-				$this->pictureBlockService->store($block);
-				return;
+				return $this->pictureBlockService->store($block);
 			case $block instanceof ILIASLinkBlockModel:
-				$this->iliasLinkBlockService->store($block);
-				return;
+				return $this->iliasLinkBlockService->store($block);
 			case $block instanceof PictureUploadBlockModel:
-				$this->pictureUploadBlockService->store($block);
-				return;
+				return $this->pictureUploadBlockService->store($block);
 			case $block instanceof MapBlockModel:
-				$this->mapBlockService->store($block);
-				return;
+				return $this->mapBlockService->store($block);
 			case $block instanceof RichTextBlockModel:
-				$this->richTextBlockService->store($block);
-				return;
+				return $this->richTextBlockService->store($block);
 			case $block instanceof VideoBlockModel:
-				$this->videoBlockService->store($block);
-				return;
+				return $this->videoBlockService->store($block);
 			default:
 				throw new LogicException('Unable to dispatch block store operation');
 		}

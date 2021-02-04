@@ -30,7 +30,7 @@ interface BlockOperationDispatcher {
 	 *
 	 * @param BlockModel[] $blocks The array of blocks which should be stored.
 	 *
-	 * @return void
+	 * @return BlockModel[]
 	 */
-	public function storeAll(array $blocks);
+	public function storeAll(array $blocks): array;
 }
