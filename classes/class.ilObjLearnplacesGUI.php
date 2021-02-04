@@ -91,7 +91,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 		$nextClass = $this->ctrl->getNextClass();
 
 		/**
-		 * @var ilTemplate $template
+		 * @var ilGlobalPageTemplate | ilTemplate $template
 		 */
 		$template = PluginContainer::resolve('tpl');
 		$template->setTitle(ilObject::_lookupTitle($this->objectId));
@@ -159,8 +159,12 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				$this->renderTabs();
 				$this->learnplaceTabs->activateTab(self::TAB_ID_PERMISSION);
 				$this->ctrl->forwardCommand(new ilPermissionGUI($this));
-				$template->getStandardTemplate();
-				$template->show();
+                if ($template instanceof ilGlobalPageTemplate) {
+                    $template->printToStdout();
+                } else {
+                    $template->getStandardTemplate();
+                    $template->show();
+                }
 				break;
 			default:
 				$this->ctrl->redirectByClass(static::class, $this->getStandardCmd());
