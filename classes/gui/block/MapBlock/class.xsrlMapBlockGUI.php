@@ -37,7 +37,7 @@ final class xsrlMapBlockGUI {
 	 */
 	private $tabs;
 	/**
-	 * @var ilTemplate $template
+	 * @var ilGlobalPageTemplate | ilTemplate $template
 	 */
 	private $template;
 	/**
@@ -73,17 +73,17 @@ final class xsrlMapBlockGUI {
 	/**
 	 * xsrlMapBlockGUI constructor.
 	 *
-	 * @param ilTabsGUI              $tabs
-	 * @param ilTemplate             $template
-	 * @param ilCtrl                 $controlFlow
-	 * @param ilLearnplacesPlugin    $plugin
-	 * @param MapBlockService        $mapBlockService
-	 * @param LearnplaceService      $learnplaceService
-	 * @param ConfigurationService   $configService
-	 * @param ServerRequestInterface $request
-	 * @param AccessGuard            $blockAccessGuard
+	 * @param ilTabsGUI                                     $tabs
+	 * @param ilGlobalPageTemplate | ilTemplate             $template
+	 * @param ilCtrl                                        $controlFlow
+	 * @param ilLearnplacesPlugin                           $plugin
+	 * @param MapBlockService                               $mapBlockService
+	 * @param LearnplaceService                             $learnplaceService
+	 * @param ConfigurationService                          $configService
+	 * @param ServerRequestInterface                        $request
+	 * @param AccessGuard                                   $blockAccessGuard
 	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
+	public function __construct(ilTabsGUI $tabs, $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, MapBlockService $mapBlockService, LearnplaceService $learnplaceService, ConfigurationService $configService, ServerRequestInterface $request, AccessGuard $blockAccessGuard) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -98,7 +98,9 @@ final class xsrlMapBlockGUI {
 
 	public function executeCommand() {
 
-		$this->template->getStandardTemplate();
+	    if (version_compare(ILIAS_VERSION_NUMERIC, "6.0", "<")) {
+            $this->template->getStandardTemplate();
+        }
 		$cmd = $this->controlFlow->getCmd(CommonControllerAction::CMD_INDEX);
 		$this->tabs->activateTab(self::TAB_ID);
 
@@ -106,7 +108,11 @@ final class xsrlMapBlockGUI {
 			case CommonControllerAction::CMD_INDEX:
 				if ($this->blockAccessGuard->hasReadPermission()) {
 					$this->index();
-					$this->template->show();
+                    if ($this->template instanceof ilGlobalPageTemplate) {
+                        $this->template->printToStdout();
+                    } else {
+                        $this->template->show();
+                    }
 					return true;
 				}
 				break;
@@ -119,7 +125,11 @@ final class xsrlMapBlockGUI {
 			case CommonControllerAction::CMD_UPDATE:
 				if ($this->blockAccessGuard->hasWritePermission()) {
 					$this->{$cmd}();
-					$this->template->show();
+                    if ($this->template instanceof ilGlobalPageTemplate) {
+                        $this->template->printToStdout();
+                    } else {
+                        $this->template->show();
+                    }
 					return true;
 				}
 				break;
