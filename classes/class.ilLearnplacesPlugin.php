@@ -42,8 +42,10 @@ final class ilLearnplacesPlugin extends ilRepositoryObjectPlugin {
 		return self::PLUGIN_NAME;
 	}
 
-
-
+    public function allowCopy()
+    {
+        return true;
+    }
 
 	protected function uninstallCustom() {
 		$this->dropDatabase();

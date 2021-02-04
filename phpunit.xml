@@ -1,16 +1,14 @@
 <phpunit
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/6.4/phpunit.xsd"
+		xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
 		backupGlobals="false"
 		backupStaticAttributes="false"
 		bootstrap="tests/bootstrap.php"
-		cacheTokens="false"
 		colors="true"
 		convertErrorsToExceptions="true"
 		convertNoticesToExceptions="true"
 		convertWarningsToExceptions="true"
 		forceCoversAnnotation="false"
-		printerClass="PHPUnit\TextUI\ResultPrinter"
 		processIsolation="false"
 		stopOnWarning="false"
 		stopOnError="false"
@@ -35,7 +33,7 @@
 		>
 	<testsuites>
 		<testsuite name="Learnplaces Unit Tests">
-			<directory suffix="Test.php" phpVersion="7.2.0" phpVersionOperator=">=">tests/unit</directory>
+			<directory suffix="Test.php" phpVersion="7.3.0" phpVersionOperator=">=">tests/unit</directory>
 		</testsuite>
 	</testsuites>
 </phpunit>

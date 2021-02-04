@@ -3,19 +3,20 @@ Learnplaces 2 is a ground up rewritten drop in replacement of
 the old learnplaces plugin.
 
 ## Requirements
-* Version: ILIAS 5.3 or 5.4
-* PHP 7 or higher
+* Version: ILIAS 5.4 or 6
+* PHP 7.0 - 7.4
 
 ### Compatibility Table
 |Plugin Version   | ILIAS Versions | PHP Versions  |
 |---|---|---|
 | v1.X  | 5.2 - 5.3 | 7.0 |
 | v2.X | 5.3 - 5.4 | 7.0 - 7.2 |
+| v3.X | 5.4 - 6 | 7.0 - 7.4 |
 
 ## Installation
 
 ### Composer
-The latest composer release can be downloaded here <https://getcomposer.org/download/>
+The latest composer 1.x release can be downloaded here <https://getcomposer.org/composer-1.phar>
 
 ### Plugin
 Start at your ILIAS root directory  
@@ -27,12 +28,24 @@ git clone https://github.com/studer-raimann/Learnplaces.git
 cd ./Learnplaces
 php composer.phar install --no-dev
 ```  
-As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.  
+As ILIAS administrator go to "Administration->Plugins" and install/activate the plugin.
+
+### Check the PHP requirements
+```bash
+cd Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces
+sphp compoer.phar check-platform-reqs --no-dev
+```  
+
+The output should look similar to this:
+```
+ext-fileinfo  7.4.11    success  
+php           7.4.11    success 
+```
 
 ## Update
 
 ### Composer
-Update composer to the latest version.
+Update composer to the latest 1.x version.
 
 Composer update guide <https://getcomposer.org/doc/03-cli.md#self-update-selfupdate->
 
@@ -77,8 +90,6 @@ This project is licensed under the GNU GPLv3 License - see the LICENSE.md file f
 
 ## Acknowledgments
 [composer](https://getcomposer.org/)
-
-[zendframework/zend-diactoros](https://github.com/zendframework/zend-diactoros)
 
 [wapmorgan/file-type-detector](https://github.com/wapmorgan/FileTypeDetector)
 

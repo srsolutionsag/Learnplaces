@@ -2,6 +2,7 @@
 <?php
 
 use SRAG\Learnplaces\persistence\entity\Visibility;
+use SRAG\Learnplaces\service\filesystem\PathHelper;
 
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
 
@@ -56,4 +57,63 @@ $visibilityAfterVisitOtherPlace->create();
 <?php
 require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
 \SRAG\Learnplaces\persistence\entity\Configuration::updateDB(); //map_zoom_level field added
+?>
+<#3>
+<?php
+require_once('./Customizing/global/plugins/Services/Repository/RepositoryObject/Learnplaces/vendor/autoload.php');
+
+function lowercaseFileExtension($filename) {
+    if ($filename === null || strlen($filename) === 0) {
+        return $filename;
+    }
+    $info = pathinfo($filename);
+    $filenameWithLcExtension =  $info['dirname'] . '/' . $info['filename'] . '.' . strtolower($info['extension']);
+    if (file_exists($filename) && !file_exists($filenameWithLcExtension)) {
+        rename($filename, $filenameWithLcExtension);
+    }
+
+    return $filenameWithLcExtension;
+}
+
+/**
+ * @var \SRAG\Learnplaces\persistence\entity\Picture[] $pictures
+ */
+$pictures = \SRAG\Learnplaces\persistence\entity\Picture::get();
+foreach ($pictures as $picture) {
+    $originalPath = lowercaseFileExtension($picture->getOriginalPath());
+
+    $originalInternalPath = \SRAG\Learnplaces\service\filesystem\PathHelper::generatePluginInternalPathFrom(
+        $originalPath
+    );
+
+    $previewPath = lowercaseFileExtension($picture->getPreviewPath());
+    $previewInternalPath = \SRAG\Learnplaces\service\filesystem\PathHelper::generatePluginInternalPathFrom(
+        $previewPath
+    );
+
+    $picture->setOriginalPath($originalInternalPath);
+    $picture->setPreviewPath($previewInternalPath);
+    $picture->store();
+}
+
+/**
+ * @var \SRAG\Learnplaces\persistence\entity\VideoBlock[] $videos
+ */
+$videos = \SRAG\Learnplaces\persistence\entity\VideoBlock::get();
+foreach ($videos as $video) {
+    $path = lowercaseFileExtension($video->getPath());
+
+    $internalPath = \SRAG\Learnplaces\service\filesystem\PathHelper::generatePluginInternalPathFrom(
+        $path
+    );
+
+    $coverPath = lowercaseFileExtension($video->getCoverPath());
+    $coverInternalPath = \SRAG\Learnplaces\service\filesystem\PathHelper::generatePluginInternalPathFrom(
+        $coverPath
+    );
+
+    $video->setPath($internalPath);
+    $video->setCoverPath($coverInternalPath);
+    $video->store();
+}
 ?>

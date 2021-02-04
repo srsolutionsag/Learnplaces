@@ -60,7 +60,7 @@ final class xsrlContentGUI {
 	 */
 	private $tabs;
 	/**
-	 * @var ilTemplate $template
+	 * @var ilGlobalPageTemplate $template
 	 */
 	private $template;
 	/**
@@ -101,22 +101,34 @@ final class xsrlContentGUI {
 	private $accessGuard;
 
 
-	/**
-	 * xsrlContentGUI constructor.
-	 *
-	 * @param ilTabsGUI                         $tabs
-	 * @param ilTemplate                        $template
-	 * @param ilCtrl                            $controlFlow
-	 * @param ilLearnplacesPlugin               $plugin
-	 * @param RenderableBlockViewFactory        $renderableFactory
-	 * @param LearnplaceService                 $learnplaceService
-	 * @param AccordionBlockService             $accordionService
-	 * @param LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
-	 * @param BlockAddFormGUI                   $blockAddGUI
-	 * @param ServerRequestInterface            $request
-	 * @param AccessGuard                       $accessGuard
-	 */
-	public function __construct(ilTabsGUI $tabs, ilTemplate $template, ilCtrl $controlFlow, ilLearnplacesPlugin $plugin, RenderableBlockViewFactory $renderableFactory, LearnplaceService $learnplaceService, AccordionBlockService $accordionService, LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory, BlockAddFormGUI $blockAddGUI, ServerRequestInterface $request, AccessGuard $accessGuard) {
+    /**
+     * xsrlContentGUI constructor.
+     *
+     * @param ilTabsGUI $tabs
+     * @param ilGlobalPageTemplate | ilTemplate $template
+     * @param ilCtrl $controlFlow
+     * @param ilLearnplacesPlugin $plugin
+     * @param RenderableBlockViewFactory $renderableFactory
+     * @param LearnplaceService $learnplaceService
+     * @param AccordionBlockService $accordionService
+     * @param LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory
+     * @param BlockAddFormGUI $blockAddGUI
+     * @param ServerRequestInterface $request
+     * @param AccessGuard $accessGuard
+     */
+	public function __construct(
+	    ilTabsGUI $tabs,
+        $template,
+        ilCtrl $controlFlow,
+        ilLearnplacesPlugin $plugin,
+        RenderableBlockViewFactory $renderableFactory,
+        LearnplaceService $learnplaceService,
+        AccordionBlockService $accordionService,
+        LearnplaceServiceDecoratorFactory $learnplaceServiceDecorationFactory,
+        BlockAddFormGUI $blockAddGUI,
+        ServerRequestInterface $request,
+        AccessGuard $accessGuard
+    ) {
 		$this->tabs = $tabs;
 		$this->template = $template;
 		$this->controlFlow = $controlFlow;
@@ -133,7 +145,11 @@ final class xsrlContentGUI {
 
 	public function executeCommand() {
 
-		$this->template->getStandardTemplate();
+	    if (version_compare(ILIAS_VERSION_NUMERIC, "6.0", "<")) {
+            $this->template->getStandardTemplate();
+        } else {
+	        $this->template->loadStandardTemplate();
+        }
 		$cmd = $this->controlFlow->getCmd(CommonControllerAction::CMD_INDEX);
 		$this->tabs->activateTab(self::TAB_ID);
 
@@ -141,7 +157,11 @@ final class xsrlContentGUI {
 			case CommonControllerAction::CMD_INDEX:
 				if ($this->accessGuard->hasReadPermission()) {
 					$this->index();
-					$this->template->show();
+                    if (version_compare(ILIAS_VERSION_NUMERIC, "6.0", "<")) {
+                        $this->template->show();
+                    } else {
+                        $this->template->printToStdout();
+                    }
 					return true;
 				}
 				break;
@@ -155,7 +175,11 @@ final class xsrlContentGUI {
 			case self::CMD_SEQUENCE:
 				if ($this->accessGuard->hasWritePermission()) {
 					$this->{$cmd}();
-					$this->template->show();
+                    if (version_compare(ILIAS_VERSION_NUMERIC, "6.0", "<")) {
+                        $this->template->show();
+                    } else {
+                        $this->template->printToStdout();
+                    }
 					return true;
 				}
 				break;

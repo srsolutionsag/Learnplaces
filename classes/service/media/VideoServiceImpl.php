@@ -69,10 +69,11 @@ final class VideoServiceImpl implements VideoService {
 		if(!$this->hasUploadedFiles())
 			throw new LogicException('Unable to store video without upload.');
 
+		$upFiles = $this->request->getUploadedFiles();
 		/**
 		 * @var UploadedFileInterface $file
 		 */
-		$file = array_pop($this->request->getUploadedFiles());
+		$file = array_pop($upFiles);
 		$this->validateUpload($file);
 
 		$videoPath = PathHelper::generatePath($objectId, $file->getClientFilename() ?? '');

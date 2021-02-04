@@ -4,9 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [2.0.0] - unreleased
+## [3.0.0] - 04.02.2021
+### Added
+- Link action for ILIAS object
+- Copy action for ILIAS object
+- ILIAS 6 support
 ### Changed
 - Move create map form into map tab
+- Picture and video path handling improved
+### Fixed
+- File extensions are now normalized as expected after a file upload completes
+- Composer deprecation warnings
+### Removed
+- ILIAS 5.3 support
+
+### BREAKING CHANGES
+- ILIAS 5.3 is no longer supported
 
 ## [1.0.1] - 02.10.2018
 ### Added

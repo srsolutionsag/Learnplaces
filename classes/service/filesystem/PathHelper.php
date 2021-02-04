@@ -6,6 +6,10 @@ namespace SRAG\Learnplaces\service\filesystem;
 use ilLearnplacesPlugin;
 use ilUtil;
 use function realpath;
+use function explode;
+use function count;
+use function ltrim;
+use function strtolower;
 
 /**
  * Class PathHelper
@@ -37,11 +41,31 @@ final class PathHelper {
 			. '/'
 			. uniqid(ilLearnplacesPlugin::PLUGIN_ID, true);
 
-		$extension = pathinfo($filename, PATHINFO_EXTENSION);
+		$extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 		$filePath = $path . '.' . $extension;
 
 		return $filePath;
 	}
+
+	public static function generatePluginInternalPathFrom(string $relativePath): string {
+	    $pathParts = explode('/', ltrim($relativePath, './'));
+	    $pathLength = count($pathParts);
+	    $parentFolder = $pathParts[$pathLength - 2];
+	    $file = $pathParts[$pathLength - 1];
+
+	    if (strlen($relativePath) === 0) {
+	        return '';
+        }
+	    return "./$parentFolder/$file";
+    }
+
+    public static function generateRelativePathFrom(string $pluginInternalPath): string {
+	    if (strlen($pluginInternalPath) === 0) {
+	        return '';
+        }
+        $pathEnd = ltrim($pluginInternalPath, './');
+        return ilUtil::getWebspaceDir() . '/' . $pathEnd;
+    }
 
 
 	/**
