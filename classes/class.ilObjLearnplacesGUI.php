@@ -208,7 +208,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 * @inheritdoc
 	 */
 	protected function supportsCloning() {
-		return false;
+		return true;
 	}
 
 
