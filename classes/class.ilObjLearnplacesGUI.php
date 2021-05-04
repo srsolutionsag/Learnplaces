@@ -34,6 +34,10 @@ use SRAG\Learnplaces\service\visibility\LearnplaceServiceDecoratorFactory;
 final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	const DEFAULT_CMD = CommonControllerAction::CMD_INDEX;
+
+    const SUBTAB_CONTENT = 'content';
+    const SUBTAB_MAP = 'map';
+
 	const TAB_ID_PERMISSION = 'id_permissions';
 	/**
 	 * @var MapBlockService $mapBlockService
@@ -88,6 +92,7 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 	 * Main Triage to following GUI-Classes
 	 */
 	public function executeCommand() {
+		$this->setSubtabs();
 		$nextClass = $this->ctrl->getNextClass();
 
 		/**
@@ -116,9 +121,10 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				parent::executeCommand();
 				break;
 			case strtolower(xsrlContentGUI::class):
-				$this->renderTabs();
-				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlContentGUI::class));
-				break;
+                $this->learnplaceTabs->activateSubTab(self::SUBTAB_CONTENT);
+                $this->renderTabs();
+                $this->ctrl->forwardCommand(PluginContainer::resolve(xsrlContentGUI::class));
+                break;
 			case strtolower(xsrlPictureUploadBlockGUI::class):
 				$this->renderTabs();
 				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlPictureUploadBlockGUI::class));
@@ -140,8 +146,9 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 				$this->ctrl->forwardCommand(new xsrlIliasLinkBlockEditFormViewGUI(new ILIASLinkBlockModel()));
 				break;
 			case strtolower(xsrlMapBlockGUI::class):
-				$this->renderTabs();
-				$this->ctrl->forwardCommand(PluginContainer::resolve(xsrlMapBlockGUI::class));
+                $this->learnplaceTabs->activateSubTab(self::SUBTAB_MAP);
+                $this->renderTabs();
+                $this->ctrl->forwardCommand(PluginContainer::resolve(xsrlMapBlockGUI::class));
 				break;
 			case strtolower(xsrlVideoBlockGUI::class):
 				$this->renderTabs();
@@ -183,6 +190,22 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 		$this->ctrl->redirectByClass(ilRepositoryGUI::class, $this->getStandardCmd());
 	}
+
+    /**
+     *
+     */
+    protected function setSubtabs() {
+        if (ilObjUdfEditorAccess::hasWriteAccess()) {
+            $this->learnplaceTabs->addSubTab(self::SUBTAB_CONTENT, $this->lng->txt(self::SUBTAB_CONTENT), $this->ctrl->getLinkTarget($this));
+
+            if($this->accessGuard->hasWritePermission() && !$this->hasMap())
+                $this->learnplaceTabs->addSubTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_ADD));
+            else if ($this->hasMap())
+                $this->learnplaceTabs->addSubTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
+
+//            $this->learnplaceTabs->activateSubTab(self::SUBTAB_CONTENT);
+        }
+    }
 
 	/**
 	 * This command will be executed after a new repository object was created.
@@ -226,10 +249,6 @@ final class ilObjLearnplacesGUI extends ilObjectPluginGUI {
 
 	private function renderTabs() {
 		$this->learnplaceTabs->addTab(xsrlContentGUI::TAB_ID, $this->plugin->txt('tabs_content'), $this->ctrl->getLinkTargetByClass(xsrlContentGUI::class, self::DEFAULT_CMD));
-		if($this->accessGuard->hasWritePermission() && !$this->hasMap())
-            $this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, CommonControllerAction::CMD_ADD));
-		else if ($this->hasMap())
-            $this->learnplaceTabs->addTab(xsrlMapBlockGUI::TAB_ID, $this->plugin->txt('tabs_map'), $this->ctrl->getLinkTargetByClass(xsrlMapBlockGUI::class, self::DEFAULT_CMD));
 		if($this->accessGuard->hasWritePermission()) {
 			$this->learnplaceTabs->addTab(xsrlSettingGUI::TAB_ID, $this->plugin->txt('tabs_settings'), $this->ctrl->getLinkTargetByClass(xsrlSettingGUI::class, CommonControllerAction::CMD_EDIT));
 		}
